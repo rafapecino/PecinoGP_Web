@@ -1,4 +1,6 @@
+
 import Header from "@/All/components/header"
+import { RaceCalendar } from "@/All/components/race-calendar";
 
 export default function CalendarioPage() {
   return (
@@ -17,21 +19,11 @@ export default function CalendarioPage() {
         {/* Content */}
         <section className="px-4 sm:px-6 lg:px-8 py-12">
           <div className="max-w-4xl mx-auto">
-            <div className="bg-secondary p-8 rounded-lg text-center">
-              <h2 className="text-2xl font-bold mb-4 text-primary">Próximamente</h2>
-              <p className="text-muted-foreground">
-                Estamos trabajando en un calendario interactivo para la temporada. Vuelve pronto para ver:
-              </p>
-              <ul className="mt-6 space-y-2 text-left inline-block">
-                <li>📅 Fechas y horarios de todas las carreras.</li>
-                <li>📍 Información detallada de cada circuito.</li>
-                <li>🏆 Resultados de las carreras pasadas.</li>
-                <li> countdown para el próximo Gran Premio.</li>
-              </ul>
-            </div>
+            <RaceCalendar />
           </div>
         </section>
       </main>
     </div>
   )
 }
+

@@ -5,13 +5,31 @@ import { motion } from "framer-motion";
 import MotogpTable from "./components/motogp-table";
 import Moto2Table from "./components/moto2-table";
 import Moto3Table from "./components/moto3-table";
+import MotogpTable2026 from "./components/motogp-table-2026";
+import Moto2Table2026 from "./components/moto2-table-2026";
+import Moto3Table2026 from "./components/moto3-table-2026";
 
 type Category = "motogp" | "moto2" | "moto3";
+type Year = "2025" | "2026";
 
 export default function ClasificacionPage() {
   const [activeCategory, setActiveCategory] = useState<Category>("motogp");
+  const [activeYear, setActiveYear] = useState<Year>("2025");
 
   const renderTable = () => {
+    if (activeYear === "2026") {
+      switch (activeCategory) {
+        case "motogp":
+          return <MotogpTable2026 />;
+        case "moto2":
+          return <Moto2Table2026 />;
+        case "moto3":
+          return <Moto3Table2026 />;
+        default:
+          return <MotogpTable2026 />;
+      }
+    }
+
     switch (activeCategory) {
       case "motogp":
         return <MotogpTable />;
@@ -41,13 +59,38 @@ export default function ClasificacionPage() {
 
         <main className="flex-grow pt-20 md:pt-24">
           <section className="px-4 sm:px-6 lg:px-8 py-12 border-b border-border bg-transparent">
-            <div className="max-w-7xl mx-auto">
-              <h1
-                className="text-4xl md:text-5xl font-bold mb-4 text-white"
-                style={{ textShadow: "2px 2px 8px rgba(0, 0, 0, 0.8)" }}
-              >
-                Clasificación del Campeonato
-              </h1>
+            <div className="max-w-7xl mx-auto flex items-center justify-between">
+              <div className="flex items-baseline space-x-4">
+                <h1
+                  className="text-4xl md:text-5xl font-bold text-white"
+                  style={{ textShadow: "2px 2px 8px rgba(0, 0, 0, 0.8)" }}
+                >
+                  Clasificación
+                </h1>
+                <div className="flex items-baseline space-x-2">
+                  {(["2025", "2026"] as Year[]).map((year) => (
+                    <button
+                      key={year}
+                      onClick={() => setActiveYear(year)}
+                      className={`relative text-2xl md:text-3xl font-bold transition-colors ${
+                        activeYear === year
+                          ? "text-white"
+                          : "text-gray-500 hover:text-white"
+                      }`}
+                      style={{ textShadow: "2px 2px 8px rgba(0, 0, 0, 0.8)" }}
+                    >
+                      {year}
+                      {activeYear === year && (
+                        <motion.div
+                          layoutId="active-year-underline"
+                          className="absolute bottom-0 left-0 right-0 h-1 bg-red-600"
+                          transition={{ type: "spring", stiffness: 300, damping: 30 }}
+                        />
+                      )}
+                    </button>
+                  ))}
+                </div>
+              </div>
             </div>
           </section>
 
@@ -67,7 +110,7 @@ export default function ClasificacionPage() {
                     >
                       {activeCategory === category && (
                         <motion.div
-                          layoutId="active-pill"
+                          layoutId="active-category-pill"
                           className="absolute inset-0 bg-red-600 rounded-full"
                           transition={{ type: "spring", stiffness: 300, damping: 30 }}
                         />
@@ -81,7 +124,7 @@ export default function ClasificacionPage() {
               </div>
 
               <motion.div
-                key={activeCategory}
+                key={`${activeYear}-${activeCategory}`}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -20 }}

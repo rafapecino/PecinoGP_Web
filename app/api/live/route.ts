@@ -1,69 +1,99 @@
 import { NextResponse } from 'next/server';
 
-export const dynamic = 'force-dynamic';
+// Lee las claves de API desde las variables de entorno del servidor.
+// No es necesario el prefijo NEXT_PUBLIC_ ya que esto se ejecuta en el servidor.
+const API_KEYS = [
+  process.env.YOUTUBE_API_KEY,
+  process.env.YOUTUBE_API_KEY_2,
+  process.env.YOUTUBE_API_KEY_3
+].filter((key): key is string => typeof key === 'string' && key.length > 0);
+
+const CHANNEL_ID = process.env.YOUTUBE_CHANNEL_ID;
 
 /**
  * README:
- * Este endpoint comprueba si un canal de YouTube está en directo.
- * 
+ * Este endpoint comprueba si un canal de YouTube está en directo de forma optimizada.
+ *
  * --- REQUISITOS DE CONFIGURACIÓN ---
  * Para que este endpoint funcione, necesitas añadir las siguientes variables
  * de entorno a tu archivo `.env.local` en la raíz del proyecto:
  *
  * 1. YOUTUBE_API_KEY: Tu clave de API de Google Cloud para la API de YouTube Data v3.
- *    Ejemplo: YOUTUBE_API_KEY="AIzaSyA...your...api...key..."
+ *    (Opcional) YOUTUBE_API_KEY_2, YOUTUBE_API_KEY_3, etc. para rotación de claves.
  *
  * 2. YOUTUBE_CHANNEL_ID: El ID del canal de YouTube que quieres monitorizar.
- *    Ejemplo: YOUTUBE_CHANNEL_ID="UC_z1h_j2c8-2c_3...your...channel...id"
  * 
  * --- FUNCIONAMIENTO ---
- * - Renderizado Dinámico: Gracias a `export const dynamic = 'force-dynamic'`, esta ruta
- *   se ejecuta en cada petición, garantizando datos en tiempo real.
+ * - **Caché Inteligente**: Esta ruta utiliza el sistema de caché de datos de Next.js.
+ *   La respuesta de la API de YouTube se cachea durante 60 segundos (`revalidate: 60`).
+ *   Esto significa que, sin importar cuántos usuarios visiten la página, solo se
+ *   realizará una llamada a la API de YouTube como máximo cada minuto.
+ *
+ * - **Rotación de API Keys**: Si se proporcionan múltiples `YOUTUBE_API_KEY_...`,
+ *   el sistema intentará con la siguiente clave si la actual falla por cuota (error 403).
+ *   Esto aumenta la robustez del sistema.
  * 
- * - Manejo de Errores: Si la API de YouTube devuelve un error 403 (cuota excedida),
- *   el endpoint devolverá `{ isLive: false }` y registrará el error en la consola
- *   del servidor, evitando que la aplicación cliente falle.
- * 
- * - Validación: Si las variables de entorno no están configuradas, devolverá
- *   `{ isLive: false }` inmediatamente.
+ * - **Manejo de Errores**: Si todas las claves fallan o hay otro error, se devuelve
+ *   un estado `{ isLive: false }` para no interrumpir al cliente.
  */
-export async function GET() {
-  // 1. Validación Previa: Comprobar si las variables de entorno están configuradas.
-  const YOUTUBE_API_KEY = process.env.YOUTUBE_API_KEY;
-  const YOUTUBE_CHANNEL_ID = process.env.YOUTUBE_CHANNEL_ID;
+async function fetchWithRotation(baseUrl: string): Promise<any> {
+  if (API_KEYS.length === 0) {
+    throw new Error("No se han proporcionado claves de API de YouTube en el servidor.");
+  }
 
-  if (!YOUTUBE_API_KEY || !YOUTUBE_CHANNEL_ID) {
-    console.warn('ADVERTENCIA: YOUTUBE_API_KEY o YOUTUBE_CHANNEL_ID no están configuradas en .env.local. El estado "en vivo" no funcionará.');
+  for (let i = 0; i < API_KEYS.length; i++) {
+    const apiKey = API_KEYS[i];
+    const url = `${baseUrl}&key=${apiKey}`;
+
+    try {
+      // Usamos el caché de Next.js con revalidación de 60 segundos.
+      const res = await fetch(url, { next: { revalidate: 60 } });
+
+      if (res.ok) {
+        return await res.json();
+      }
+
+      if (res.status === 403) {
+        console.warn(`[YouTube API] Clave #${i + 1} falló (403). Probando la siguiente.`);
+        // No cacheamos el error 403 para poder reintentar con otra clave en la siguiente petición.
+        // Pero para esta petición, continuamos al siguiente loop.
+        continue;
+      }
+      
+      // Para otros errores HTTP, no reintentamos y lanzamos excepción.
+      throw new Error(`Error HTTP ${res.status}`);
+
+    } catch (err) {
+      console.warn(`[YouTube API] Error con la Clave #${i + 1}.`, err);
+      // Continuamos al siguiente bucle para probar con la siguiente clave.
+      continue;
+    }
+  }
+
+  throw new Error("Todas las claves de API de YouTube fallaron.");
+}
+
+export async function GET() {
+  if (API_KEYS.length === 0 || !CHANNEL_ID) {
+    console.warn('ADVERTENCIA: YOUTUBE_API_KEY(s) o YOUTUBE_CHANNEL_ID no están configuradas. El estado "en vivo" no funcionará.');
     return NextResponse.json({ isLive: false });
   }
 
-  // Se procede a llamar a la API de YouTube en cada petición.
-  const url = `https://www.googleapis.com/youtube/v3/search?part=snippet&channelId=${YOUTUBE_CHANNEL_ID}&eventType=live&type=video&key=${YOUTUBE_API_KEY}`;
+  const baseUrl = `https://www.googleapis.com/youtube/v3/search?part=snippet&channelId=${CHANNEL_ID}&eventType=live&type=video`;
 
   try {
-    const response = await fetch(url, { cache: 'no-store' }); // Usar 'no-store' para confirmar que no hay caché de fetch
+    const data = await fetchWithRotation(baseUrl);
 
-    // 3. Manejo de Errores Silencioso (Cuota Excedida)
-    if (!response.ok) {
-      if (response.status === 403) {
-        console.error('Error 403: Se ha excedido la cuota de la API de YouTube. Sirviendo `isLive: false` como fallback.');
-        return NextResponse.json({ isLive: false });
-      }
-      // Para otros errores, lanzamos una excepción para que sea capturada por el catch block.
-      throw new Error(`La API de YouTube respondió con el estado: ${response.status}`);
+    if (data.items && data.items.length > 0) {
+      return NextResponse.json({
+        isLive: true,
+        videoId: data.items[0].id.videoId,
+      });
     }
 
-    const data = await response.json();
-    
-    // La API devuelve un array 'items'. Si tiene elementos, es que hay un directo activo.
-    const isCurrentlyLive = data.items && data.items.length > 0;
-
-    return NextResponse.json({ isLive: isCurrentlyLive });
-
+    return NextResponse.json({ isLive: false });
   } catch (error) {
-    console.error("Error al intentar contactar con la API de YouTube:", error);
-    
-    // En caso de cualquier otro error (red, parsing, etc.), devolvemos false para no romper el cliente.
+    console.error("Error final al obtener el estado en vivo de YouTube:", error);
     return NextResponse.json({ isLive: false });
   }
 }

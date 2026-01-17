@@ -4,7 +4,7 @@ import Image from "next/image";
 import Link from "next/link"
 import { useState, useEffect } from "react"
 import { Logo } from "./logo"
-import { getLiveStream, LiveStream } from "@/lib/youtube-service"
+import { LiveStream } from "@/lib/youtube-service"
 
 const NAV_LINKS = [
   { href: "/", label: "Inicio" },
@@ -34,9 +34,17 @@ export default function Header() {
 
   useEffect(() => {
     async function fetchLiveStatus() {
-      const status = await getLiveStream();
-      setLiveInfo(status);
+      try {
+        const res = await fetch('/api/live');
+        if (res.ok) {
+          const status: LiveStream = await res.json();
+          setLiveInfo(status);
+        }
+      } catch (error) {
+        console.error("Error fetching live status from API route:", error);
+      }
     }
+
     fetchLiveStatus();
     const interval = setInterval(fetchLiveStatus, 60000); // Check every minute
     return () => clearInterval(interval);
