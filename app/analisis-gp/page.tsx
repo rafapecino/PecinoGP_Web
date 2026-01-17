@@ -1,11 +1,15 @@
 import Header from "@/All/components/header"
-import { getLatestVideos } from "@/lib/youtube-data"
+import { getLatestVideos, getVideosByIds } from "@/lib/youtube-data"
 import { YouTubeVideos } from "@/All/components/youtube-videos"
 
 export const revalidate = 3600
 
 export default async function AnalisisGpPage() {
-  const videos = await getLatestVideos(12)
+  const featuredVideoIds = ['EhRz4obCadU', 'b15kGQHfMwI', 'eCPrCjpQC2c'];
+  const featuredVideos = await getVideosByIds(featuredVideoIds);
+  const latestVideos = await getLatestVideos(12)
+
+  const specialVideoId = featuredVideos.length > 0 ? featuredVideos[0].id : null;
 
   return (
     <div className="min-h-screen bg-background text-foreground">
@@ -20,11 +24,26 @@ export default async function AnalisisGpPage() {
           </div>
         </section>
 
-        {/* Videos Grid */}
+        {/* Featured Videos Section */}
         <section className="px-4 sm:px-6 lg:px-8 py-12">
           <div className="max-w-7xl mx-auto">
-            {videos && videos.length > 0 ? (
-              <YouTubeVideos videos={videos} />
+            <h2 className="text-3xl font-bold mb-8">Lo mejor de 2025</h2>
+            {featuredVideos && featuredVideos.length > 0 ? (
+              <YouTubeVideos videos={featuredVideos} specialVideoId={specialVideoId} />
+            ) : (
+              <div className="text-center text-muted-foreground py-16">
+                <p className="text-lg">No hay vídeos destacados en este momento.</p>
+              </div>
+            )}
+          </div>
+        </section>
+        
+        {/* All Videos Grid */}
+        <section className="px-4 sm:px-6 lg:px-8 py-12 bg-secondary/50 border-t border-border">
+          <div className="max-w-7xl mx-auto">
+            <h2 className="text-3xl font-bold mb-8">Últimos Vídeos</h2>
+            {latestVideos && latestVideos.length > 0 ? (
+              <YouTubeVideos videos={latestVideos} />
             ) : (
               <div className="text-center text-muted-foreground py-24">
                 <p className="text-xl">No hay vídeos disponibles en este momento.</p>

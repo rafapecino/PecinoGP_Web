@@ -154,3 +154,34 @@ export const getLatestVideos = cache(
     return videos;
   }
 );
+
+export const getVideosByIds = cache(
+  async (videoIds: string[]): Promise<YouTubeVideo[]> => {
+    const url = `https://www.googleapis.com/youtube/v3/videos?id=${videoIds.join(
+      ","
+    )}&part=snippet,statistics`;
+
+    const data = await getData(url, `videosByIds-${videoIds.join('-')}`, { items: [] });
+
+    if (!data.items || data.items.length === 0) {
+      console.warn(`No videos found for IDs: ${videoIds.join(",")}`);
+      return FALLBACK_VIDEOS.slice(0, videoIds.length);
+    }
+
+    const videos = data.items.map((item: any) => ({
+      id: item.id,
+      title: item.snippet.title,
+      description: item.snippet.description,
+      thumbnail:
+        item.snippet.thumbnails.high?.url ||
+        item.snippet.thumbnails.default?.url ||
+        "",
+      publishedAt: item.snippet.publishedAt,
+      viewCount: item.statistics?.viewCount || "0",
+      channelTitle: item.snippet.channelTitle,
+    }));
+
+    console.log(`Successfully fetched ${videos.length} videos by ID.`);
+    return videos;
+  }
+);
