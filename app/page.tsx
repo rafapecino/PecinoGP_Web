@@ -2,19 +2,21 @@ import { Footer } from "@/All/components/footer";
 import Header from "@/All/components/header"
 import Image from "next/image"
 import Link from "next/link"
-import { getChannelStats, getLatestVideos } from "@/lib/youtube-data"
+import { getChannelStats, getLatestVideos, getVideosByIds } from "@/lib/youtube-data"
 import { YouTubeStats } from "@/All/components/youtube-stats"
 import { YouTubeVideos } from "@/All/components/youtube-videos"
-import { Logo } from "@/All/components/logo"
-import { Youtube } from "lucide-react"
-import { LatestVideo } from "@/All/components/latest-video"
 import { TestMotion } from "@/All/components/ui/test-motion";
+import { LatestVideo } from "@/All/components/latest-video";
 
 export const revalidate = 3600;
 
 export default async function Home() {
   const channelStats = await getChannelStats()
-  const videos = await getLatestVideos(3)
+  const latestVideo = await getLatestVideos(1)
+  
+  const featuredVideoIds = ['EhRz4obCadU', 'b15kGQHfMwI', 'eCPrCjpQC2c'];
+  const featuredVideos = await getVideosByIds(featuredVideoIds);
+  const specialVideoId = featuredVideos.length > 0 ? featuredVideos[0].id : null;
 
   const getVideoUrl = (videoId: string) => `https://www.youtube.com/watch?v=${videoId}`;
 
@@ -52,7 +54,7 @@ export default async function Home() {
             {/* 4. CTAs con Diseño Coherente */}
             <div className="flex flex-col sm:flex-row gap-4 justify-center mb-16">
               <Link
-                href={getVideoUrl(videos[0].id)}
+                href={getVideoUrl(latestVideo[0].id)}
                 className="inline-block bg-[#E60000] text-white font-bold py-3 px-8 rounded-lg text-lg hover:bg-red-700 transition-transform hover:scale-105"
               >
                 Ver Último Análisis
@@ -73,25 +75,24 @@ export default async function Home() {
 
         <section className="flex justify-center px-4 py-20 border-t sm:px-6 lg:px-8 bg-background border-border">
             <div className="w-full max-w-2xl">
-                <LatestVideo latestVideo={videos[0] || null} />
+                <LatestVideo latestVideo={latestVideo[0] || null} />
             </div>
         </section>
 
-        {/* Latest Content Section */}
-        <section className="px-4 sm:px-6 lg:px-8 py-20 border-t border-border bg-secondary/20">
+        {/* Featured Videos Section */}
+        <section className="px-4 sm:px-6 lg:px-8 py-12 bg-secondary/20 border-t border-border">
           <div className="max-w-7xl mx-auto">
             <div className="flex flex-wrap items-center justify-between gap-4 mb-12">
-              <h2 className="text-3xl md:text-4xl font-bold text-balance">Últimos Análisis y Vídeos</h2>
+              <h2 className="text-3xl md:text-4xl font-bold text-balance">Lo mejor de 2025</h2>
               <Link href="/analisis-gp" className="border border-primary text-primary font-semibold py-2 px-4 rounded-lg hover:bg-primary hover:text-primary-foreground transition-colors">
                 Ver Todos los Análisis
               </Link>
             </div>
-
-            {videos && videos.length > 0 ? (
-              <YouTubeVideos videos={videos} />
+            {featuredVideos && featuredVideos.length > 0 ? (
+              <YouTubeVideos videos={featuredVideos} specialVideoId={specialVideoId} />
             ) : (
-              <div className="text-center text-muted-foreground py-12">
-                <p>No hay vídeos disponibles en este momento</p>
+              <div className="text-center text-muted-foreground py-16">
+                <p className="text-lg">No hay vídeos destacados en este momento.</p>
               </div>
             )}
           </div>
