@@ -4,6 +4,9 @@ import "./globals.css"
 export const metadata: Metadata = {
   title: "PecinoGP - Análisis de MotoGP",
   description: "Tu comunidad de análisis técnicos, directos y cobertura exclusiva del campeonato mundial de MotoGP.",
+  icons: {
+    icon: "/favicon.png",
+  },
 }
 
 export default function RootLayout({
