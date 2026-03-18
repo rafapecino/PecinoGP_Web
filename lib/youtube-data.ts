@@ -1,6 +1,6 @@
 import { cache } from 'react'
-export type { YouTubeChannel, YouTubeVideo } from "./youtube-service";
-import { YouTubeChannel, YouTubeVideo } from "./youtube-service";
+export type { YouTubeChannel, YouTubeVideo, LiveStream } from "./youtube-service";
+import { YouTubeChannel, YouTubeVideo, LiveStream, getLiveStream as getLiveStreamService } from "./youtube-service";
 
 const KEYS = [
   process.env['NEXT_PUBLIC_YOUTUBE_API_KEY'],
@@ -94,6 +94,10 @@ async function getData(
   }
 }
 
+export const getLiveStream = cache(async (): Promise<LiveStream> => {
+  return await getLiveStreamService();
+});
+
 export const getChannelStats = cache(async (): Promise<YouTubeChannel> => {
   const url = `https://www.googleapis.com/youtube/v3/channels?part=statistics&id=${CHANNEL_ID}`;
   const data = await getData(url, "channelStats", { items: [FALLBACK_STATS] });
@@ -148,14 +152,21 @@ export const getLatestVideos = cache(
     if (!detailsData.items) return FALLBACK_VIDEOS.slice(0, maxResults);
 
     // YouTube duration format is ISO 8601 (PT1M20S)
-    // Shorts are typically under 60 seconds
+    // Shorts are typically under 61 seconds
     const filteredVideos = detailsData.items
       .filter((item: any) => {
         const duration = item.contentDetails.duration;
-        // Simple regex to check if it's under 60s (e.g. PT45S, PT1M0S is okay)
-        // If it contains H or M (more than 0), it's likely not a short (unless it's exactly 1M)
-        const isShort = !duration.includes('H') && !duration.includes('M') && duration.includes('S');
-        return !isShort; // Keep if NOT a short
+        // Parse ISO 8601 duration
+        const match = duration.match(/PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?/);
+        if (!match) return true;
+        const hours = parseInt(match[1] || '0');
+        const minutes = parseInt(match[2] || '0');
+        const seconds = parseInt(match[3] || '0');
+        const totalSeconds = hours * 3600 + minutes * 60 + seconds;
+        
+        // Exclude videos shorter than 2 minutes (120 seconds) as requested
+        // This ensures Shorts and very short clips are filtered out.
+        return totalSeconds > 120; 
       })
       .map((item: any) => ({
         id: item.id,

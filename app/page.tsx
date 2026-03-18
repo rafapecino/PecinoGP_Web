@@ -4,7 +4,7 @@ import Header from "@/All/components/header";
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { getChannelStats, getLatestVideos, getVideosByIds, YouTubeChannel, YouTubeVideo } from "@/lib/youtube-data";
+import { getChannelStats, getLatestVideos, getVideosByIds, getLiveStream, YouTubeChannel, YouTubeVideo, LiveStream } from "@/lib/youtube-data";
 import { YouTubeStats } from "@/All/components/youtube-stats";
 import { YouTubeVideos } from "@/All/components/youtube-videos";
 import { LatestVideo } from "@/All/components/latest-video";
@@ -16,10 +16,12 @@ export default function Home() {
     channelStats: YouTubeChannel | null;
     latestVideo: YouTubeVideo[];
     featuredVideos: YouTubeVideo[];
+    liveStatus: LiveStream | null;
   }>({
     channelStats: null,
     latestVideo: [],
     featuredVideos: [],
+    liveStatus: null,
   });
   const [loading, setLoading] = useState(true);
 
@@ -30,6 +32,7 @@ export default function Home() {
     async function fetchData() {
       const stats = await getChannelStats();
       const latest = await getLatestVideos(1);
+      const live = await getLiveStream();
       const featuredVideoIds = ['EhRz4obCadU', 'b15kGQHfMwI', 'eCPrCjpQC2c'];
       const featured = await getVideosByIds(featuredVideoIds);
 
@@ -37,6 +40,7 @@ export default function Home() {
         channelStats: stats,
         latestVideo: latest,
         featuredVideos: featured,
+        liveStatus: live,
       });
       setLoading(false);
     }
@@ -131,51 +135,62 @@ export default function Home() {
 
             <motion.div
               variants={itemVariants}
-              className="hidden lg:block relative group h-[500px] w-full"
+              className="hidden lg:block relative h-[500px] w-full"
             >
-              <div className="absolute -inset-4 bg-red-600/20 rounded-[40px] blur-3xl group-hover:bg-red-600/30 transition-all"></div>
-              <div className="relative h-full w-full bg-slate-900/60 backdrop-blur-3xl rounded-[32px] border border-white/10 p-12 shadow-2xl overflow-hidden group">
-                <div className="absolute inset-0 z-0 overflow-hidden">
-                  <Image
-                    src="/hero-stats-bg.png"
-                    alt="Stats Background"
-                    fill
-                    className="object-cover opacity-70 scale-105 group-hover:scale-115 transition-transform duration-[2s] ease-out"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-br from-red-600/40 via-transparent to-black/80" />
-                </div>
+              <div className="relative h-full w-full bg-white/[0.01] backdrop-blur-xl rounded-[32px] border border-white/5 p-12 shadow-2xl overflow-hidden group">
+                <div className="relative z-10 flex flex-col h-full justify-between">
+                  <div>
+                    <div className="flex items-center justify-between mb-10">
+                      <div className="flex items-center gap-2 translate-y-0 group-hover:-translate-y-1 transition-transform">
+                        <div className="w-8 h-1 bg-red-600 rounded-full shadow-[0_0_20px_rgba(220,38,38,1)]" />
+                        <span className="text-red-500 font-black uppercase tracking-[0.4em] text-[10px]">PecinoGP Insight</span>
+                      </div>
+                      
+                      {/* --- LIVE STATUS BUTTON --- */}
+                      <Link 
+                        href={data.liveStatus?.isLive ? `https://www.youtube.com/watch?v=${data.liveStatus.videoId}` : "https://www.youtube.com/@PecinoGP/streams"}
+                        target="_blank"
+                        className={`group/live flex items-center gap-2 px-4 py-2 rounded-full border transition-all duration-300 ${
+                          data.liveStatus?.isLive 
+                          ? "bg-red-600/10 border-red-600/30 text-red-500 animate-pulse" 
+                          : "bg-white/5 border-white/10 text-white/40 hover:bg-white/10"
+                        }`}
+                      >
+                        <div className={`w-2 h-2 rounded-full ${data.liveStatus?.isLive ? "bg-red-600 shadow-[0_0_8px_rgba(220,38,38,1)]" : "bg-white/20"}`} />
+                        <span className="text-[10px] font-black uppercase tracking-widest italic pt-0.5">
+                          {data.liveStatus?.isLive ? "EN DIRECTO AHORA" : "CANAL DE DIRECTOS"}
+                        </span>
+                      </Link>
+                    </div>
 
-                <div className="relative z-10 flex flex-col h-full justify-center">
-                  <div className="flex items-center gap-2 mb-10 translate-y-0 group-hover:-translate-y-1 transition-transform">
-                    <div className="w-8 h-1 bg-red-600 rounded-full shadow-[0_0_20px_rgba(220,38,38,1)]" />
-                    <span className="text-red-500 font-black uppercase tracking-[0.4em] text-[10px]">PecinoGP Insight</span>
+                    {data.channelStats && (
+                      <div className="space-y-12">
+                        <div className="flex flex-col group/item">
+                          <span className="text-[10px] font-black uppercase tracking-[0.2em] text-white/50 mb-1">Fanáticos Reales</span>
+                          <div className="flex items-baseline gap-2">
+                            <span className="text-7xl md:text-9xl font-black text-white italic tracking-tighter leading-none [text-shadow:0_15px_30px_rgba(0,0,0,0.5)]">
+                              {Math.floor(Number(data.channelStats.subscriberCount) / 1000)}K
+                            </span>
+                          </div>
+                          <div className="w-full bg-white/10 h-1.5 mt-6 rounded-full overflow-hidden">
+                            <motion.div initial={{ width: 0 }} whileInView={{ width: "88%" }} transition={{ duration: 2, ease: "circOut" }} className="h-full bg-red-600 shadow-[0_0_15px_rgba(220,38,38,0.5)]" />
+                          </div>
+                        </div>
+                      </div>
+                    )}
                   </div>
 
                   {data.channelStats && (
-                    <div className="space-y-12">
-                      <div className="flex flex-col group/item">
-                        <span className="text-[10px] font-black uppercase tracking-[0.2em] text-white/50 mb-1">Fanáticos Reales</span>
-                        <div className="flex items-baseline gap-2">
-                          <span className="text-7xl md:text-9xl font-black text-white italic tracking-tighter leading-none [text-shadow:0_15px_30px_rgba(0,0,0,0.5)]">
-                            {Math.floor(Number(data.channelStats.subscriberCount) / 1000)}K
-                          </span>
-                        </div>
-                        <div className="w-full bg-white/10 h-1.5 mt-6 rounded-full overflow-hidden">
-                          <motion.div initial={{ width: 0 }} whileInView={{ width: "88%" }} transition={{ duration: 2, ease: "circOut" }} className="h-full bg-red-600 shadow-[0_0_15px_rgba(220,38,38,0.5)]" />
-                        </div>
+                    <div className="grid grid-cols-2 gap-10 pt-10 border-t border-white/10">
+                      <div className="flex flex-col">
+                        <span className="text-[9px] font-black uppercase tracking-[0.3em] text-white/40 mb-2">Contenido</span>
+                        <span className="text-4xl font-black text-white italic tracking-tighter">{data.channelStats.videoCount} <span className="text-xs text-red-500 not-italic ml-1">VÍDEOS</span></span>
                       </div>
-
-                      <div className="grid grid-cols-2 gap-10 pt-10 border-t border-white/10">
-                        <div className="flex flex-col">
-                          <span className="text-[9px] font-black uppercase tracking-[0.3em] text-white/40 mb-2">Contenido</span>
-                          <span className="text-4xl font-black text-white italic tracking-tighter">{data.channelStats.videoCount} <span className="text-xs text-red-500 not-italic ml-1">VÍDEOS</span></span>
-                        </div>
-                        <div className="flex flex-col">
-                          <span className="text-[9px] font-black uppercase tracking-[0.3em] text-white/40 mb-2">Impacto</span>
-                          <span className="text-4xl font-black text-white italic tracking-tighter">
-                            {Math.floor(Number(data.channelStats.viewCount) / 1000000)}M <span className="text-xs text-red-500 not-italic ml-1">VISTAS</span>
-                          </span>
-                        </div>
+                      <div className="flex flex-col">
+                        <span className="text-[9px] font-black uppercase tracking-[0.3em] text-white/40 mb-2">Impacto</span>
+                        <span className="text-4xl font-black text-white italic tracking-tighter">
+                          {Math.floor(Number(data.channelStats.viewCount) / 1000000)}M <span className="text-xs text-red-500 not-italic ml-1">VISTAS</span>
+                        </span>
                       </div>
                     </div>
                   )}
