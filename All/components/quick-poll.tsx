@@ -21,21 +21,21 @@ interface Poll {
 }
 
 const optionColors = [
-  "bg-blue-500/20",
-  "bg-green-500/20",
-  "bg-yellow-500/20",
-  "bg-purple-500/20",
-  "bg-red-500/20",
-  "bg-indigo-500/20",
+  "bg-red-600/40",
+  "bg-white/10",
+  "bg-white/10",
+  "bg-white/10",
+  "bg-white/10",
+  "bg-white/10",
 ];
 
 const optionTextColors = [
-  "text-blue-500",
-  "text-green-500",
-  "text-yellow-500",
-  "text-purple-500",
   "text-red-500",
-  "text-indigo-500",
+  "text-white",
+  "text-white",
+  "text-white",
+  "text-white",
+  "text-white",
 ];
 
 export function QuickPoll() {
@@ -155,8 +155,8 @@ export function QuickPoll() {
                         transition={{ duration: 1, ease: [0.22, 1, 0.36, 1] }}
                       />
                       <div className="relative z-10 flex items-center justify-between w-full">
-                        <div className="flex items-center gap-2">
-                          <span className={`font-semibold ${optionTextColors[index % optionTextColors.length]}`}>
+                        <div className="flex items-center gap-3">
+                          <span className={`font-black uppercase tracking-widest text-[11px] italic transition-colors ${isVotedOption ? 'text-white' : 'text-white/80'}`}>
                             {option.text}
                           </span>
                           {isVotedOption && (
@@ -165,10 +165,9 @@ export function QuickPoll() {
                             </motion.div>
                           )}
                         </div>
-                        <div className="flex items-center gap-1 font-bold text-lg">
-                           {/* Usamos toFixed directo si Counter da problemas, o Counter si lo tienes bien importado */}
+                        <div className={`flex items-center gap-1 font-black italic tracking-tighter text-xl ${isVotedOption ? 'text-white' : 'text-white/40'}`}>
                           <span>{percentage.toFixed(1)}</span>
-                          <span>%</span>
+                          <span className="text-[10px] ml-0.5">%</span>
                         </div>
                       </div>
                     </div>
@@ -192,8 +191,8 @@ export function QuickPoll() {
           </AnimatePresence>
         </div>
         {voted && totalVotes > 0 && (
-          <p className="text-[10px] font-black uppercase tracking-[0.2em] text-white/30 text-center mt-8 italic">
-            Participación: <span className="text-red-500">{totalVotes}</span> MOTORES RUGIENDO
+          <p className="text-[10px] font-black uppercase tracking-[0.2em] text-white/60 text-center mt-10 italic">
+            Participación: <span className="text-red-500 font-black">{totalVotes}</span> MOTORES RUGIENDO
           </p>
         )}
       </div>

@@ -41,7 +41,7 @@ export default function ElPaddockPage() {
 
       <main>
         {/* --- CINEMATIC HERO --- */}
-        <section className="relative h-[50vh] flex items-center justify-center overflow-hidden">
+        <section className="relative py-32 md:py-48 flex items-center justify-center overflow-hidden">
           <motion.div style={{ y: y1 }} className="absolute inset-0 z-0 scale-110">
             <Image
               src="/hero-stats-bg.png"
@@ -57,7 +57,7 @@ export default function ElPaddockPage() {
             variants={containerVariants}
             initial="hidden"
             animate="visible"
-            className="relative z-20 max-w-7xl mx-auto px-4 text-center pt-20"
+            className="relative z-20 max-w-7xl mx-auto px-4 text-center"
           >
             <motion.div variants={itemVariants} className="flex items-center justify-center gap-2 mb-6">
               <div className="w-8 h-1 bg-red-600 rounded-full" />

@@ -1,174 +1,247 @@
+"use client";
 
-import { CalendarIcon } from "lucide-react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/All/components/ui/card";
+import { CalendarIcon, MapPin, ChevronRight, Flag } from "lucide-react";
+import { motion } from "framer-motion";
 
 const races = [
     {
         "gp": "Gran Premio de Tailandia",
-        "circuit": "Circuito Internacional de Chang, Buriram",
-        "dates": "27 febrero-1 marzo",
-        "countryCode": "th"
+        "circuit": "Chang International Circuit, Buriram",
+        "dates": "27 feb - 1 mar",
+        "countryCode": "th",
+        "status": "completed"
     },
     {
         "gp": "Gran Premio de Brasil",
         "circuit": "Autódromo Internacional Ayrton Senna, Goiânia",
         "dates": "20-22 marzo",
-        "countryCode": "br"
+        "countryCode": "br",
+        "status": "next"
     },
     {
         "gp": "Gran Premio de las Américas",
-        "circuit": "Circuito de las Américas, Austin",
+        "circuit": "Circuit of the Americas, Austin",
         "dates": "27-29 marzo",
-        "countryCode": "us"
+        "countryCode": "us",
+        "status": "upcoming"
     },
     {
         "gp": "Gran Premio de Catar",
-        "circuit": "Circuito Internacional de Losail, Lusail",
+        "circuit": "Lusail International Circuit, Lusail",
         "dates": "10-12 abril",
-        "countryCode": "qa"
+        "countryCode": "qa",
+        "status": "upcoming"
     },
     {
         "gp": "Gran Premio de España",
         "circuit": "Circuito de Jerez, Jerez de la Frontera",
         "dates": "24-26 abril",
-        "countryCode": "es"
+        "countryCode": "es",
+        "status": "upcoming"
     },
     {
         "gp": "Gran Premio de Francia",
-        "circuit": "Circuito de Bugatti, Le Mans",
+        "circuit": "Bugatti Circuit, Le Mans",
         "dates": "8-10 mayo",
-        "countryCode": "fr"
+        "countryCode": "fr",
+        "status": "upcoming"
     },
     {
         "gp": "Gran Premio de Cataluña",
-        "circuit": "Circuito de Barcelona-Cataluña, Montmeló",
+        "circuit": "Circuit de Barcelona-Catalunya, Montmeló",
         "dates": "15-17 mayo",
-        "countryCode": "es"
+        "countryCode": "es",
+        "status": "upcoming"
     },
     {
         "gp": "Gran Premio de Italia",
-        "circuit": "Autódromo Internacional del Mugello, Scarperia",
+        "circuit": "Autodromo Internazionale del Mugello, Scarperia",
         "dates": "29-31 mayo",
-        "countryCode": "it"
+        "countryCode": "it",
+        "status": "upcoming"
     },
     {
         "gp": "Gran Premio de Hungría",
-        "circuit": "Circuito de Balaton Park, Balatonfőkajár",
+        "circuit": "Balaton Park Circuit, Balatonfőkajár",
         "dates": "5-7 junio",
-        "countryCode": "hu"
+        "countryCode": "hu",
+        "status": "upcoming"
     },
     {
         "gp": "Gran Premio de República Checa",
-        "circuit": "Autódromo de Brno, Brno",
+        "circuit": "Brno Circuit, Brno",
         "dates": "19-21 junio",
-        "countryCode": "cz"
+        "countryCode": "cz",
+        "status": "upcoming"
     },
     {
         "gp": "Gran Premio de Países Bajos",
-        "circuit": "Circuito de Assen, Assen",
+        "circuit": "TT Circuit Assen, Assen",
         "dates": "26-28 junio",
-        "countryCode": "nl"
+        "countryCode": "nl",
+        "status": "upcoming"
     },
     {
         "gp": "Gran Premio de Alemania",
         "circuit": "Sachsenring, Hohenstein-Ernstthal",
         "dates": "10-12 julio",
-        "countryCode": "de"
+        "countryCode": "de",
+        "status": "upcoming"
     },
     {
         "gp": "Gran Premio de Gran Bretaña",
-        "circuit": "Circuito de Silverstone, Silverstone",
+        "circuit": "Silverstone Circuit, Silverstone",
         "dates": "7-9 agosto",
-        "countryCode": "gb"
+        "countryCode": "gb",
+        "status": "upcoming"
     },
     {
         "gp": "Gran Premio de Aragón",
         "circuit": "Motorland Aragón, Alcañiz",
         "dates": "28-30 agosto",
-        "countryCode": "es"
+        "countryCode": "es",
+        "status": "upcoming"
     },
     {
         "gp": "Gran Premio de San Marino",
-        "circuit": "Misano World Circuit Marco Simoncelli, Misano Adriatico",
+        "circuit": "Misano World Circuit Marco Simoncelli, Misano",
         "dates": "11-13 septiembre",
-        "countryCode": "sm"
+        "countryCode": "sm",
+        "status": "upcoming"
     },
     {
         "gp": "Gran Premio de Austria",
         "circuit": "Red Bull Ring, Spielberg",
         "dates": "18-20 septiembre",
-        "countryCode": "at"
+        "countryCode": "at",
+        "status": "upcoming"
     },
     {
         "gp": "Gran Premio de Japón",
         "circuit": "Mobility Resort Motegi, Motegi",
         "dates": "2-4 octubre",
-        "countryCode": "jp"
+        "countryCode": "jp",
+        "status": "upcoming"
     },
     {
         "gp": "Gran Premio de Indonesia",
-        "circuit": "Circuito Urbano Internacional de Mandalika, Lombok",
+        "circuit": "Mandalika International Street Circuit, Lombok",
         "dates": "9-11 octubre",
-        "countryCode": "id"
+        "countryCode": "id",
+        "status": "upcoming"
     },
     {
         "gp": "Gran Premio de Australia",
-        "circuit": "Circuito de Phillip Island, Isla Phillip",
+        "circuit": "Phillip Island Circuit, Phillip Island",
         "dates": "23-25 octubre",
-        "countryCode": "au"
+        "countryCode": "au",
+        "status": "upcoming"
     },
     {
         "gp": "Gran Premio de Malasia",
-        "circuit": "Circuito Internacional de Sepang, Sepang",
-        "dates": "30 octubre-1 noviembre",
-        "countryCode": "my"
+        "circuit": "Sepang International Circuit, Sepang",
+        "dates": "30 oct - 1 nov",
+        "countryCode": "my",
+        "status": "upcoming"
     },
     {
         "gp": "Gran Premio de Portugal",
         "circuit": "Autódromo Internacional do Algarve, Portimão",
         "dates": "13-15 noviembre",
-        "countryCode": "pt"
+        "countryCode": "pt",
+        "status": "upcoming"
     },
     {
         "gp": "Gran Premio de la Comunidad Valenciana",
-        "circuit": "Circuito Ricardo Tormo, Valencia",
+        "circuit": "Circuit Ricardo Tormo, Valencia",
         "dates": "20-22 noviembre",
-        "countryCode": "es"
+        "countryCode": "es",
+        "status": "upcoming"
     }
 ]
 
 export function RaceCalendar() {
+    const listVariants = {
+        hidden: { opacity: 0 },
+        visible: {
+            opacity: 1,
+            transition: {
+                staggerChildren: 0.05
+            }
+        }
+    };
+
+    const itemVariants = {
+        hidden: { opacity: 0, x: -20 },
+        visible: {
+            opacity: 1,
+            x: 0,
+            transition: { duration: 0.5, ease: [0.22, 1, 0.36, 1] as [number, number, number, number] }
+        }
+    };
+
     return (
-        <Card>
-            <CardHeader>
-                <CardTitle className="flex items-center">
-                    <CalendarIcon className="mr-2" />
-                    Calendario MotoGP 2026
-                </CardTitle>
-            </CardHeader>
-            <CardContent>
-                <div className="space-y-4">
-                    {races.map((race, index) => (
-                        <div key={index} className="flex items-center p-4 rounded-lg border">
-                            <img
-                                src={`https://flagcdn.com/w40/${race.countryCode}.png`}
-                                alt={`${race.gp} flag`}
-                                className="w-10 h-auto mr-4"
-                            />
-                            <div className="flex flex-col sm:flex-row justify-between flex-grow">
-                                <div>
-                                    <p className="font-bold text-lg">{race.gp}</p>
-                                    <p className="text-sm text-muted-foreground">{race.circuit}</p>
-                                </div>
-                                <div className="flex items-center text-sm font-semibold mt-2 sm:mt-0">
-                                    <CalendarIcon className="mr-2 h-4 w-4" />
-                                    {race.dates}
-                                </div>
+        <motion.div 
+            variants={listVariants}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: "-100px" }}
+            className="space-y-4"
+        >
+            {races.map((race, index) => {
+                const isNext = race.status === "next";
+                const isCompleted = race.status === "completed";
+
+                return (
+                    <motion.div
+                        key={index}
+                        variants={itemVariants}
+                        className={`group relative flex items-center p-6 rounded-[24px] border transition-all duration-500 overflow-hidden ${
+                            isNext 
+                                ? "bg-red-600/10 border-red-600/40 shadow-[0_0_30px_rgba(220,38,38,0.1)] scale-[1.02] z-10" 
+                                : "bg-white/[0.03] border-white/5 hover:bg-white/[0.06] hover:border-white/10"
+                        } ${isCompleted ? "opacity-40 grayscale" : ""}`}
+                    >
+                        {isNext && (
+                            <div className="absolute top-0 right-0 py-1 px-3 bg-red-600 text-[8px] font-black italic tracking-[0.2em] text-white uppercase rounded-bl-lg">
+                                PRÓXIMO EVENTO
+                            </div>
+                        )}
+
+                        <div className="flex-shrink-0 mr-6">
+                            <div className="relative w-12 h-12 flex items-center justify-center rounded-2xl bg-white/5 border border-white/5 group-hover:border-red-600/30 transition-all overflow-hidden">
+                                <img
+                                    src={`https://flagcdn.com/w80/${race.countryCode}.png`}
+                                    alt={`${race.gp} flag`}
+                                    className="w-full h-full object-cover opacity-80 group-hover:scale-110 transition-transform duration-500"
+                                />
                             </div>
                         </div>
-                    ))}
-                </div>
-            </CardContent>
-        </Card>
+
+                        <div className="flex flex-col md:flex-row justify-between flex-grow gap-4">
+                            <div>
+                                <h3 className={`text-lg md:text-xl font-black italic tracking-tighter transition-colors ${isNext ? 'text-red-500' : 'text-white'}`}>
+                                    {race.gp.toUpperCase()}
+                                </h3>
+                                <div className="flex items-center gap-2 text-[10px] font-bold text-white/40 uppercase tracking-widest mt-1 italic">
+                                    <MapPin size={10} className="text-red-600" />
+                                    {race.circuit}
+                                </div>
+                            </div>
+                            
+                            <div className="flex items-center gap-4">
+                                <div className={`flex items-center gap-2 py-2 px-4 rounded-xl font-black italic tracking-widest text-[11px] ${
+                                    isNext ? "bg-red-600 text-white shadow-[0_0_20px_rgba(220,38,38,0.4)]" : "bg-white/5 text-white/60"
+                                }`}>
+                                    <CalendarIcon size={12} className={isNext ? "text-white" : "text-red-600"} />
+                                    {race.dates.toUpperCase()}
+                                </div>
+                                <ChevronRight className={`hidden md:block transition-all ${isNext ? 'text-red-600 opacity-100 translate-x-1' : 'text-white/10 opacity-0 group-hover:opacity-40'}`} />
+                            </div>
+                        </div>
+                    </motion.div>
+                );
+            })}
+        </motion.div>
     );
 }
