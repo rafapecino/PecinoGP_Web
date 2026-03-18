@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useRef } from "react"
+import { useEffect, useRef, useState } from "react"
 import { animate, motion } from "framer-motion"
 
 type CounterProps = {
@@ -11,21 +11,23 @@ type CounterProps = {
 }
 
 export function Counter({ from, to, className, format }: CounterProps) {
-  const nodeRef = useRef<HTMLParagraphElement>(null)
+  const [displayValue, setDisplayValue] = useState(from)
 
   useEffect(() => {
-    const node = nodeRef.current
-    if (!node) return
-
     const controls = animate(from, to, {
-      duration: 5,
+      duration: 3, // slightly faster
+      ease: "easeOut",
       onUpdate(value) {
-        node.textContent = format ? format(value) : value.toFixed(0)
+        setDisplayValue(value)
       },
     })
 
     return () => controls.stop()
-  }, [from, to, format])
+  }, [from, to])
 
-  return <p className={className} ref={nodeRef} />
+  return (
+    <span className={className}>
+      {format ? format(displayValue) : displayValue.toFixed(0)}
+    </span>
+  )
 }

@@ -16,7 +16,7 @@ const NAV_LINKS = [
 
 export default function Header() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
-  const [liveInfo, setLiveInfo] = useState<LiveStream>({isLive: false});
+  const [liveInfo, setLiveInfo] = useState<LiveStream>({ isLive: false });
   const [scrolled, setScrolled] = useState(false)
 
   useEffect(() => {
@@ -52,8 +52,8 @@ export default function Header() {
 
   return (
     <header
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 border-b border-border shadow-lg ${
-        scrolled ? "bg-slate-800/50 backdrop-blur-sm" : ""
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+        scrolled ? "bg-slate-800/50 backdrop-blur-md border-b border-white/10 shadow-lg" : "bg-transparent border-transparent"
       }`}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -78,7 +78,7 @@ export default function Header() {
           {/* CTA Button */}
           <div className="flex items-center gap-2 sm:gap-4">
             {liveInfo.isLive ? (
-               <a
+              <a
                 href={`https://www.youtube.com/watch?v=${liveInfo.videoId}`}
                 target="_blank"
                 rel="noopener noreferrer"

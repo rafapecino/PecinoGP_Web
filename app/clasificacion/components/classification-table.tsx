@@ -3,7 +3,8 @@
 import { useEffect, useState, useCallback } from "react";
 import { getDriverStandings, DriverStanding, CATEGORIES, SEASONS } from "@/lib/motogp-service";
 import { Skeleton } from "@/All/components/ui/skeleton";
-import { RefreshCcw, Clock } from "lucide-react";
+import { RefreshCcw, Clock, Award, TrendingUp } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
 
 interface ClassificationTableProps {
   category: keyof typeof CATEGORIES;
@@ -137,60 +138,110 @@ export default function ClassificationTable({ category, year }: ClassificationTa
               </tr>
             </thead>
             <tbody>
-              {data.map((piloto) => {
-                const pilotPoints = Number(piloto.points);
-                const pointsPercentage = leaderPoints > 0 ? (pilotPoints / leaderPoints) * 100 : 0;
+              <AnimatePresence mode="popLayout">
+                {data.map((piloto, index) => {
+                  const pilotPoints = Number(piloto.points);
+                  const pointsPercentage = leaderPoints > 0 ? (pilotPoints / leaderPoints) * 100 : 0;
+                  const isLeader = index === 0;
 
-                return (
-                  <tr
-                    key={`${piloto.pos}-${piloto.driverName}`}
-                    className={`border-t border-border/50 transition-colors hover:bg-white/5 ${getTeamColor(
-                      piloto.teamName
-                    )} border-l-4`}
-                  >
-                    <td className="p-4 text-center font-bold text-lg text-white">
-                      {piloto.pos}
-                    </td>
-                    <td className="p-4">
-                      <div className="flex items-center gap-3">
-                        <img 
-                          src={`https://flagcdn.com/w20/${piloto.countryCode.toLowerCase()}.png`}
-                          alt={piloto.countryCode}
-                          className="w-5 h-auto rounded-sm opacity-80"
-                          onError={(e) => (e.currentTarget.style.display = "none")}
-                        />
-                        <div className="flex flex-col">
-                          <span className="text-primary font-bold text-base line-clamp-1">
-                            {piloto.driverName}
-                          </span>
-                          <span className="text-[10px] sm:hidden text-muted-foreground uppercase tracking-tighter">
-                            {piloto.teamName}
-                          </span>
+                  return (
+                    <motion.tr
+                      key={`${piloto.pos}-${piloto.driverName}`}
+                      initial={{ opacity: 0, x: -20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      exit={{ opacity: 0, scale: 0.95 }}
+                      transition={{ 
+                        duration: 0.3, 
+                        delay: index * 0.05,
+                        ease: "easeOut"
+                      }}
+                      whileHover={{ backgroundColor: "rgba(255, 255, 255, 0.05)" }}
+                      className={`group border-t border-border/50 transition-colors ${getTeamColor(
+                        piloto.teamName
+                      )} border-l-4 relative overflow-hidden`}
+                    >
+                      {isLeader && (
+                        <div className="absolute inset-0 bg-gradient-to-r from-yellow-500/5 to-transparent pointer-events-none" />
+                      )}
+                      
+                      <td className="p-4 text-center font-black text-xl italic text-white/90">
+                        <div className="flex flex-col items-center justify-center">
+                          {isLeader ? (
+                            <Award className="w-4 h-4 text-yellow-500 mb-0.5" />
+                          ) : (
+                            <span className="opacity-0 w-4 h-4 mb-0.5" />
+                          )}
+                          {piloto.pos}
                         </div>
-                      </div>
-                    </td>
-                    <td className="p-4 hidden md:table-cell text-sm text-gray-300">
-                      {piloto.teamName}
-                    </td>
-                    <td className="p-4 hidden sm:table-cell text-right text-xs font-mono text-gray-500">
-                      {piloto.diffLeader}
-                    </td>
-                    <td className="p-4 text-right">
-                      <div className="flex flex-col items-end">
-                        <span className="font-mono text-lg font-bold text-white">{piloto.points}</span>
-                        <div className="w-20 bg-gray-800 rounded-full h-1 mt-1 overflow-hidden">
-                          <div
-                            className={`${getTeamBgColor(
-                              piloto.teamName
-                            )} h-full rounded-full`}
-                            style={{ width: `${pointsPercentage}%` }}
-                          ></div>
+                      </td>
+                      
+                      <td className="p-4">
+                        <div className="flex items-center gap-4">
+                          <div className="relative">
+                            <img 
+                              src={`https://flagcdn.com/w40/${piloto.countryCode.toLowerCase()}.png`}
+                              alt={piloto.countryCode}
+                              className="w-6 h-auto rounded-sm shadow-md transition-transform group-hover:scale-110"
+                              onError={(e) => (e.currentTarget.style.display = "none")}
+                            />
+                            {isLeader && (
+                              <div className="absolute -inset-1 rounded-sm bg-yellow-500/20 animate-pulse" />
+                            )}
+                          </div>
+                          
+                          <div className="flex flex-col">
+                            <div className="flex items-center gap-2">
+                              <span className={`font-black text-lg tracking-tight uppercase italic ${isLeader ? 'text-yellow-500' : 'text-white'}`}>
+                                {piloto.driverName}
+                              </span>
+                              <span className="text-[10px] bg-white/10 text-white/60 px-1.5 py-0.5 rounded font-mono">
+                                #{piloto.riderNumber}
+                              </span>
+                            </div>
+                            <span className="text-[10px] text-muted-foreground uppercase tracking-widest font-medium">
+                              {piloto.teamName}
+                            </span>
+                          </div>
                         </div>
-                      </div>
-                    </td>
-                  </tr>
-                );
-              })}
+                      </td>
+                      
+                      <td className="p-4 hidden md:table-cell">
+                        <span className="text-xs font-bold text-gray-400 group-hover:text-white transition-colors">
+                          {piloto.teamName}
+                        </span>
+                      </td>
+                      
+                      <td className="p-4 hidden sm:table-cell text-right">
+                        <div className="flex flex-col items-end">
+                          <span className={`text-[10px] font-black uppercase tracking-tighter ${piloto.diffLeader === '-' ? 'text-gray-500' : 'text-red-500'}`}>
+                            {piloto.diffLeader === '-' ? 'LID' : piloto.diffLeader}
+                          </span>
+                          <TrendingUp className={`w-3 h-3 ${piloto.diffLeader === '-' ? 'text-gray-700' : 'text-red-900/50'}`} />
+                        </div>
+                      </td>
+                      
+                      <td className="p-4 text-right">
+                        <div className="flex flex-col items-end gap-1">
+                          <div className="flex items-baseline gap-1">
+                            <span className="font-black text-2xl italic text-white tracking-tighter">{piloto.points}</span>
+                            <span className="text-[10px] text-gray-500 font-bold">PTS</span>
+                          </div>
+                          <div className="w-24 bg-white/5 rounded-full h-1.5 overflow-hidden border border-white/5">
+                            <motion.div
+                              initial={{ width: 0 }}
+                              animate={{ width: `${pointsPercentage}%` }}
+                              transition={{ duration: 1, delay: index * 0.05 + 0.3 }}
+                              className={`${getTeamBgColor(
+                                piloto.teamName
+                              )} h-full rounded-full shadow-[0_0_5px_rgba(255,255,255,0.1)]`}
+                            />
+                          </div>
+                        </div>
+                      </td>
+                    </motion.tr>
+                  );
+                })}
+              </AnimatePresence>
             </tbody>
           </table>
         </div>

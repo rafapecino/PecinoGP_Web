@@ -48,9 +48,9 @@ h1, h2, h3 {
 }
 
 .card-racing {
-  background-color: bg-slate-800/50;
+  background-color: rgba(30, 41, 59, 0.5); /* slate-800/50 */
   backdrop-filter: blur(12px);
-  border: 1px solid border-slate-800;
+  border: 1px solid rgba(30, 41, 59, 0.8); /* border-slate-800 proxy */
   border-radius: 0.5rem;
   padding: 1.5rem;
   transition: all 0.3s ease-in-out;
@@ -58,7 +58,7 @@ h1, h2, h3 {
 }
 
 .card-racing:hover {
-  border-color: border-slate-600;
+  border-color: rgba(71, 85, 105, 0.8); /* border-slate-600 proxy */
   box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
 }
 

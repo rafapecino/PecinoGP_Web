@@ -38,7 +38,7 @@ const CACHE_DURATION = 5 * 60 * 1000; // 5 minutos
 
 export async function getDriverStandings(
   category: keyof typeof CATEGORIES = "motogp",
-  year: keyof typeof SEASONS = "2025"
+  year: keyof typeof SEASONS = "2026"
 ): Promise<DriverStanding[]> {
   const seasonUuid = SEASONS[year];
   const categoryUuid = CATEGORIES[category];

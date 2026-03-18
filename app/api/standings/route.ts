@@ -16,7 +16,7 @@ export async function GET(request: Request) {
 
   try {
     const response = await fetch(apiUrl, {
-      next: { revalidate: 300 }, // Cache on server for 5 minutes
+      next: { revalidate: 900 }, // Cache on server for 15 minutes
     });
 
     if (!response.ok) {

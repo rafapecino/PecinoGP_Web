@@ -1,4 +1,5 @@
 import { cache } from 'react'
+export type { YouTubeChannel, YouTubeVideo } from "./youtube-service";
 import { YouTubeChannel, YouTubeVideo } from "./youtube-service";
 
 const KEYS = [
@@ -44,20 +45,20 @@ async function fetchWithRotation(baseUrl: string, cacheKey: string, revalidateTi
 
     try {
       console.log(`[YouTube API] Intentando con Key #${i + 1} (${apiKey.substring(0, 4)}...) para ${cacheKey}`);
-      
+
       const res = await fetch(url, { next: { revalidate: revalidateTime } });
 
       if (res.ok) {
         return await res.json();
       }
-      
+
       if (res.status === 403) {
         const errorData = await res.json();
         const message = errorData.error?.message || 'Quota Exceeded or Access Denied';
         console.error(`[YouTube API] Key #${i + 1} para ${cacheKey} falló (403):`, message);
         throw new Error('QUOTA_EXCEEDED');
       }
-      
+
       throw new Error(`HTTP error ${res.status}`);
 
     } catch (err) {
@@ -128,7 +129,8 @@ export const getLatestVideos = cache(
   async (maxResults: number = 6): Promise<YouTubeVideo[]> => {
     // Convert Channel ID to Uploads Playlist ID
     const playlistId = getUploadsPlaylistId(CHANNEL_ID!);
-    const url = `https://www.googleapis.com/youtube/v3/playlistItems?playlistId=${playlistId}&part=snippet&maxResults=${maxResults}`;
+    // Fetch more videos initially because some might be filtered out (Shorts)
+    const url = `https://www.googleapis.com/youtube/v3/playlistItems?playlistId=${playlistId}&part=snippet&maxResults=15`;
 
     const data = await getData(url, "latestVideos", { items: [] });
 
@@ -137,21 +139,41 @@ export const getLatestVideos = cache(
       return FALLBACK_VIDEOS.slice(0, maxResults);
     }
 
-    const videos = data.items.map((item: any) => ({
-      id: item.snippet.resourceId.videoId, // Corrected for playlistItems
-      title: item.snippet.title,
-      description: item.snippet.description,
-      thumbnail:
-        item.snippet.thumbnails.high?.url ||
-        item.snippet.thumbnails.default?.url ||
-        "",
-      publishedAt: item.snippet.publishedAt,
-      viewCount: "0", // playlistItems does not return view count directly
-      channelTitle: item.snippet.channelTitle,
-    }));
+    const videoIds = data.items.map((item: any) => item.snippet.resourceId.videoId);
 
-    console.log(`Successfully fetched ${videos.length} videos`);
-    return videos;
+    // Fetch video details (duration) to filter shorts
+    const detailsUrl = `https://www.googleapis.com/youtube/v3/videos?id=${videoIds.join(",")}&part=contentDetails,snippet,statistics`;
+    const detailsData = await getData(detailsUrl, `videoDetails-${videoIds.join('-')}`, { items: [] });
+
+    if (!detailsData.items) return FALLBACK_VIDEOS.slice(0, maxResults);
+
+    // YouTube duration format is ISO 8601 (PT1M20S)
+    // Shorts are typically under 60 seconds
+    const filteredVideos = detailsData.items
+      .filter((item: any) => {
+        const duration = item.contentDetails.duration;
+        // Simple regex to check if it's under 60s (e.g. PT45S, PT1M0S is okay)
+        // If it contains H or M (more than 0), it's likely not a short (unless it's exactly 1M)
+        const isShort = !duration.includes('H') && !duration.includes('M') && duration.includes('S');
+        return !isShort; // Keep if NOT a short
+      })
+      .map((item: any) => ({
+        id: item.id,
+        title: item.snippet.title,
+        description: item.snippet.description,
+        thumbnail:
+          item.snippet.thumbnails.maxres?.url ||
+          item.snippet.thumbnails.high?.url ||
+          item.snippet.thumbnails.default?.url ||
+          "",
+        publishedAt: item.snippet.publishedAt,
+        viewCount: item.statistics?.viewCount || "0",
+        channelTitle: item.snippet.channelTitle,
+      }))
+      .slice(0, maxResults);
+
+    console.log(`Successfully fetched ${filteredVideos.length} non-short videos`);
+    return filteredVideos;
   }
 );
 

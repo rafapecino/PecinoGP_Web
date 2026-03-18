@@ -3,7 +3,7 @@
 import Image from "next/image"
 import Link from "next/link"
 import { YouTubeVideo, getVideoUrl, formatDate } from "@/lib/youtube-service"
-import { Star } from "lucide-react"
+import { Star, Play, Calendar } from "lucide-react"
 
 interface YouTubeVideosProps {
   videos: YouTubeVideo[];
@@ -12,7 +12,7 @@ interface YouTubeVideosProps {
 
 export function YouTubeVideos({ videos, specialVideoId }: YouTubeVideosProps) {
   return (
-    <div className="grid md:grid-cols-3 gap-8">
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
       {videos.map((video) => {
         const isSpecial = video.id === specialVideoId;
         return (
@@ -21,46 +21,54 @@ export function YouTubeVideos({ videos, specialVideoId }: YouTubeVideosProps) {
             href={getVideoUrl(video.id)}
             target="_blank"
             rel="noopener noreferrer"
-            className={`card-racing overflow-hidden hover:border-accent transition-colors group cursor-pointer ${isSpecial ? 'border-2 border-yellow-500 shadow-lg shadow-yellow-500/20' : ''}`}
+            className={`group relative flex flex-col bg-white/5 backdrop-blur-xl border rounded-[32px] overflow-hidden transition-all duration-500 hover:scale-[1.02] hover:shadow-[0_20px_50px_rgba(0,0,0,0.5)] ${
+              isSpecial ? 'border-yellow-500/80 shadow-[0_0_30px_rgba(234,179,8,0.2)] ring-1 ring-inset ring-yellow-500/20' : 'border-white/10 hover:border-red-600/50'
+            }`}
           >
-            <div className="relative w-full h-48 overflow-hidden bg-secondary">
+            <div className="relative aspect-video overflow-hidden">
               <Image
                 src={video.thumbnail || "/placeholder.svg"}
                 alt={video.title}
                 fill
-                className="object-cover group-hover:scale-110 transition-transform duration-300"
+                className="object-cover transition-transform duration-700 group-hover:scale-110 group-hover:rotate-1"
               />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-60 group-hover:opacity-40 transition-opacity" />
+
               {isSpecial && (
-                <div className="absolute top-2 right-2 bg-yellow-500 text-black px-2 py-1 rounded-full text-xs font-bold flex items-center gap-1">
-                  <Star className="w-3 h-3" />
-                  <span>1000 Vídeos</span>
+                <div className="absolute top-4 left-4 bg-yellow-500 text-black px-3 py-1.5 rounded-full text-[10px] font-black flex items-center gap-1.5 shadow-xl animate-pulse">
+                  <Star size={12} fill="currentColor" />
+                  <span>EDICIÓN ESPECIAL</span>
                 </div>
               )}
-              <div className="absolute inset-0 bg-black/30 group-hover:bg-black/40 transition-colors flex items-center justify-center opacity-90 group-hover:opacity-100">
-                <div className="bg-red-600 hover:bg-red-700 rounded-full w-16 h-16 flex items-center justify-center transition-all duration-300 transform group-hover:scale-110 shadow-lg">
-                  <svg
-                    className="w-8 h-8 text-white ml-1"
-                    fill="currentColor"
-                    viewBox="0 0 20 20"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path d="M6.3 4.29A1.25 1.25 0 0 0 4 5.37v9.26a1.25 1.25 0 0 0 1.9 1.08l7.67-4.63a1.25 1.25 0 0 0 0-2.16L6.3 4.29Z" />
-                  </svg>
+
+              <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+                <div className="w-16 h-16 bg-red-600 rounded-full flex items-center justify-center shadow-[0_0_30px_rgba(220,38,38,0.6)]">
+                  <Play className="fill-white text-white translate-x-0.5" size={24} />
                 </div>
               </div>
             </div>
-            <div className="p-4">
-              <h3 className="font-bold text-lg mb-2 text-foreground group-hover:text-accent transition-colors line-clamp-2">
+
+            <div className="p-8 flex flex-col flex-grow">
+              <div className="flex items-center gap-2 mb-4">
+                <Calendar size={12} className="text-red-500" />
+                <span className="text-[10px] font-black uppercase tracking-widest text-gray-400">
+                  {formatDate(video.publishedAt)}
+                </span>
+                <div className="ml-auto flex items-center gap-1">
+                  <div className="w-1 h-1 rounded-full bg-red-600" />
+                  <span className="text-[9px] font-black text-gray-500 uppercase">Analysis</span>
+                </div>
+              </div>
+
+              <h3 className="text-xl font-black italic tracking-tighter text-white mb-4 group-hover:text-red-500 transition-colors line-clamp-2 leading-tight uppercase">
                 {video.title}
               </h3>
-              <p className="text-muted-foreground text-sm mb-3 line-clamp-2">
-                {video.description}
-              </p>
-              <div className="flex items-center justify-between text-xs text-muted-foreground border-t border-border pt-3">
-                <span className="flex items-center gap-1">
-                  📅 {formatDate(video.publishedAt)}
-                </span>
-                <span className="text-accent font-semibold">Ver →</span>
+
+              <div className="mt-auto pt-6 border-t border-white/5 flex items-center justify-between">
+                <span className="text-[10px] font-black uppercase tracking-widest text-gray-500 group-hover:text-white transition-colors">Ver ahora</span>
+                <div className="w-8 h-8 rounded-full border border-white/10 flex items-center justify-center group-hover:bg-red-600 group-hover:border-red-600 transition-all">
+                  <Play size={12} className="fill-white text-white opacity-0 group-hover:opacity-100 transition-opacity" />
+                </div>
               </div>
             </div>
           </Link>

@@ -10,17 +10,17 @@ interface LogoProps {
 
 export function Logo({ size = "md", showText = true, className = "" }: LogoProps) {
   const sizeMap = {
-    sm: { image: 120 },
-    md: { image: 200 },
-    lg: { image: 280 },
+    sm: { image: 50 },
+    md: { image: 120 },
+    lg: { image: 120 },
   }
 
   const config = sizeMap[size]
 
   return (
     <div className={`flex items-center justify-center ${className}`}>
-      <div className="relative flex items-center justify-center transition-transform duration-300 hover:scale-110" 
-           style={{ width: config.image, height: config.image }}>
+      <div className="relative flex items-center justify-center transition-transform duration-300 hover:scale-110"
+        style={{ width: config.image, height: config.image }}>
         <Image
           src="/logo-pecinogp.png"
           alt="PecinoGP Logo"
