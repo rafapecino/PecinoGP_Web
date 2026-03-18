@@ -1,6 +1,7 @@
 "use client"
 
 import Image from "next/image"
+import { motion } from "framer-motion"
 
 interface LogoProps {
   size?: "sm" | "md" | "lg"
@@ -10,26 +11,32 @@ interface LogoProps {
 
 export function Logo({ size = "md", showText = true, className = "" }: LogoProps) {
   const sizeMap = {
-    sm: { image: 50 },
-    md: { image: 120 },
-    lg: { image: 120 },
+    sm: { image: 150 },
+    md: { image: 200 },
+    lg: { image: 300 },
   }
 
   const config = sizeMap[size]
 
   return (
     <div className={`flex items-center justify-center ${className}`}>
-      <div className="relative flex items-center justify-center transition-transform duration-300 hover:scale-110"
-        style={{ width: config.image, height: config.image }}>
+      <motion.div 
+        className="relative flex items-center justify-center cursor-pointer"
+        initial={false}
+        animate={{ width: config.image }}
+        transition={{ type: "spring", stiffness: 300, damping: 30 }}
+        whileHover={{ scale: 1.05 }}
+        whileTap={{ scale: 0.95 }}
+      >
         <Image
           src="/logo-pecinogp.png"
           alt="PecinoGP Logo"
           width={config.image}
-          height={config.image}
-          className="object-contain drop-shadow-lg"
+          height={config.image / 2}
+          className="object-contain w-full h-auto drop-shadow-[0_0_15px_rgba(220,38,38,0.3)] transition-all hover:drop-shadow-[0_0_30px_rgba(220,38,38,0.5)]"
           priority
         />
-      </div>
+      </motion.div>
     </div>
   )
 }

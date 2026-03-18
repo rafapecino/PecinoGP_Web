@@ -94,7 +94,7 @@ export default function Home() {
             variants={containerVariants}
             initial="hidden"
             animate="visible"
-            className="relative z-20 max-w-6xl mx-auto px-4 text-center md:text-left grid grid-cols-1 lg:grid-cols-2 gap-12 items-center"
+            className="relative z-20 max-w-6xl mx-auto px-4 text-center md:text-left grid grid-cols-1 lg:grid-cols-2 gap-12 items-center pt-40"
           >
             <div className="flex flex-col items-center md:items-start text-center md:text-left pb-16 md:pb-24">
               <motion.div variants={itemVariants} className="flex items-center gap-2 mb-6">
