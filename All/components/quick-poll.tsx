@@ -128,13 +128,11 @@ export function QuickPoll() {
   const totalVotes = options.reduce((acc, option) => acc + (option.votes || 0), 0);
 
   return (
-    <Card className="w-full max-w-md mx-auto bg-card/50 backdrop-blur-sm border-border/20">
-      <CardHeader>
-        <CardTitle className="text-center text-2xl font-bold text-primary">
+    <div className="w-full mx-auto bg-white/[0.03] backdrop-blur-3xl rounded-[32px] border border-white/10 p-8 shadow-2xl overflow-hidden group">
+      <div className="relative z-10 flex flex-col h-full">
+        <h3 className="text-2xl font-black text-white italic tracking-tighter uppercase mb-8 leading-tight">
           {poll.question}
-        </CardTitle>
-      </CardHeader>
-      <CardContent>
+        </h3>
         <div className="space-y-3">
           <AnimatePresence>
             {options.map((option, index) => {
@@ -176,12 +174,12 @@ export function QuickPoll() {
                     </div>
                   ) : (
                     <motion.div
-                      whileHover={{ scale: 1.03 }}
+                      whileHover={{ scale: 1.02 }}
                       whileTap={{ scale: 0.98 }}
                     >
                       <Button
                         variant="outline"
-                        className="w-full h-14 justify-center text-lg border-border/30 hover:bg-primary/10"
+                        className="w-full h-14 justify-center text-sm font-black italic uppercase tracking-widest border-white/10 bg-white/5 hover:bg-red-600 hover:border-red-600 hover:text-white transition-all rounded-2xl"
                         onClick={() => handleVote(option.id)}
                       >
                         {option.text}
@@ -194,11 +192,11 @@ export function QuickPoll() {
           </AnimatePresence>
         </div>
         {voted && totalVotes > 0 && (
-          <p className="text-sm text-muted-foreground text-center mt-5">
-            Total de <span className="font-bold text-foreground">{totalVotes}</span> votos
+          <p className="text-[10px] font-black uppercase tracking-[0.2em] text-white/30 text-center mt-8 italic">
+            Participación: <span className="text-red-500">{totalVotes}</span> MOTORES RUGIENDO
           </p>
         )}
-      </CardContent>
-    </Card>
+      </div>
+    </div>
   );
 }

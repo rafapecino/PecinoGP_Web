@@ -101,30 +101,31 @@ export function QAndA() {
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
       <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
+        initial={{ opacity: 0, x: -20 }}
+        whileInView={{ opacity: 1, x: 0 }}
+        transition={{ duration: 0.8 }}
+        className="bg-white/[0.03] backdrop-blur-3xl rounded-[32px] border border-white/10 p-10 shadow-2xl"
       >
-        <Card>
-          <CardHeader>
-            <CardTitle>Envía tu pregunta</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <Form {...form}>
-              <form
-                onSubmit={form.handleSubmit(onSubmit)}
-                className="space-y-6"
-              >
+        <h3 className="text-2xl font-black text-white italic tracking-tighter uppercase mb-8">Envía tu pregunta</h3>
+        <Form {...form}>
+          <form
+            onSubmit={form.handleSubmit(onSubmit)}
+            className="space-y-8"
+          >
                 <FormField
                   control={form.control}
                   name="userName"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Tu nombre (Opcional)</FormLabel>
+                      <FormLabel className="text-[10px] font-black uppercase tracking-widest text-white/50 mb-2 block">Tu nombre (Opcional)</FormLabel>
                       <FormControl>
-                        <Input placeholder="Ej: Juan Pérez" {...field} />
+                        <Input 
+                          placeholder="Ej: Juan Pérez" 
+                          {...field} 
+                          className="bg-white/5 border-white/10 focus:border-red-600 focus:ring-1 focus:ring-red-600 rounded-xl h-12 text-white placeholder:text-white/20 transition-all font-bold italic"
+                        />
                       </FormControl>
-                      <FormMessage />
+                      <FormMessage className="text-red-500 text-[10px] font-bold" />
                     </FormItem>
                   )}
                 />
@@ -133,70 +134,72 @@ export function QAndA() {
                   name="question"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Tu pregunta</FormLabel>
+                      <FormLabel className="text-[10px] font-black uppercase tracking-widest text-white/50 mb-2 block">Tu pregunta</FormLabel>
                       <FormControl>
                         <Textarea
                           placeholder="Escribe aquí tu pregunta para Manuel Pecino..."
-                          className="resize-none"
-                          rows={5}
+                          className="bg-white/5 border-white/10 focus:border-red-600 focus:ring-1 focus:ring-red-600 rounded-2xl p-5 text-white placeholder:text-white/20 transition-all resize-none shadow-inner"
+                          rows={6}
                           {...field}
                         />
                       </FormControl>
-                      <FormDescription>
+                      <FormDescription className="text-[10px] font-medium text-white/20 italic mt-2">
                         Tu pregunta será revisada antes de ser publicada.
                       </FormDescription>
-                      <FormMessage />
+                      <FormMessage className="text-red-500 text-[10px] font-bold" />
                     </FormItem>
                   )}
                 />
-                <Button type="submit" disabled={isSubmitting}>
-                  {isSubmitting ? "Enviando..." : "Enviar Pregunta"}
+                <Button 
+                  type="submit" 
+                  disabled={isSubmitting}
+                  className="w-full bg-red-600 hover:bg-red-700 text-white font-black italic uppercase tracking-widest py-6 rounded-2xl transition-all hover:scale-[1.02] active:scale-95 shadow-[0_0_20px_rgba(220,38,38,0.3)]"
+                >
+                  {isSubmitting ? "ENVIANDO..." : "ENVIAR PREGUNTA"}
                 </Button>
               </form>
             </Form>
-          </CardContent>
-        </Card>
       </motion.div>
       <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5, delay: 0.2 }}
+        initial={{ opacity: 0, x: 20 }}
+        whileInView={{ opacity: 1, x: 0 }}
+        transition={{ duration: 0.8, delay: 0.2 }}
+        className="bg-white/[0.03] backdrop-blur-3xl rounded-[32px] border border-white/10 p-10 shadow-2xl flex flex-col h-full"
       >
-        <Card>
-          <CardHeader>
-            <CardTitle>Preguntas de la comunidad</CardTitle>
-          </CardHeader>
-          <CardContent>
-            {questions.length > 0 ? (
-              <div className="space-y-4 max-h-[400px] overflow-y-auto pr-4">
-                <AnimatePresence>
-                  {questions.map((q, index) => (
-                    <motion.div
-                      key={q.id}
-                      initial={{ opacity: 0, x: -20 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      exit={{ opacity: 0, x: 20 }}
-                      transition={{ duration: 0.3, delay: index * 0.1 }}
-                      className="border-b border-border/50 pb-4"
-                    >
-                      <p className="font-semibold text-primary">
-                        {q.userName}
-                      </p>
-                      <p className="text-muted-foreground">{q.question}</p>
-                    </motion.div>
-                  ))}
-                </AnimatePresence>
-              </div>
-            ) : (
-              <div className="text-center py-12">
-                <HelpCircle className="mx-auto h-16 w-16 text-gray-700" />
-                <p className="mt-4 text-muted-foreground">
-                  ¡Sé el primero en abrir debate! Tu pregunta podría salir en el próximo vídeo de Manuel Pecino.
-                </p>
-              </div>
-            )}
-          </CardContent>
-        </Card>
+        <h3 className="text-2xl font-black text-white italic tracking-tighter uppercase mb-8">Debate Comunitario</h3>
+        <div className="flex-grow">
+          {questions.length > 0 ? (
+            <div className="space-y-6 max-h-[500px] overflow-y-auto pr-4 custom-scrollbar">
+              <AnimatePresence>
+                {questions.map((q, index) => (
+                  <motion.div
+                    key={q.id}
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="bg-white/5 border border-white/5 p-6 rounded-[24px] group hover:border-red-600/30 transition-all"
+                  >
+                    <div className="flex items-center gap-2 mb-3">
+                      <div className="w-1 h-3 bg-red-600 rounded-full" />
+                      <span className="text-[10px] font-black uppercase tracking-widest text-red-500 italic">
+                        {q.userName || "Fan PecinoGP"}
+                      </span>
+                    </div>
+                    <p className="text-gray-300 font-medium leading-relaxed italic line-clamp-4">
+                      "{q.question}"
+                    </p>
+                  </motion.div>
+                ))}
+              </AnimatePresence>
+            </div>
+          ) : (
+            <div className="text-center py-16">
+              <HelpCircle className="mx-auto h-20 w-20 text-white/10 mb-6" />
+              <p className="text-white/40 font-bold italic tracking-wider max-w-[240px] mx-auto text-sm leading-relaxed">
+                ¡ABRE EL DEBATE! TU PREGUNTA PODRÍA SALIR EN EL PRÓXIMO VÍDEO.
+              </p>
+            </div>
+          )}
+        </div>
       </motion.div>
     </div>
   );
