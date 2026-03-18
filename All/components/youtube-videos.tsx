@@ -8,9 +8,10 @@ import { Star, Play, Calendar } from "lucide-react"
 interface YouTubeVideosProps {
   videos: YouTubeVideo[];
   specialVideoId?: string | null;
+  specialLabel?: string;
 }
 
-export function YouTubeVideos({ videos, specialVideoId }: YouTubeVideosProps) {
+export function YouTubeVideos({ videos, specialVideoId, specialLabel = "EDICIÓN ESPECIAL" }: YouTubeVideosProps) {
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
       {videos.map((video) => {
@@ -35,9 +36,9 @@ export function YouTubeVideos({ videos, specialVideoId }: YouTubeVideosProps) {
               <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-60 group-hover:opacity-40 transition-opacity" />
 
               {isSpecial && (
-                <div className="absolute top-4 left-4 bg-yellow-500 text-black px-3 py-1.5 rounded-full text-[10px] font-black flex items-center gap-1.5 shadow-xl animate-pulse">
+                <div className={`${specialLabel === 'MÁS RECIENTE' ? 'bg-red-600' : 'bg-yellow-500'} text-white px-3 py-1.5 rounded-full text-[10px] font-black flex items-center gap-1.5 shadow-xl animate-pulse absolute top-4 left-4 z-20`}>
                   <Star size={12} fill="currentColor" />
-                  <span>EDICIÓN ESPECIAL</span>
+                  <span>{specialLabel}</span>
                 </div>
               )}
 
