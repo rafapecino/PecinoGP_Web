@@ -4,13 +4,14 @@ import Image from "next/image"
 import { motion } from "framer-motion"
 
 interface LogoProps {
-  size?: "sm" | "md" | "lg"
+  size?: "xs" | "sm" | "md" | "lg"
   showText?: boolean
   className?: string
 }
 
 export function Logo({ size = "md", showText = true, className = "" }: LogoProps) {
   const sizeMap = {
+    xs: { image: 120 },
     sm: { image: 150 },
     md: { image: 200 },
     lg: { image: 300 },

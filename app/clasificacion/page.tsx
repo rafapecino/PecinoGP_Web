@@ -43,17 +43,17 @@ export default function ClasificacionPage() {
                   </div>
                   <div className="flex items-baseline space-x-6">
                     <h1
-                      className="text-5xl md:text-8xl font-black text-transparent bg-clip-text bg-gradient-to-r from-white via-white to-gray-500 italic tracking-tighter leading-none"
+                      className="text-4xl sm:text-6xl md:text-8xl font-black text-transparent bg-clip-text bg-gradient-to-r from-white via-white to-gray-500 italic tracking-tighter leading-none"
                       style={{ filter: "drop-shadow(0 10px 20px rgba(0,0,0,0.5))" }}
                     >
                       MOTO<span className="text-red-600">GP</span>
                     </h1>
-                    <div className="flex items-baseline space-x-4">
+                    <div className="flex items-baseline space-x-2 md:space-x-4">
                       {(["2025", "2026"] as Year[]).map((year) => (
                         <button
                           key={year}
                           onClick={() => setActiveYear(year)}
-                          className={`relative text-3xl md:text-5xl font-black transition-all duration-500 outline-none ${
+                          className={`relative text-2xl sm:text-3xl md:text-5xl font-black transition-all duration-500 outline-none ${
                             activeYear === year
                               ? "text-red-600 drop-shadow-[0_0_15px_rgba(220,38,38,0.5)]"
                               : "text-white/20 hover:text-white/40"
@@ -86,7 +86,7 @@ export default function ClasificacionPage() {
                     <button
                       key={category}
                       onClick={() => setActiveCategory(category)}
-                      className={`relative px-8 py-3 text-xs md:text-sm font-black rounded-xl transition-all duration-500 uppercase tracking-[0.2em] outline-none ${
+                      className={`relative px-4 sm:px-8 py-2 sm:py-3 text-[10px] sm:text-xs md:text-sm font-black rounded-xl transition-all duration-500 uppercase tracking-[0.2em] outline-none ${
                         activeCategory === category
                           ? "text-white"
                           : "text-gray-500 hover:text-gray-300"

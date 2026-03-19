@@ -94,17 +94,17 @@ export default function Home() {
             variants={containerVariants}
             initial="hidden"
             animate="visible"
-            className="relative z-20 max-w-6xl mx-auto px-4 text-center md:text-left grid grid-cols-1 lg:grid-cols-2 gap-12 items-center pt-40"
+            className="relative z-20 max-w-6xl mx-auto px-4 text-center md:text-left grid grid-cols-1 lg:grid-cols-2 gap-12 items-center pt-24 md:pt-40"
           >
-            <div className="flex flex-col items-center md:items-start text-center md:text-left pb-16 md:pb-24">
-              <motion.div variants={itemVariants} className="flex items-center gap-2 mb-6">
-                <div className="w-10 h-1 bg-red-600 rounded-full" />
-                <span className="text-red-500 font-black uppercase tracking-[0.4em] text-xs">PecinoGP Oficial</span>
+            <div className="flex flex-col items-center md:items-start text-center md:text-left pb-12 md:pb-24">
+              <motion.div variants={itemVariants} className="flex items-center gap-2 mb-4 md:mb-6">
+                <div className="w-8 md:w-10 h-1 bg-red-600 rounded-full" />
+                <span className="text-red-500 font-black uppercase tracking-[0.4em] text-[10px] md:text-xs">PecinoGP Oficial</span>
               </motion.div>
 
               <motion.h1
                 variants={itemVariants}
-                className="text-6xl md:text-8xl lg:text-9xl font-black text-white italic tracking-tighter leading-[0.85] mb-8"
+                className="text-5xl sm:text-6xl md:text-8xl lg:text-9xl font-black text-white italic tracking-tighter leading-[0.85] mb-8"
                 style={{ filter: "drop-shadow(0 10px 30px rgba(0,0,0,0.8))" }}
               >
                 PASIÓN <br /> <span className="text-red-600">AL LÍMITE</span>
@@ -112,22 +112,22 @@ export default function Home() {
 
               {/* Removiendo párrafo solicitado */}
 
-              <motion.div variants={itemVariants} className="flex flex-col sm:flex-row gap-6">
+              <motion.div variants={itemVariants} className="flex flex-col sm:flex-row gap-4 md:gap-6 w-full sm:w-auto">
                 <Link
                   href={data.latestVideo.length > 0 ? getVideoUrl(data.latestVideo[0].id) : "#"}
-                  className="group relative inline-flex items-center justify-center bg-red-600 text-white font-black py-5 px-10 rounded-2xl text-xl overflow-hidden transition-all hover:scale-105 active:scale-95 shadow-[0_0_20px_rgba(220,38,38,0.3)] hover:shadow-[0_0_40px_rgba(220,38,38,0.5)]"
+                  className="group relative inline-flex items-center justify-center bg-red-600 text-white font-black py-4 md:py-5 px-6 md:px-10 rounded-2xl text-lg md:text-xl overflow-hidden transition-all hover:scale-105 active:scale-95 shadow-[0_0_20px_rgba(220,38,38,0.3)] hover:shadow-[0_0_40px_rgba(220,38,38,0.5)]"
                 >
-                  <span className="relative z-10 flex items-center gap-3 italic">
-                    <Play className="fill-white" size={24} /> VER ÚLTIMO ANÁLISIS
+                  <span className="relative z-10 flex items-center gap-2 md:gap-3 italic">
+                    <Play className="fill-white" size={20} /> VER ANÁLISIS
                   </span>
                   <div className="absolute inset-x-0 bottom-0 h-1.5 bg-white/20 transform scale-x-0 group-hover:scale-x-100 transition-transform origin-left" />
                 </Link>
                 <Link
                   href="/analisis-gp"
-                  className="inline-flex items-center justify-center bg-white/10 backdrop-blur-md border border-white/20 text-white font-black py-5 px-10 rounded-2xl text-xl hover:bg-white hover:text-black transition-all hover:scale-105"
+                  className="inline-flex items-center justify-center bg-white/10 backdrop-blur-md border border-white/20 text-white font-black py-4 md:py-5 px-6 md:px-10 rounded-2xl text-lg md:text-xl hover:bg-white hover:text-black transition-all hover:scale-105"
                 >
-                  <span className="flex items-center gap-3 italic">
-                    HISTORIAL DE GP <ChevronRight size={24} />
+                  <span className="flex items-center gap-2 md:gap-3 italic">
+                    GP <ChevronRight size={20} />
                   </span>
                 </Link>
               </motion.div>

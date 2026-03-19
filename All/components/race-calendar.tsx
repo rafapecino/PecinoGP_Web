@@ -196,7 +196,7 @@ export function RaceCalendar() {
                     <motion.div
                         key={index}
                         variants={itemVariants}
-                        className={`group relative flex items-center p-6 rounded-[24px] border transition-all duration-500 overflow-hidden ${
+                        className={`group relative flex items-center p-4 md:p-6 rounded-[20px] md:rounded-[24px] border transition-all duration-500 overflow-hidden ${
                             isNext 
                                 ? "bg-red-600/10 border-red-600/40 shadow-[0_0_30px_rgba(220,38,38,0.1)] scale-[1.02] z-10" 
                                 : "bg-white/[0.03] border-white/5 hover:bg-white/[0.06] hover:border-white/10"
@@ -208,8 +208,8 @@ export function RaceCalendar() {
                             </div>
                         )}
 
-                        <div className="flex-shrink-0 mr-6">
-                            <div className="relative w-12 h-12 flex items-center justify-center rounded-2xl bg-white/5 border border-white/5 group-hover:border-red-600/30 transition-all overflow-hidden">
+                        <div className="flex-shrink-0 mr-4 md:mr-6">
+                            <div className="relative w-10 h-10 md:w-12 md:h-12 flex items-center justify-center rounded-xl md:rounded-2xl bg-white/5 border border-white/5 group-hover:border-red-600/30 transition-all overflow-hidden">
                                 <img
                                     src={`https://flagcdn.com/w80/${race.countryCode}.png`}
                                     alt={`${race.gp} flag`}
@@ -218,22 +218,22 @@ export function RaceCalendar() {
                             </div>
                         </div>
 
-                        <div className="flex flex-col md:flex-row justify-between flex-grow gap-4">
-                            <div>
-                                <h3 className={`text-lg md:text-xl font-black italic tracking-tighter transition-colors ${isNext ? 'text-red-500' : 'text-white'}`}>
+                        <div className="flex flex-col md:flex-row justify-between flex-grow gap-3 md:gap-4 overflow-hidden">
+                            <div className="min-w-0">
+                                <h3 className={`text-base md:text-xl font-black italic tracking-tighter truncate transition-colors ${isNext ? 'text-red-500' : 'text-white'}`}>
                                     {race.gp.toUpperCase()}
                                 </h3>
-                                <div className="flex items-center gap-2 text-[10px] font-bold text-white/40 uppercase tracking-widest mt-1 italic">
-                                    <MapPin size={10} className="text-red-600" />
+                                <div className="flex items-center gap-1.5 text-[8px] md:text-[10px] font-bold text-white/40 uppercase tracking-widest mt-0.5 md:mt-1 italic truncate">
+                                    <MapPin size={8} className="text-red-600 shrink-0" />
                                     {race.circuit}
                                 </div>
                             </div>
                             
                             <div className="flex items-center gap-4">
-                                <div className={`flex items-center gap-2 py-2 px-4 rounded-xl font-black italic tracking-widest text-[11px] ${
+                                <div className={`flex items-center gap-2 py-1.5 md:py-2 px-3 md:px-4 rounded-lg md:rounded-xl font-black italic tracking-widest text-[9px] md:text-[11px] whitespace-nowrap ${
                                     isNext ? "bg-red-600 text-white shadow-[0_0_20px_rgba(220,38,38,0.4)]" : "bg-white/5 text-white/60"
                                 }`}>
-                                    <CalendarIcon size={12} className={isNext ? "text-white" : "text-red-600"} />
+                                    <CalendarIcon size={10} className={isNext ? "text-white" : "text-red-600"} />
                                     {race.dates.toUpperCase()}
                                 </div>
                                 <ChevronRight className={`hidden md:block transition-all ${isNext ? 'text-red-600 opacity-100 translate-x-1' : 'text-white/10 opacity-0 group-hover:opacity-40'}`} />

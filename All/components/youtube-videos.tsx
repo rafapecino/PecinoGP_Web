@@ -13,7 +13,7 @@ interface YouTubeVideosProps {
 
 export function YouTubeVideos({ videos, specialVideoId, specialLabel = "EDICIÓN ESPECIAL" }: YouTubeVideosProps) {
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-10">
       {videos.map((video) => {
         const isSpecial = video.id === specialVideoId;
         return (
@@ -22,7 +22,7 @@ export function YouTubeVideos({ videos, specialVideoId, specialLabel = "EDICIÓN
             href={getVideoUrl(video.id)}
             target="_blank"
             rel="noopener noreferrer"
-            className={`group relative flex flex-col bg-white/5 backdrop-blur-xl border rounded-[32px] overflow-hidden transition-all duration-500 hover:scale-[1.02] hover:shadow-[0_20px_50px_rgba(0,0,0,0.5)] ${
+            className={`group relative flex flex-col bg-white/5 backdrop-blur-xl border rounded-[24px] md:rounded-[32px] overflow-hidden transition-all duration-500 hover:scale-[1.02] hover:shadow-[0_20px_50px_rgba(0,0,0,0.5)] ${
               isSpecial ? 'border-yellow-500/80 shadow-[0_0_30px_rgba(234,179,8,0.2)] ring-1 ring-inset ring-yellow-500/20' : 'border-white/10 hover:border-red-600/50'
             }`}
           >
@@ -49,7 +49,7 @@ export function YouTubeVideos({ videos, specialVideoId, specialLabel = "EDICIÓN
               </div>
             </div>
 
-            <div className="p-8 flex flex-col flex-grow">
+            <div className="p-6 md:p-8 flex flex-col flex-grow">
               <div className="flex items-center gap-2 mb-4">
                 <Calendar size={12} className="text-red-500" />
                 <span className="text-[10px] font-black uppercase tracking-widest text-gray-400">
@@ -61,7 +61,7 @@ export function YouTubeVideos({ videos, specialVideoId, specialLabel = "EDICIÓN
                 </div>
               </div>
 
-              <h3 className="text-xl font-black italic tracking-tighter text-white mb-4 group-hover:text-red-500 transition-colors line-clamp-2 leading-tight uppercase">
+              <h3 className="text-lg md:text-xl font-black italic tracking-tighter text-white mb-4 group-hover:text-red-500 transition-colors line-clamp-2 leading-tight uppercase">
                 {video.title}
               </h3>
 

@@ -128,9 +128,9 @@ export function QuickPoll() {
   const totalVotes = options.reduce((acc, option) => acc + (option.votes || 0), 0);
 
   return (
-    <div className="w-full mx-auto bg-white/[0.03] backdrop-blur-3xl rounded-[32px] border border-white/10 p-8 shadow-2xl overflow-hidden group">
+    <div className="w-full mx-auto bg-white/[0.03] backdrop-blur-3xl rounded-[28px] md:rounded-[32px] border border-white/10 p-5 md:p-8 shadow-2xl overflow-hidden group">
       <div className="relative z-10 flex flex-col h-full">
-        <h3 className="text-2xl font-black text-white italic tracking-tighter uppercase mb-8 leading-tight">
+        <h3 className="text-xl md:text-2xl font-black text-white italic tracking-tighter uppercase mb-6 md:mb-8 leading-tight">
           {poll.question}
         </h3>
         <div className="space-y-3">
@@ -147,7 +147,7 @@ export function QuickPoll() {
                   transition={{ duration: 0.3, delay: index * 0.1 }}
                 >
                   {voted ? (
-                    <div className="relative w-full h-14 border border-border/30 rounded-lg flex items-center justify-between px-4 overflow-hidden transition-all duration-300">
+                    <div className="relative w-full h-12 md:h-14 border border-border/30 rounded-lg flex items-center justify-between px-3 md:px-4 overflow-hidden transition-all duration-300">
                       <motion.div
                         className={`absolute top-0 left-0 h-full ${optionColors[index % optionColors.length]}`}
                         initial={{ width: 0 }}
@@ -165,7 +165,7 @@ export function QuickPoll() {
                             </motion.div>
                           )}
                         </div>
-                        <div className={`flex items-center gap-1 font-black italic tracking-tighter text-xl ${isVotedOption ? 'text-white' : 'text-white/40'}`}>
+                        <div className={`flex items-center gap-1 font-black italic tracking-tighter text-lg md:text-xl ${isVotedOption ? 'text-white' : 'text-white/40'}`}>
                           <span>{percentage.toFixed(1)}</span>
                           <span className="text-[10px] ml-0.5">%</span>
                         </div>
@@ -178,7 +178,7 @@ export function QuickPoll() {
                     >
                       <Button
                         variant="outline"
-                        className="w-full h-14 justify-center text-sm font-black italic uppercase tracking-widest border-white/10 bg-white/5 hover:bg-red-600 hover:border-red-600 hover:text-white transition-all rounded-2xl"
+                        className="w-full h-12 md:h-14 justify-center text-[10px] md:text-sm font-black italic uppercase tracking-widest border-white/10 bg-white/5 hover:bg-red-600 hover:border-red-600 hover:text-white transition-all rounded-xl md:rounded-2xl"
                         onClick={() => handleVote(option.id)}
                       >
                         {option.text}

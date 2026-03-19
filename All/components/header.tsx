@@ -56,13 +56,13 @@ export default function Header() {
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
         scrolled 
           ? "py-3 bg-black/80 backdrop-blur-2xl border-b border-white/10 shadow-[0_10px_40px_rgba(0,0,0,0.5)]" 
-          : "py-14 bg-transparent border-transparent"
+          : "py-6 md:py-14 bg-transparent border-transparent"
       }`}
     >
-      <div className="max-w-screen-2xl mx-auto px-8 sm:px-12 lg:px-16">
+      <div className="max-w-screen-2xl mx-auto px-4 sm:px-12 lg:px-16">
         <div className="flex items-center justify-between transition-all duration-500">
           <Link href="/" className="shrink-0 active:scale-95 transition-transform duration-300">
-            <Logo size={scrolled ? "sm" : "md"} className="" />
+            <Logo size={scrolled ? "xs" : "sm"} className="md:scale-125 origin-left transition-transform" />
           </Link>
 
           {/* Desktop Navigation */}
@@ -87,26 +87,36 @@ export default function Header() {
                   href={`https://www.youtube.com/watch?v=${liveInfo.videoId}`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="group relative inline-flex items-center gap-3 bg-red-600 text-white font-black italic px-6 py-2.5 rounded-xl transition-all duration-300 hover:scale-105 active:scale-95 shadow-[0_0_20px_rgba(220,38,38,0.4)]"
+                  className="group relative inline-flex items-center gap-3 bg-red-600 text-white font-black italic px-6 py-2.5 rounded-xl transition-all duration-300 hover:scale-110 active:scale-95 shadow-[0_0_20px_rgba(220,38,38,0.4)]"
                 >
                   <span className="w-2.5 h-2.5 bg-white rounded-full animate-pulse shadow-[0_0_10px_white]" />
-                  <span className="text-[10px] uppercase tracking-widest">EN DIRECTO</span>
+                  <span className="text-[10px] uppercase tracking-widest hidden sm:inline">EN DIRECTO</span>
+                  <span className="text-[10px] uppercase tracking-widest inline sm:hidden">LIVE</span>
                 </a>
               ) : (
                 <a
                   href="https://www.youtube.com/channel/UCSvr3yH2NkqlAHfuRDphz4g"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="group relative inline-flex items-center gap-3 bg-white/5 backdrop-blur-md border border-white/10 hover:border-red-600/50 text-white font-black italic px-6 py-2.5 rounded-xl transition-all duration-300 hover:scale-105 active:scale-95"
+                  className="group relative inline-flex items-center transition-all duration-300 hover:scale-125 active:scale-95"
                 >
                   <Image
                     src="/YouTube_Logo/Digital/01 Full Color/yt_logo_fullcolor_white_digital.png"
                     alt="YouTube Logo"
                     width={80}
                     height={20}
-                    className="opacity-80 group-hover:opacity-100 transition-opacity"
+                    className="opacity-60 group-hover:opacity-100 transition-opacity hidden sm:block"
                   />
-                  <div className="absolute inset-0 bg-red-600/0 group-hover:bg-red-600/5 rounded-xl transition-colors" />
+                  <div className="sm:hidden text-white/60 group-hover:text-red-600 transition-colors">
+                    <svg
+                      className="w-8 h-8"
+                      viewBox="0 0 28 20"
+                      fill="currentColor"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path d="M27.3733 3.033C27.0433 1.841 26.0913 0.889 24.9 0.559C22.7163 0 14.0003 0 14.0003 0C14.0003 0 5.28433 0 3.10033 0.559C1.90833 0.889 0.957333 1.841 0.627333 3.033C0.0683334 5.217 0 9.8 0 9.8S0.0683334 14.383 0.627333 16.567C0.957333 17.759 1.90833 18.711 3.10033 19.041C5.28433 19.6 14.0003 19.6 14.0003 19.6C14.0003 19.6 22.7163 19.6 24.9003 19.041C26.0923 18.711 27.0433 17.759 27.3733 16.567C27.9323 14.383 28.0003 9.8 28.0003 9.8S27.9323 5.217 27.3733 3.033ZM11.2003 14V5.6L18.4803 9.8L11.2003 14Z" />
+                    </svg>
+                  </div>
                 </a>
               )}
             </div>
@@ -143,13 +153,13 @@ export default function Header() {
                   {link.label}
                 </Link>
               ))}
-              <div className="pt-6 border-t border-white/5">
+              <div className="pt-6 border-t border-white/5 flex justify-center">
                 {liveInfo.isLive ? (
                   <a
                     href={`https://www.youtube.com/watch?v=${liveInfo.videoId}`}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex items-center justify-center gap-3 bg-red-600 text-white font-black italic px-4 py-4 rounded-2xl animate-pulse"
+                    className="flex items-center gap-3 bg-red-600 text-white font-black italic px-8 py-4 rounded-2xl animate-pulse shadow-[0_0_30px_rgba(220,38,38,0.4)]"
                   >
                     <span className="w-2.5 h-2.5 bg-white rounded-full shadow-[0_0_10px_white]" />
                     <span>EN DIRECTO</span>
@@ -159,14 +169,16 @@ export default function Header() {
                     href="https://www.youtube.com/channel/UCSvr3yH2NkqlAHfuRDphz4g"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex items-center justify-center gap-3 bg-white/5 border border-white/10 px-4 py-4 rounded-2xl"
+                    className="p-4 text-white/40 hover:text-red-600 transition-colors"
                   >
-                    <Image
-                      src="/YouTube_Logo/Digital/01 Full Color/yt_logo_fullcolor_white_digital.png"
-                      alt="YouTube Logo"
-                      width={96}
-                      height={24}
-                    />
+                    <svg
+                      className="w-12 h-12"
+                      viewBox="0 0 28 20"
+                      fill="currentColor"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path d="M27.3733 3.033C27.0433 1.841 26.0913 0.889 24.9 0.559C22.7163 0 14.0003 0 14.0003 0C14.0003 0 5.28433 0 3.10033 0.559C1.90833 0.889 0.957333 1.841 0.627333 3.033C0.0683334 5.217 0 9.8 0 9.8S0.0683334 14.383 0.627333 16.567C0.957333 17.759 1.90833 18.711 3.10033 19.041C5.28433 19.6 14.0003 19.6 14.0003 19.6C14.0003 19.6 22.7163 19.6 24.9003 19.041C26.0923 18.711 27.0433 17.759 27.3733 16.567C27.9323 14.383 28.0003 9.8 28.0003 9.8S27.9323 5.217 27.3733 3.033ZM11.2003 14V5.6L18.4803 9.8L11.2003 14Z" />
+                    </svg>
                   </a>
                 )}
               </div>

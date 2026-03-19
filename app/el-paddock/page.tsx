@@ -41,7 +41,7 @@ export default function ElPaddockPage() {
 
       <main>
         {/* --- CINEMATIC HERO --- */}
-        <section className="relative py-32 md:py-48 flex items-center justify-center overflow-hidden">
+        <section className="relative py-16 md:py-48 flex items-center justify-center overflow-hidden">
           <motion.div style={{ y: y1 }} className="absolute inset-0 z-0 scale-110">
             <Image
               src="/hero-stats-bg.png"
@@ -66,7 +66,7 @@ export default function ElPaddockPage() {
 
             <motion.h1
               variants={itemVariants}
-              className="text-6xl md:text-8xl lg:text-9xl font-black text-white italic tracking-tighter leading-[0.85] mb-8"
+              className="text-5xl sm:text-6xl md:text-8xl lg:text-9xl font-black text-white italic tracking-tighter leading-[0.85] mb-8"
               style={{ filter: "drop-shadow(0 10px 30px rgba(0,0,0,0.8))" }}
             >
               EL <span className="text-red-600">PADDOCK</span>
@@ -82,7 +82,7 @@ export default function ElPaddockPage() {
         </section>
 
         {/* --- INTERACTIVE CONTENT --- */}
-        <section className="px-4 sm:px-6 lg:px-8 py-24 relative">
+        <section className="px-4 sm:px-6 lg:px-8 py-12 md:py-24 relative">
           <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-red-600/30 to-transparent" />
           
           <div className="max-w-7xl mx-auto">
@@ -97,7 +97,7 @@ export default function ElPaddockPage() {
                 initial={{ opacity: 0, x: 20 }}
                 whileInView={{ opacity: 1, x: 0 }}
                 transition={{ duration: 1 }}
-                className="w-full lg:col-span-1 order-1 lg:order-2 sticky top-32"
+                className="w-full lg:col-span-1 order-1 lg:order-2 lg:sticky lg:top-32"
               >
                 <div className="flex items-center gap-3 mb-8">
                   <div className="p-3 bg-red-600/10 rounded-2xl border border-red-600/20">

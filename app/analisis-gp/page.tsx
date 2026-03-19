@@ -54,7 +54,7 @@ export default function AnalisisGpPage() {
 
       <main>
         {/* --- CINEMATIC HEADER --- */}
-        <section className="relative h-[60vh] flex items-center justify-center overflow-hidden">
+        <section className="relative h-[40vh] md:h-[60vh] flex items-center justify-center overflow-hidden">
           <motion.div style={{ y: y1 }} className="absolute inset-0 z-0 scale-110">
             <Image
               src="/motogp-race-moment---index-.jpg"
@@ -79,7 +79,7 @@ export default function AnalisisGpPage() {
 
             <motion.h1
               variants={itemVariants}
-              className="text-6xl md:text-8xl lg:text-9xl font-black text-white italic tracking-tighter leading-[0.85] mb-8"
+              className="text-5xl sm:text-6xl md:text-8xl lg:text-9xl font-black text-white italic tracking-tighter leading-[0.85] mb-8"
               style={{ filter: "drop-shadow(0 10px 30px rgba(0,0,0,0.8))" }}
             >
               ANÁLISIS <span className="text-red-600">GP</span>
@@ -105,7 +105,7 @@ export default function AnalisisGpPage() {
                   <div className="w-6 h-1 bg-red-600 rounded-full" />
                   <span className="text-red-500 font-black uppercase tracking-[0.2em] text-[10px]">Contenidos 2026/2025</span>
                 </motion.div>
-                <h2 className="text-3xl md:text-5xl font-black text-white italic tracking-tighter">TODOS LOS <span className="text-red-600">ANÁLISIS</span></h2>
+                <h2 className="text-2xl sm:text-3xl md:text-5xl font-black text-white italic tracking-tighter">TODOS LOS <span className="text-red-600">ANÁLISIS</span></h2>
               </div>
             </div>
 

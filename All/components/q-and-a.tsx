@@ -99,14 +99,14 @@ export function QAndA() {
   }
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12">
       <motion.div
         initial={{ opacity: 0, x: -20 }}
         whileInView={{ opacity: 1, x: 0 }}
         transition={{ duration: 0.8 }}
-        className="bg-white/[0.03] backdrop-blur-3xl rounded-[32px] border border-white/10 p-10 shadow-2xl"
+        className="bg-white/[0.03] backdrop-blur-3xl rounded-[28px] md:rounded-[32px] border border-white/10 p-6 md:p-10 shadow-2xl"
       >
-        <h3 className="text-2xl font-black text-white italic tracking-tighter uppercase mb-8">Envía tu pregunta</h3>
+        <h3 className="text-xl md:text-2xl font-black text-white italic tracking-tighter uppercase mb-6 md:mb-8">Envía tu pregunta</h3>
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit(onSubmit)}
@@ -153,7 +153,7 @@ export function QAndA() {
                 <Button 
                   type="submit" 
                   disabled={isSubmitting}
-                  className="w-full bg-red-600 hover:bg-red-700 text-white font-black italic uppercase tracking-widest py-6 rounded-2xl transition-all hover:scale-[1.02] active:scale-95 shadow-[0_0_20px_rgba(220,38,38,0.3)]"
+                  className="w-full bg-red-600 hover:bg-red-700 text-white font-black italic uppercase tracking-widest py-4 md:py-6 rounded-xl md:rounded-2xl transition-all hover:scale-[1.02] active:scale-95 shadow-[0_0_20px_rgba(220,38,38,0.3)]"
                 >
                   {isSubmitting ? "ENVIANDO..." : "ENVIAR PREGUNTA"}
                 </Button>
@@ -164,9 +164,9 @@ export function QAndA() {
         initial={{ opacity: 0, x: 20 }}
         whileInView={{ opacity: 1, x: 0 }}
         transition={{ duration: 0.8, delay: 0.2 }}
-        className="bg-white/[0.03] backdrop-blur-3xl rounded-[32px] border border-white/10 p-10 shadow-2xl flex flex-col h-full"
+        className="bg-white/[0.03] backdrop-blur-3xl rounded-[28px] md:rounded-[32px] border border-white/10 p-6 md:p-10 shadow-2xl flex flex-col h-full"
       >
-        <h3 className="text-2xl font-black text-white italic tracking-tighter uppercase mb-8">Debate Comunitario</h3>
+        <h3 className="text-xl md:text-2xl font-black text-white italic tracking-tighter uppercase mb-6 md:mb-8">Debate Comunitario</h3>
         <div className="flex-grow">
           {questions.length > 0 ? (
             <div className="space-y-6 max-h-[500px] overflow-y-auto pr-4 custom-scrollbar">
