@@ -54,10 +54,13 @@ export default function Header() {
 
   return (
     <header
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${scrolled
-          ? "py-3 bg-black/80 backdrop-blur-2xl border-b border-white/10 shadow-[0_10px_40px_rgba(0,0,0,0.5)]"
-          : "py-6 md:py-14 bg-transparent border-transparent"
-        }`}
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
+        isMobileMenuOpen
+          ? "py-3 bg-black" 
+          : scrolled 
+            ? "py-3 bg-black/80 backdrop-blur-2xl border-b border-white/10 shadow-[0_10px_40px_rgba(0,0,0,0.5)]" 
+            : "py-6 md:py-14 bg-transparent border-transparent"
+      }`}
     >
       <div className="max-w-screen-2xl mx-auto px-4 sm:px-12 lg:px-16">
         <div className="flex items-center justify-between transition-all duration-500">
@@ -139,7 +142,7 @@ export default function Header() {
               animate={{ x: 0 }}
               exit={{ x: "100%" }}
               transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-              className="fixed inset-0 z-[100] xl:hidden bg-black/95 backdrop-blur-2xl flex flex-col"
+              className="fixed inset-0 z-[100] xl:hidden bg-black flex flex-col"
             >
               <div className="flex items-center justify-between p-6 border-b border-white/5">
                 <Logo size="sm" className="opacity-80" />
