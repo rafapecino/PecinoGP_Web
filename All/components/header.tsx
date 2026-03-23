@@ -72,7 +72,7 @@ export default function Header() {
               <motion.div
                 initial={{ scale: 0, x: -10 }}
                 animate={{ scale: 1, x: 0, rotate: -3 }}
-                className="ml-2 bg-red-600 text-white text-[7px] md:text-[8px] font-black px-2 py-1 rounded shadow-lg border border-white/20 whitespace-nowrap uppercase tracking-tighter"
+                className="ml-2 bg-gradient-to-r from-red-600 to-red-800 text-white text-[7px] md:hidden font-black px-2 py-1 rounded shadow-[0_0_15px_rgba(220,38,38,0.5)] border border-white/30 whitespace-nowrap uppercase tracking-tighter italic"
               >
                 Estamos en directo
               </motion.div>
@@ -101,12 +101,14 @@ export default function Header() {
                 href={`https://www.youtube.com/watch?v=${liveInfo.videoId}`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="group relative inline-flex items-center gap-2 bg-red-600 text-white font-black italic px-4 py-2 rounded-xl transition-all duration-300 hover:scale-110 active:scale-95 shadow-[0_0_20px_rgba(220,38,38,0.5)] border-2 border-white/30"
+                className="group relative inline-flex items-center gap-2 bg-gradient-to-br from-red-500 via-red-600 to-red-800 text-white font-black italic px-5 py-2.5 rounded-xl transition-all duration-500 hover:scale-110 active:scale-95 shadow-[0_0_20px_rgba(220,38,38,0.6)] border border-white/30 overflow-hidden"
               >
-                <div className="flex flex-col items-center">
-                  <span className="text-[7px] uppercase tracking-widest opacity-80 leading-none mb-0.5">¡QUÉ SUERTE!</span>
-                  <span className="text-[10px] uppercase tracking-tighter leading-none">ENTRA YA</span>
+                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:animate-shimmer" />
+                <div className="flex flex-col items-center relative z-10">
+                  <span className="text-[8px] uppercase tracking-[0.2em] opacity-90 leading-none mb-1 shadow-sm">¡QUÉ SUERTE!</span>
+                  <span className="text-[12px] uppercase tracking-tighter font-black leading-none drop-shadow-md">ENTRA YA</span>
                 </div>
+                <div className="w-1.5 h-1.5 bg-white rounded-full animate-pulse shadow-[0_0_10px_white] ml-1" />
               </a>
             ) : (
               <a

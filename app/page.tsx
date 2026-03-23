@@ -115,19 +115,19 @@ export default function Home() {
               <motion.div variants={itemVariants} className="flex flex-col sm:flex-row gap-4 md:gap-6 w-full sm:w-auto">
                 <Link
                   href={data.latestVideo.length > 0 ? getVideoUrl(data.latestVideo[0].id) : "#"}
-                  className="group relative inline-flex items-center justify-center bg-red-600 text-white font-black py-4 md:py-5 px-6 md:px-10 rounded-2xl text-lg md:text-xl overflow-hidden transition-all hover:scale-105 active:scale-95 shadow-[0_0_20px_rgba(220,38,38,0.3)] hover:shadow-[0_0_40px_rgba(220,38,38,0.5)]"
+                  className="group relative inline-flex items-center justify-center bg-gradient-to-r from-red-600 to-red-700 text-white font-black py-4 md:py-6 px-8 md:px-14 rounded-2xl text-xl md:text-2xl overflow-hidden transition-all duration-500 hover:scale-110 active:scale-95 shadow-[0_0_30px_rgba(220,38,38,0.4)] hover:shadow-[0_0_60px_rgba(220,38,38,0.6)] border border-white/10"
                 >
-                  <span className="relative z-10 flex items-center gap-2 md:gap-3 italic">
-                    <Play className="fill-white" size={20} /> VER ÚLTIMO VÍDEO
+                  <div className="absolute inset-x-0 inset-y-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:animate-shimmer" />
+                  <span className="relative z-10 flex items-center gap-3 md:gap-4 italic tracking-tighter uppercase drop-shadow-lg">
+                    <Play className="fill-white" size={24} /> VER ÚLTIMO VÍDEO
                   </span>
-                  <div className="absolute inset-x-0 bottom-0 h-1.5 bg-white/20 transform scale-x-0 group-hover:scale-x-100 transition-transform origin-left" />
                 </Link>
                 <Link
                   href="/analisis-gp"
-                  className="inline-flex items-center justify-center bg-white/5 backdrop-blur-md border border-white/10 text-white/70 font-black py-4 md:py-5 px-6 md:px-10 rounded-2xl text-lg md:text-xl hover:bg-white/10 hover:text-white hover:border-white/30 transition-all hover:scale-105 active:scale-95 group/btn"
+                  className="group relative inline-flex items-center justify-center bg-white/5 backdrop-blur-xl border border-white/10 text-white font-black py-4 md:py-6 px-8 md:px-14 rounded-2xl text-xl md:text-2xl overflow-hidden transition-all duration-500 hover:scale-110 active:scale-95 hover:bg-white/10 group/btn"
                 >
-                  <span className="flex items-center gap-2 md:gap-3 italic uppercase tracking-tight">
-                    Todos los Vídeos <ChevronRight size={20} className="group-hover/btn:translate-x-1 transition-transform" />
+                  <span className="relative z-10 flex items-center gap-3 md:gap-4 italic tracking-tighter uppercase whitespace-nowrap">
+                    Todos los Vídeos <ChevronRight size={24} className="group-hover/btn:translate-x-2 transition-transform duration-300" />
                   </span>
                 </Link>
               </motion.div>

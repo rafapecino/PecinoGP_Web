@@ -23,8 +23,8 @@ export function YouTubeVideos({ videos, specialVideoId, specialLabel = "EDICIÓN
             href={getVideoUrl(video.id)}
             target="_blank"
             rel="noopener noreferrer"
-            className={`group relative flex flex-col bg-white/5 backdrop-blur-xl border rounded-[24px] md:rounded-[32px] overflow-hidden transition-all duration-500 hover:scale-[1.02] hover:shadow-[0_20px_50px_rgba(0,0,0,0.5)] ${
-              isSpecial ? 'border-yellow-500/80 shadow-[0_0_30px_rgba(234,179,8,0.2)] ring-1 ring-inset ring-yellow-500/20' : 'border-white/10 hover:border-red-600/50'
+            className={`group relative flex flex-col bg-white/5 backdrop-blur-xl border rounded-[24px] md:rounded-[32px] overflow-hidden transition-all duration-500 hover:scale-[1.03] hover:shadow-[0_40px_80px_rgba(0,0,0,0.7)] ${
+              isSpecial ? 'border-red-600 shadow-[0_0_30px_rgba(220,38,38,0.2)] ring-1 ring-inset ring-red-600/20' : 'border-white/10 hover:border-white/30'
             }`}
           >
             <div className="relative aspect-video overflow-hidden">
