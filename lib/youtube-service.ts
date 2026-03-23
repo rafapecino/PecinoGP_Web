@@ -24,6 +24,7 @@ export interface YouTubeVideo {
   publishedAt: string;
   viewCount: string;
   channelTitle: string;
+  isLive?: boolean;
   error?: string;
 }
 

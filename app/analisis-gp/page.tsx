@@ -18,7 +18,7 @@ export default function AnalisisGpPage() {
 
   useEffect(() => {
     async function fetchData() {
-      const latestVideos = await getLatestVideos(24);
+      const latestVideos = await getLatestVideos(25);
       setVideos(latestVideos);
       setLoading(false);
     }
@@ -54,7 +54,7 @@ export default function AnalisisGpPage() {
 
       <main>
         {/* --- CINEMATIC HEADER --- */}
-        <section className="relative h-[40vh] md:h-[60vh] flex items-center justify-center overflow-hidden">
+        <section className="relative min-h-[50vh] md:h-[60vh] flex items-center justify-center overflow-hidden pt-16 md:pt-0">
           <motion.div style={{ y: y1 }} className="absolute inset-0 z-0 scale-110">
             <Image
               src="/motogp-race-moment---index-.jpg"
@@ -79,17 +79,17 @@ export default function AnalisisGpPage() {
 
             <motion.h1
               variants={itemVariants}
-              className="text-5xl sm:text-6xl md:text-8xl lg:text-9xl font-black text-white italic tracking-tighter leading-[0.85] mb-8"
+              className="text-5xl sm:text-6xl md:text-8xl lg:text-9xl font-black text-white italic tracking-tighter leading-[0.95] md:leading-[0.85] mb-8"
               style={{ filter: "drop-shadow(0 10px 30px rgba(0,0,0,0.8))" }}
             >
-              ANÁLISIS <span className="text-red-600">GP</span>
+              VÍDEOS <span className="text-red-600">GP</span>
             </motion.h1>
             
             <motion.p 
               variants={itemVariants}
               className="max-w-2xl mx-auto text-gray-400 text-lg md:text-xl font-medium italic"
             >
-              Acceso completo a todos los detalles técnicos, análisis post-carrera y coberturas exclusivas de MotoGP.
+              Acceso completo a todos los detalles técnicos, vídeos post-carrera y coberturas exclusivas de MotoGP.
             </motion.p>
           </motion.div>
         </section>
@@ -105,7 +105,7 @@ export default function AnalisisGpPage() {
                   <div className="w-6 h-1 bg-red-600 rounded-full" />
                   <span className="text-red-500 font-black uppercase tracking-[0.2em] text-[10px]">Contenidos 2026/2025</span>
                 </motion.div>
-                <h2 className="text-2xl sm:text-3xl md:text-5xl font-black text-white italic tracking-tighter">TODOS LOS <span className="text-red-600">ANÁLISIS</span></h2>
+                <h2 className="text-2xl sm:text-3xl md:text-5xl font-black text-white italic tracking-tighter">TODOS LOS <span className="text-red-600">VÍDEOS</span></h2>
               </div>
             </div>
 
@@ -117,7 +117,7 @@ export default function AnalisisGpPage() {
               </div>
             ) : videos.length > 0 ? (
               /* Pasamos el ID del vídeo más reciente para que tenga el label especial */
-              <YouTubeVideos videos={videos} specialVideoId={videos[0].id} specialLabel="MÁS RECIENTE" />
+              <YouTubeVideos videos={videos} specialVideoId={videos[0].id} specialLabel="MÁS RECIENTE" showSeeMore={true} />
             ) : (
               <div className="text-center py-24 border border-white/5 rounded-[40px] bg-white/[0.02]">
                 <p className="text-gray-500 font-bold italic tracking-wider">NO SE HAN ENCONTRADO VÍDEOS DISPONIBLES.</p>

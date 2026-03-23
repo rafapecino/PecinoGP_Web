@@ -3,15 +3,16 @@
 import Image from "next/image"
 import Link from "next/link"
 import { YouTubeVideo, getVideoUrl, formatDate } from "@/lib/youtube-service"
-import { Star, Play, Calendar } from "lucide-react"
+import { Star, Play, Calendar, Youtube } from "lucide-react"
 
 interface YouTubeVideosProps {
   videos: YouTubeVideo[];
   specialVideoId?: string | null;
   specialLabel?: string;
+  showSeeMore?: boolean;
 }
 
-export function YouTubeVideos({ videos, specialVideoId, specialLabel = "EDICIÓN ESPECIAL" }: YouTubeVideosProps) {
+export function YouTubeVideos({ videos, specialVideoId, specialLabel = "EDICIÓN ESPECIAL", showSeeMore = false }: YouTubeVideosProps) {
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-10">
       {videos.map((video) => {
@@ -36,7 +37,7 @@ export function YouTubeVideos({ videos, specialVideoId, specialLabel = "EDICIÓN
               <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-60 group-hover:opacity-40 transition-opacity" />
 
               {isSpecial && (
-                <div className={`${specialLabel === 'MÁS RECIENTE' ? 'bg-red-600' : 'bg-yellow-500'} text-white px-3 py-1.5 rounded-full text-[10px] font-black flex items-center gap-1.5 shadow-xl animate-pulse absolute top-4 left-4 z-20`}>
+                <div className={`${specialLabel === 'MÁS RECIENTE' ? 'bg-red-600' : 'bg-yellow-500'} text-white px-3 py-1.5 rounded-full text-[10px] font-black flex items-center gap-1.5 shadow-xl animate-pulse absolute top-4 right-4 z-20`}>
                   <Star size={12} fill="currentColor" />
                   <span>{specialLabel}</span>
                 </div>
@@ -57,7 +58,9 @@ export function YouTubeVideos({ videos, specialVideoId, specialLabel = "EDICIÓN
                 </span>
                 <div className="ml-auto flex items-center gap-1">
                   <div className="w-1 h-1 rounded-full bg-red-600" />
-                  <span className="text-[9px] font-black text-gray-500 uppercase">Analysis</span>
+                  <span className="text-[9px] font-black text-gray-500 uppercase">
+                    {video.isLive ? 'Directo' : 'Vídeo'}
+                  </span>
                 </div>
               </div>
 
@@ -75,6 +78,27 @@ export function YouTubeVideos({ videos, specialVideoId, specialLabel = "EDICIÓN
           </Link>
         )
       })}
+      
+      {showSeeMore && (
+        <Link
+          href="https://www.youtube.com/@PecinoGP"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="group relative flex flex-col items-center justify-center bg-white/5 backdrop-blur-xl border border-white/10 rounded-[24px] md:rounded-[32px] overflow-hidden transition-all duration-500 hover:scale-[1.02] hover:bg-white/10"
+        >
+          <div className="text-center p-8">
+            <div className="w-48 h-48 relative mb-6 mx-auto group-hover:scale-110 transition-transform duration-500 drop-shadow-[0_0_20px_rgba(234,179,8,0.4)]">
+              <Image
+                src="/insignia-member.png"
+                alt="PecinoGP Member"
+                fill
+                className="object-contain"
+              />
+            </div>
+            <h3 className="text-2xl font-black italic tracking-tighter text-white uppercase">Ver más</h3>
+          </div>
+        </Link>
+      )}
     </div>
   )
 }

@@ -104,7 +104,7 @@ export default function Home() {
 
               <motion.h1
                 variants={itemVariants}
-                className="text-5xl sm:text-6xl md:text-8xl lg:text-9xl font-black text-white italic tracking-tighter leading-[0.85] mb-8"
+                className="relative text-5xl sm:text-6xl md:text-8xl lg:text-9xl font-black text-white italic tracking-tighter leading-[0.85] mb-8"
                 style={{ filter: "drop-shadow(0 10px 30px rgba(0,0,0,0.8))" }}
               >
                 PASIÓN <br /> <span className="text-red-600">AL LÍMITE</span>
@@ -118,47 +118,46 @@ export default function Home() {
                   className="group relative inline-flex items-center justify-center bg-red-600 text-white font-black py-4 md:py-5 px-6 md:px-10 rounded-2xl text-lg md:text-xl overflow-hidden transition-all hover:scale-105 active:scale-95 shadow-[0_0_20px_rgba(220,38,38,0.3)] hover:shadow-[0_0_40px_rgba(220,38,38,0.5)]"
                 >
                   <span className="relative z-10 flex items-center gap-2 md:gap-3 italic">
-                    <Play className="fill-white" size={20} /> VER ANÁLISIS
+                    <Play className="fill-white" size={20} /> VER ÚLTIMO VÍDEO
                   </span>
                   <div className="absolute inset-x-0 bottom-0 h-1.5 bg-white/20 transform scale-x-0 group-hover:scale-x-100 transition-transform origin-left" />
                 </Link>
                 <Link
                   href="/analisis-gp"
-                  className="inline-flex items-center justify-center bg-white/10 backdrop-blur-md border border-white/20 text-white font-black py-4 md:py-5 px-6 md:px-10 rounded-2xl text-lg md:text-xl hover:bg-white hover:text-black transition-all hover:scale-105"
+                  className="inline-flex items-center justify-center bg-white/5 backdrop-blur-md border border-white/10 text-white/70 font-black py-4 md:py-5 px-6 md:px-10 rounded-2xl text-lg md:text-xl hover:bg-white/10 hover:text-white hover:border-white/30 transition-all hover:scale-105 active:scale-95 group/btn"
                 >
-                  <span className="flex items-center gap-2 md:gap-3 italic">
-                    GP <ChevronRight size={20} />
+                  <span className="flex items-center gap-2 md:gap-3 italic uppercase tracking-tight">
+                    Todos los Vídeos <ChevronRight size={20} className="group-hover/btn:translate-x-1 transition-transform" />
                   </span>
                 </Link>
               </motion.div>
             </div>
 
             <motion.div
-              variants={itemVariants}
               className="hidden lg:block relative h-[500px] w-full"
             >
               <div className="relative h-full w-full bg-white/[0.01] backdrop-blur-xl rounded-[32px] border border-white/5 p-12 shadow-2xl overflow-hidden group">
                 <div className="relative z-10 flex flex-col h-full justify-between">
                   <div>
                     <div className="flex items-center justify-between mb-10">
-                      <div className="flex items-center gap-2 translate-y-0 group-hover:-translate-y-1 transition-transform">
+                      <div className="relative flex items-center gap-2 translate-y-0 group-hover:-translate-y-1 transition-transform">
                         <div className="w-8 h-1 bg-red-600 rounded-full shadow-[0_0_20px_rgba(220,38,38,1)]" />
-                        <span className="text-red-500 font-black uppercase tracking-[0.4em] text-[10px]">PecinoGP Insight</span>
+                        <span className="text-red-500 font-black uppercase tracking-[0.4em] text-[10px] whitespace-nowrap">
+                          Archivo PecinoGP
+                        </span>
                       </div>
-                      
                       {/* --- LIVE STATUS BUTTON --- */}
-                      <Link 
+                      <Link
                         href={data.liveStatus?.isLive ? `https://www.youtube.com/watch?v=${data.liveStatus.videoId}` : "https://www.youtube.com/@PecinoGP/streams"}
                         target="_blank"
-                        className={`group/live flex items-center gap-2 px-4 py-2 rounded-full border transition-all duration-300 ${
-                          data.liveStatus?.isLive 
-                          ? "bg-red-600/10 border-red-600/30 text-red-500 animate-pulse" 
-                          : "bg-white/5 border-white/10 text-white/40 hover:bg-white/10"
-                        }`}
+                        className={`group/live flex items-center gap-2 px-4 py-2 rounded-full border transition-all duration-300 ${data.liveStatus?.isLive
+                            ? "bg-red-600 border-red-500 text-white animate-pulse shadow-[0_0_30px_rgba(220,38,38,0.8)] scale-110"
+                            : "bg-white/5 border-white/10 text-white/40 hover:bg-white/10"
+                          }`}
                       >
-                        <div className={`w-2 h-2 rounded-full ${data.liveStatus?.isLive ? "bg-red-600 shadow-[0_0_8px_rgba(220,38,38,1)]" : "bg-white/20"}`} />
+                        <div className={`w-2.5 h-2.5 rounded-full ${data.liveStatus?.isLive ? "bg-white shadow-[0_0_15px_white]" : "bg-white/20"}`} />
                         <span className="text-[10px] font-black uppercase tracking-widest italic pt-0.5">
-                          {data.liveStatus?.isLive ? "EN DIRECTO AHORA" : "CANAL DE DIRECTOS"}
+                          {data.liveStatus?.isLive ? "EN DIRECTO" : "CANAL DE DIRECTOS"}
                         </span>
                       </Link>
                     </div>
@@ -226,12 +225,12 @@ export default function Home() {
               <div>
                 <motion.div initial={{ x: -20, opacity: 0 }} whileInView={{ x: 0, opacity: 1 }} className="flex items-center gap-2 mb-2">
                   <div className="w-8 h-1 bg-red-600 rounded-full" />
-                  <span className="text-red-500 font-black uppercase tracking-[0.2em] text-[10px]">Contenido Curado</span>
+                  <span className="text-red-500 font-black uppercase tracking-[0.2em] text-[10px]">Contenido a pie de pista</span>
                 </motion.div>
-                <h2 className="text-4xl md:text-6xl font-black text-white italic tracking-tighter">LO MEJOR DE <span className="text-red-600">2026</span></h2>
+                <h2 className="text-4xl md:text-6xl font-black text-white italic tracking-tighter">LO MEJOR DE <span className="text-red-600">ESTE AÑO</span></h2>
               </div>
               <Link href="/analisis-gp" className="group flex items-center gap-3 bg-white/5 border border-white/10 text-white font-black py-3 px-8 rounded-xl hover:bg-red-600 transition-all tracking-wider text-sm uppercase italic">
-                VER TODOS LOS ANÁLISIS <ChevronRight className="group-hover:translate-x-1 transition-transform" />
+                VER TODOS LOS VÍDEOS <ChevronRight className="group-hover:translate-x-1 transition-transform" />
               </Link>
             </div>
 

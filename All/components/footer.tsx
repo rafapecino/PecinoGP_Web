@@ -10,7 +10,7 @@ export function Footer() {
         <Logo size="sm" />
         <div className="flex justify-center gap-x-6 gap-y-4 flex-wrap mb-8 text-muted-foreground">
           <Link href="/" className="hover:text-primary transition-colors">Inicio</Link>
-          <Link href="/analisis-gp" className="hover:text-primary transition-colors">Análisis GP</Link>
+          <Link href="/analisis-gp" className="hover:text-primary transition-colors">Vídeos GP</Link>
           <Link href="/calendario" className="hover:text-primary transition-colors">Calendario</Link>
           <Link href="/clasificacion" className="hover:text-primary transition-colors">Clasificación</Link>
           <Link href="/el-paddock" className="hover:text-primary transition-colors">El Paddock</Link>

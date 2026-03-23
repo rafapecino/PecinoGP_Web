@@ -146,7 +146,7 @@ export const getLatestVideos = cache(
     const videoIds = data.items.map((item: any) => item.snippet.resourceId.videoId);
 
     // Fetch video details (duration) to filter shorts
-    const detailsUrl = `https://www.googleapis.com/youtube/v3/videos?id=${videoIds.join(",")}&part=contentDetails,snippet,statistics`;
+    const detailsUrl = `https://www.googleapis.com/youtube/v3/videos?id=${videoIds.join(",")}&part=contentDetails,snippet,statistics,liveStreamingDetails`;
     const detailsData = await getData(detailsUrl, `videoDetails-${videoIds.join('-')}`, { items: [] });
 
     if (!detailsData.items) return FALLBACK_VIDEOS.slice(0, maxResults);
@@ -180,6 +180,7 @@ export const getLatestVideos = cache(
         publishedAt: item.snippet.publishedAt,
         viewCount: item.statistics?.viewCount || "0",
         channelTitle: item.snippet.channelTitle,
+        isLive: !!item.liveStreamingDetails || item.snippet.liveBroadcastContent !== 'none',
       }))
       .slice(0, maxResults);
 
@@ -192,7 +193,7 @@ export const getVideosByIds = cache(
   async (videoIds: string[]): Promise<YouTubeVideo[]> => {
     const url = `https://www.googleapis.com/youtube/v3/videos?id=${videoIds.join(
       ","
-    )}&part=snippet,statistics`;
+    )}&part=snippet,statistics,liveStreamingDetails`;
 
     const data = await getData(url, `videosByIds-${videoIds.join('-')}`, { items: [] });
 
@@ -212,6 +213,7 @@ export const getVideosByIds = cache(
       publishedAt: item.snippet.publishedAt,
       viewCount: item.statistics?.viewCount || "0",
       channelTitle: item.snippet.channelTitle,
+      isLive: !!item.liveStreamingDetails || item.snippet.liveBroadcastContent !== 'none',
     }));
 
     console.log(`Successfully fetched ${videos.length} videos by ID.`);

@@ -3,12 +3,12 @@ import { NextResponse } from 'next/server';
 // Lee las claves de API desde las variables de entorno del servidor.
 // No es necesario el prefijo NEXT_PUBLIC_ ya que esto se ejecuta en el servidor.
 const API_KEYS = [
-  process.env.YOUTUBE_API_KEY,
-  process.env.YOUTUBE_API_KEY_2,
-  process.env.YOUTUBE_API_KEY_3
+  process.env.YOUTUBE_API_KEY || process.env.NEXT_PUBLIC_YOUTUBE_API_KEY,
+  process.env.YOUTUBE_API_KEY_2 || process.env.NEXT_PUBLIC_YOUTUBE_API_KEY_2,
+  process.env.YOUTUBE_API_KEY_3 || process.env.NEXT_PUBLIC_YOUTUBE_API_KEY_3
 ].filter((key): key is string => typeof key === 'string' && key.length > 0);
 
-const CHANNEL_ID = process.env.YOUTUBE_CHANNEL_ID;
+const CHANNEL_ID = process.env.YOUTUBE_CHANNEL_ID || process.env.NEXT_PUBLIC_YOUTUBE_CHANNEL_ID;
 
 /**
  * README:
@@ -89,6 +89,34 @@ export async function GET() {
         isLive: true,
         videoId: data.items[0].id.videoId,
       });
+    }
+
+    // --- FALLBACK: Check latest video status ---
+    // Sometimes search API is delayed. We check the latest video directly.
+    const playlistId = CHANNEL_ID.startsWith("UC") ? `UU${CHANNEL_ID.substring(2)}` : CHANNEL_ID;
+    const latestVideoUrl = `https://www.googleapis.com/youtube/v3/playlistItems?playlistId=${playlistId}&part=snippet&maxResults=1`;
+    
+    try {
+      const latestData = await fetchWithRotation(latestVideoUrl);
+      if (latestData.items && latestData.items.length > 0) {
+        const videoId = latestData.items[0].snippet.resourceId.videoId;
+        const videoStatusUrl = `https://www.googleapis.com/youtube/v3/videos?id=${videoId}&part=snippet,liveStreamingDetails`;
+        const videoData = await fetchWithRotation(videoStatusUrl);
+        
+        if (videoData.items && videoData.items.length > 0) {
+          const item = videoData.items[0];
+          const isActuallyLive = item.snippet.liveBroadcastContent === 'live' || !!item.liveStreamingDetails?.actualStartTime && !item.liveStreamingDetails?.actualEndTime;
+          
+          if (isActuallyLive) {
+            return NextResponse.json({
+              isLive: true,
+              videoId: videoId,
+            });
+          }
+        }
+      }
+    } catch (fallbackError) {
+      console.warn("Fallback check failed:", fallbackError);
     }
 
     return NextResponse.json({ isLive: false });

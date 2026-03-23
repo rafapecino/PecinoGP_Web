@@ -10,7 +10,7 @@ import { LiveStream } from "@/lib/youtube-service"
 
 const NAV_LINKS = [
   { href: "/", label: "Inicio" },
-  { href: "/analisis-gp", label: "Análisis GP" },
+  { href: "/analisis-gp", label: "Vídeos GP" },
   { href: "/calendario", label: "Calendario" },
   { href: "/clasificacion", label: "Clasificación" },
   { href: "/el-paddock", label: "El Paddock" },
@@ -64,9 +64,20 @@ export default function Header() {
     >
       <div className="max-w-screen-2xl mx-auto px-4 sm:px-12 lg:px-16">
         <div className="flex items-center justify-between transition-all duration-500">
-          <Link href="/" className="shrink-0 active:scale-95 transition-transform duration-300">
-            <Logo size={scrolled ? "xs" : "sm"} className="md:scale-125 origin-left transition-transform" />
-          </Link>
+          <div className="flex items-center">
+            <Link href="/" className="shrink-0 active:scale-95 transition-transform duration-300">
+              <Logo size={scrolled ? "xs" : "sm"} className="md:scale-125 origin-left transition-transform" />
+            </Link>
+            {liveInfo.isLive && (
+              <motion.div
+                initial={{ scale: 0, x: -10 }}
+                animate={{ scale: 1, x: 0, rotate: -3 }}
+                className="ml-2 bg-red-600 text-white text-[7px] md:text-[8px] font-black px-2 py-1 rounded shadow-lg border border-white/20 whitespace-nowrap uppercase tracking-tighter"
+              >
+                Estamos en directo
+              </motion.div>
+            )}
+          </div>
 
           {/* Desktop Navigation */}
           <nav className="hidden xl:flex items-center gap-12">
@@ -90,11 +101,12 @@ export default function Header() {
                 href={`https://www.youtube.com/watch?v=${liveInfo.videoId}`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="group relative inline-flex items-center gap-3 bg-red-600 text-white font-black italic px-6 py-2.5 rounded-xl transition-all duration-300 hover:scale-110 active:scale-95 shadow-[0_0_20px_rgba(220,38,38,0.4)]"
+                className="group relative inline-flex items-center gap-2 bg-red-600 text-white font-black italic px-4 py-2 rounded-xl transition-all duration-300 hover:scale-110 active:scale-95 shadow-[0_0_20px_rgba(220,38,38,0.5)] border-2 border-white/30"
               >
-                <span className="w-2.5 h-2.5 bg-white rounded-full animate-pulse shadow-[0_0_10px_white]" />
-                <span className="text-[10px] uppercase tracking-widest hidden sm:inline">EN DIRECTO</span>
-                <span className="text-[10px] uppercase tracking-widest inline sm:hidden">LIVE</span>
+                <div className="flex flex-col items-center">
+                  <span className="text-[7px] uppercase tracking-widest opacity-80 leading-none mb-0.5">¡QUÉ SUERTE!</span>
+                  <span className="text-[10px] uppercase tracking-tighter leading-none">ENTRA YA</span>
+                </div>
               </a>
             ) : (
               <a
