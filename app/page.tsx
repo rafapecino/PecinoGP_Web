@@ -8,7 +8,7 @@ import { getChannelStats, getLatestVideos, getVideosByIds, getLiveStream, YouTub
 import { YouTubeStats } from "@/All/components/youtube-stats";
 import { YouTubeVideos } from "@/All/components/youtube-videos";
 import { LatestVideo } from "@/All/components/latest-video";
-import { motion, useScroll, useTransform } from "framer-motion";
+import { motion, useScroll, useTransform, useSpring } from "framer-motion";
 import { Play, ChevronRight, Youtube, Star, ArrowUpRight } from "lucide-react";
 
 export default function Home() {
@@ -26,7 +26,16 @@ export default function Home() {
   const [loading, setLoading] = useState(true);
 
   const { scrollY } = useScroll();
-  const y1 = useTransform(scrollY, [0, 500], [0, 100]);
+  const smoothScrollY = useSpring(scrollY, {
+    stiffness: 100,
+    damping: 30,
+    restDelta: 0.001
+  });
+  
+  const y1 = useTransform(smoothScrollY, [0, 500], [0, 200]);
+  const y2 = useTransform(smoothScrollY, [0, 500], [0, -150]);
+  const y3 = useTransform(smoothScrollY, [0, 500], [0, 100]);
+  const opacity = useTransform(smoothScrollY, [0, 400], [1, 0.2]);
 
   useEffect(() => {
     async function fetchData() {
@@ -94,7 +103,7 @@ export default function Home() {
             variants={containerVariants}
             initial="hidden"
             animate="visible"
-            className="relative z-20 max-w-6xl mx-auto px-4 text-center md:text-left grid grid-cols-1 lg:grid-cols-2 gap-12 items-center pt-24 md:pt-40"
+            className="relative z-20 max-w-7xl mx-auto px-4 text-center md:text-left grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-32 items-center pt-24 md:pt-40"
           >
             <div className="flex flex-col items-center md:items-start text-center md:text-left pb-12 md:pb-24">
               <motion.div variants={itemVariants} className="flex items-center gap-2 mb-4 md:mb-6">
@@ -107,7 +116,7 @@ export default function Home() {
                   <motion.div
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
-                    className="inline-flex items-center gap-3 bg-white/5 backdrop-blur-xl border border-white/10 rounded-full px-5 py-2 mb-6 shadow-2xl"
+                    className="inline-flex items-center gap-3 bg-white/5 backdrop-blur-xl border border-white/10 rounded-full px-5 py-2 mb-10 shadow-2xl"
                   >
                     <span className="relative flex h-2 w-2">
                       <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
@@ -125,36 +134,37 @@ export default function Home() {
 
               <motion.h1
                 variants={itemVariants}
-                className="relative text-5xl sm:text-6xl md:text-8xl lg:text-9xl font-black text-white italic tracking-tighter leading-[0.85] mb-8"
+                className="relative text-5xl sm:text-6xl md:text-8xl lg:text-9xl font-black text-white italic tracking-tighter leading-[0.85] mb-12"
                 style={{ filter: "drop-shadow(0 10px 30px rgba(0,0,0,0.8))" }}
               >
                 PASIÓN <br /> <span className="text-red-600">AL LÍMITE</span>
               </motion.h1>
 
               {/* Removiendo párrafo solicitado */}
-
-              <motion.div variants={itemVariants} className="flex flex-col sm:flex-row gap-4 md:gap-6 w-full sm:w-auto">
+              <div className="flex flex-col sm:flex-row gap-4 md:gap-6 w-full sm:w-auto relative z-30">
                 <Link
                   href={data.latestVideo.length > 0 ? getVideoUrl(data.latestVideo[0].id) : "#"}
-                  className="group relative inline-flex items-center justify-center bg-gradient-to-r from-red-600 to-red-700 text-white font-black py-4 md:py-6 px-8 md:px-14 rounded-2xl text-xl md:text-2xl overflow-hidden transition-all duration-500 hover:scale-110 active:scale-95 shadow-[0_0_30px_rgba(220,38,38,0.4)] hover:shadow-[0_0_60px_rgba(220,38,38,0.6)] border border-white/10"
+                  className="group relative inline-flex items-center justify-center bg-gradient-to-r from-red-600 to-red-700 text-white font-black py-4 md:py-6 px-10 rounded-2xl text-lg md:text-xl overflow-hidden transition-all duration-500 hover:scale-110 active:scale-95 shadow-[0_0_30px_rgba(220,38,38,0.4)] hover:shadow-[0_0_60px_rgba(220,38,38,0.6)] border border-white/10"
                 >
                   <div className="absolute inset-x-0 inset-y-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:animate-shimmer" />
-                  <span className="relative z-10 flex items-center gap-3 md:gap-4 italic tracking-tighter uppercase drop-shadow-lg">
+                  <span className="relative z-10 flex items-center gap-2 md:gap-3 italic tracking-tighter uppercase drop-shadow-lg">
                     <Play className="fill-white" size={24} /> VER ÚLTIMO VÍDEO
                   </span>
                 </Link>
                 <Link
                   href="/analisis-gp"
-                  className="group relative inline-flex items-center justify-center bg-white/5 backdrop-blur-xl border border-white/10 text-white font-black py-4 md:py-6 px-8 md:px-14 rounded-2xl text-xl md:text-2xl overflow-hidden transition-all duration-500 hover:scale-110 active:scale-95 hover:bg-white/10 group/btn"
+                  className="group relative inline-flex items-center justify-center bg-white/5 backdrop-blur-xl border border-white/10 text-white font-black py-4 md:py-6 px-10 rounded-2xl text-lg md:text-xl overflow-hidden transition-all duration-500 hover:scale-110 active:scale-95 hover:bg-white/10 group/btn"
                 >
-                  <span className="relative z-10 flex items-center gap-3 md:gap-4 italic tracking-tighter uppercase whitespace-nowrap">
+                  <span className="relative z-10 flex items-center gap-2 md:gap-3 italic tracking-tighter uppercase whitespace-nowrap">
                     Todos los Vídeos <ChevronRight size={24} className="group-hover/btn:translate-x-2 transition-transform duration-300" />
                   </span>
                 </Link>
-              </motion.div>
+              </div>
             </div>
 
+            {/* Columna Derecha: Estadísticas (solo escritorio) */}
             <motion.div
+              variants={itemVariants}
               className="hidden lg:block relative h-[500px] w-full"
             >
               <div className="relative h-full w-full bg-white/[0.01] backdrop-blur-xl rounded-[32px] border border-white/5 p-12 shadow-2xl overflow-hidden group">
