@@ -9,7 +9,7 @@ import { YouTubeStats } from "@/All/components/youtube-stats";
 import { YouTubeVideos } from "@/All/components/youtube-videos";
 import { LatestVideo } from "@/All/components/latest-video";
 import { motion, useScroll, useTransform } from "framer-motion";
-import { Play, ChevronRight, Youtube, Star } from "lucide-react";
+import { Play, ChevronRight, Youtube, Star, ArrowUpRight } from "lucide-react";
 
 export default function Home() {
   const [data, setData] = useState<{
@@ -100,6 +100,27 @@ export default function Home() {
               <motion.div variants={itemVariants} className="flex items-center gap-2 mb-4 md:mb-6">
                 <div className="w-8 md:w-10 h-1 bg-red-600 rounded-full" />
                 <span className="text-red-500 font-black uppercase tracking-[0.4em] text-[10px] md:text-xs">PecinoGP Oficial</span>
+              </motion.div>
+
+              <motion.div variants={itemVariants} className="relative z-10">
+                {data.liveStatus?.isLive && (
+                  <motion.div
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="inline-flex items-center gap-3 bg-white/5 backdrop-blur-xl border border-white/10 rounded-full px-5 py-2 mb-6 shadow-2xl"
+                  >
+                    <span className="relative flex h-2 w-2">
+                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
+                      <span className="relative inline-flex rounded-full h-2 w-2 bg-red-600"></span>
+                    </span>
+                    <span className="text-white/80 text-xs font-bold tracking-widest uppercase italic">
+                      ¡Estamos en directo ahora!
+                    </span>
+                    <div className="flex items-center gap-1 text-red-500 font-black text-[10px] animate-bounce">
+                      SINTONIZAR ARRIBA <ArrowUpRight size={14} className="rotate-[-15deg]" />
+                    </div>
+                  </motion.div>
+                )}
               </motion.div>
 
               <motion.h1
