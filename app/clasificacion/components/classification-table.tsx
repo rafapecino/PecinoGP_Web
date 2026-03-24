@@ -130,11 +130,11 @@ export default function ClassificationTable({ category, year }: ClassificationTa
           <table className="w-full text-left">
             <thead className="bg-secondary/50">
               <tr>
-                <th className="p-3 md:p-4 w-12 md:w-16 text-center text-[10px] md:text-xs font-bold uppercase tracking-wider text-gray-400">Pos.</th>
-                <th className="p-3 md:p-4 text-[10px] md:text-xs font-bold uppercase tracking-wider text-gray-400">Piloto</th>
-                <th className="p-3 md:p-4 hidden md:table-cell text-xs font-bold uppercase tracking-wider text-gray-400">Equipo</th>
-                <th className="p-3 md:p-4 hidden sm:table-cell text-xs font-bold uppercase tracking-wider text-gray-400 text-right">Dif.</th>
-                <th className="p-3 md:p-4 w-24 md:w-32 text-right text-[10px] md:text-xs font-bold uppercase tracking-wider text-gray-400">Puntos</th>
+                <th className="px-1.5 py-3 w-8 md:w-16 text-center text-[8px] md:text-xs font-bold uppercase tracking-wider text-gray-400">Pos.</th>
+                <th className="px-2 py-3 text-[8px] md:text-xs font-bold uppercase tracking-wider text-gray-400">Piloto</th>
+                <th className="p-4 hidden lg:table-cell text-xs font-bold uppercase tracking-wider text-gray-400">Equipo</th>
+                <th className="p-4 hidden sm:table-cell text-xs font-bold uppercase tracking-wider text-gray-400 text-right">Dif.</th>
+                <th className="px-2 py-3 w-16 md:w-32 text-right text-[8px] md:text-xs font-bold uppercase tracking-wider text-gray-400">Puntos</th>
               </tr>
             </thead>
             <tbody>
@@ -164,48 +164,48 @@ export default function ClassificationTable({ category, year }: ClassificationTa
                         <div className="absolute inset-0 bg-gradient-to-r from-yellow-500/5 to-transparent pointer-events-none" />
                       )}
                       
-                      <td className="p-3 md:p-4 text-center font-black text-base md:text-xl italic text-white/90">
+                      <td className="px-1 py-3 text-center font-black text-xs md:text-xl italic text-white/90">
                         <div className="flex flex-col items-center justify-center">
                           {isLeader ? (
-                            <Award className="w-3 h-3 md:w-4 md:h-4 text-yellow-500 mb-0.5" />
+                            <Award className="w-2 h-2 md:w-4 md:h-4 text-yellow-500 mb-0.5" />
                           ) : (
-                            <span className="opacity-0 w-3 h-3 md:w-4 md:h-4 mb-0.5" />
+                            <span className="opacity-0 w-2 h-2 md:w-4 md:h-4 mb-0.5" />
                           )}
                           {piloto.pos}
                         </div>
                       </td>
                       
-                      <td className="p-3 md:p-4">
-                        <div className="flex items-center gap-2 md:gap-4">
+                      <td className="px-2 py-3">
+                        <div className="flex items-center gap-1.5 md:gap-4">
                           <div className="relative shrink-0">
                             <img 
                               src={`https://flagcdn.com/w40/${piloto.countryCode.toLowerCase()}.png`}
                               alt={piloto.countryCode}
-                              className="w-4 md:w-6 h-auto rounded-sm shadow-md transition-transform group-hover:scale-110"
+                              className="w-3 md:w-6 h-auto rounded-sm shadow-md transition-transform group-hover:scale-110"
                               onError={(e) => (e.currentTarget.style.display = "none")}
                             />
                             {isLeader && (
-                              <div className="absolute -inset-1 rounded-sm bg-yellow-500/20 animate-pulse" />
+                              <div className="absolute -inset-0.5 rounded-sm bg-yellow-500/20 animate-pulse" />
                             )}
                           </div>
                           
                           <div className="flex flex-col min-w-0">
                             <div className="flex items-center gap-1 md:gap-2 overflow-hidden">
-                              <span className={`font-black text-sm md:text-lg tracking-tight uppercase italic truncate ${isLeader ? 'text-yellow-500' : 'text-white'}`}>
+                              <span className={`font-black text-[10px] md:text-lg tracking-tighter uppercase italic truncate ${isLeader ? 'text-yellow-500' : 'text-white'}`}>
                                 {piloto.driverName}
                               </span>
-                              <span className="text-[8px] md:text-[10px] bg-white/10 text-white/60 px-1 md:px-1.5 py-0.5 rounded font-mono shrink-0">
+                              <span className="text-[6px] md:text-[10px] bg-white/10 text-white/60 px-0.5 md:px-1.5 py-0.5 rounded font-mono shrink-0">
                                 #{piloto.riderNumber}
                               </span>
                             </div>
-                            <span className="text-[8px] md:text-[10px] text-muted-foreground uppercase tracking-widest font-medium truncate">
+                            <span className="text-[6px] md:text-[10px] text-muted-foreground uppercase tracking-widest font-medium truncate">
                               {piloto.teamName}
                             </span>
                           </div>
                         </div>
                       </td>
                       
-                      <td className="p-4 hidden md:table-cell">
+                      <td className="p-4 hidden lg:table-cell">
                         <span className="text-xs font-bold text-gray-400 group-hover:text-white transition-colors">
                           {piloto.teamName}
                         </span>
@@ -220,13 +220,13 @@ export default function ClassificationTable({ category, year }: ClassificationTa
                         </div>
                       </td>
                       
-                      <td className="p-3 md:p-4 text-right">
+                      <td className="px-2 py-3 text-right">
                         <div className="flex flex-col items-end gap-1">
-                          <div className="flex items-baseline gap-1">
-                            <span className="font-black text-lg md:text-2xl italic text-white tracking-tighter">{piloto.points}</span>
-                            <span className="text-[8px] md:text-[10px] text-gray-500 font-bold">PTS</span>
+                          <div className="flex items-baseline gap-0.5 md:gap-1">
+                            <span className="font-black text-sm md:text-2xl italic text-white tracking-tighter">{piloto.points}</span>
+                            <span className="text-[6px] md:text-[10px] text-gray-500 font-bold">PTS</span>
                           </div>
-                          <div className="w-12 md:w-24 bg-white/5 rounded-full h-1 md:h-1.5 overflow-hidden border border-white/5">
+                          <div className="w-8 md:w-24 bg-white/5 rounded-full h-0.5 md:h-1.5 overflow-hidden border border-white/5">
                             <motion.div
                               initial={{ width: 0 }}
                               animate={{ width: `${pointsPercentage}%` }}

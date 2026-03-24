@@ -11,13 +11,13 @@ export default function CalendarioPage() {
   const { scrollY } = useScroll();
   const y1 = useTransform(scrollY, [0, 500], [0, 100]);
 
-  // La próxima carrera según la fecha actual (18 de marzo 2026) es Brasil
+  // La próxima carrera según la fecha actual (24 de marzo 2026) es Americas
   const nextRace = {
-    gp: "Gran Premio de Brasil",
-    circuit: "Autódromo Internacional Ayrton Senna, Goiânia",
-    dates: "20-22 marzo",
-    countryCode: "br",
-    round: "02"
+    gp: "Gran Premio de las Américas",
+    circuit: "Circuit of the Americas, Austin",
+    dates: "27-29 marzo",
+    countryCode: "us",
+    round: "03"
   };
 
   const containerVariants = {

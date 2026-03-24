@@ -16,14 +16,14 @@ const races = [
         "circuit": "Autódromo Internacional Ayrton Senna, Goiânia",
         "dates": "20-22 marzo",
         "countryCode": "br",
-        "status": "next"
+        "status": "completed"
     },
     {
         "gp": "Gran Premio de las Américas",
         "circuit": "Circuit of the Americas, Austin",
         "dates": "27-29 marzo",
         "countryCode": "us",
-        "status": "upcoming"
+        "status": "next"
     },
     {
         "gp": "Gran Premio de Catar",
