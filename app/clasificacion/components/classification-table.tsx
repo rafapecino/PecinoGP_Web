@@ -161,15 +161,15 @@ export default function ClassificationTable({ category, year }: ClassificationTa
                       )} border-l-4 relative overflow-hidden`}
                     >
                       {isLeader && (
-                        <div className="absolute inset-0 bg-gradient-to-r from-yellow-500/5 to-transparent pointer-events-none" />
+                        <div className="absolute inset-0 bg-gradient-to-r from-yellow-500/5 to-transparent pointer-events-none hidden md:block" />
                       )}
                       
                       <td className="px-1 py-3 text-center font-black text-xs md:text-xl italic text-white/90">
                         <div className="flex flex-col items-center justify-center">
                           {isLeader ? (
-                            <Award className="w-2 h-2 md:w-4 md:h-4 text-yellow-500 mb-0.5" />
+                            <Award className="hidden md:block w-4 h-4 text-yellow-500 mb-0.5" />
                           ) : (
-                            <span className="opacity-0 w-2 h-2 md:w-4 md:h-4 mb-0.5" />
+                            <span className="hidden md:block opacity-0 w-4 h-4 mb-0.5" />
                           )}
                           {piloto.pos}
                         </div>
@@ -185,13 +185,13 @@ export default function ClassificationTable({ category, year }: ClassificationTa
                               onError={(e) => (e.currentTarget.style.display = "none")}
                             />
                             {isLeader && (
-                              <div className="absolute -inset-0.5 rounded-sm bg-yellow-500/20 animate-pulse" />
+                              <div className="absolute -inset-0.5 rounded-sm bg-yellow-500/20 animate-pulse hidden md:block" />
                             )}
                           </div>
                           
                           <div className="flex flex-col min-w-0">
                             <div className="flex items-center gap-1 md:gap-2 overflow-hidden">
-                              <span className={`font-black text-[10px] md:text-lg tracking-tighter uppercase italic truncate ${isLeader ? 'text-yellow-500' : 'text-white'}`}>
+                              <span className={`font-black text-[10px] md:text-lg tracking-tighter uppercase italic truncate ${isLeader ? 'text-white md:text-yellow-500' : 'text-white'}`}>
                                 {piloto.driverName}
                               </span>
                               <span className="text-[6px] md:text-[10px] bg-white/10 text-white/60 px-0.5 md:px-1.5 py-0.5 rounded font-mono shrink-0">
