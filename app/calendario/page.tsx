@@ -7,17 +7,20 @@ import Image from "next/image";
 import { Footer } from "@/All/components/footer";
 import { Calendar, Flag, MapPin, ChevronRight } from "lucide-react";
 
+import { getNextRace } from "@/lib/races";
+
 export default function CalendarioPage() {
   const { scrollY } = useScroll();
   const y1 = useTransform(scrollY, [0, 500], [0, 100]);
 
-  // La próxima carrera según la fecha actual (24 de marzo 2026) es Americas
-  const nextRace = {
-    gp: "Gran Premio de las Américas",
-    circuit: "Circuit of the Americas, Austin",
-    dates: "27-29 marzo",
-    countryCode: "us",
-    round: "03"
+  const nextRaceData = getNextRace();
+  
+  const nextRace = nextRaceData || {
+    gp: "Próxima Carrera",
+    circuit: "TBD",
+    dates: "TBD",
+    countryCode: "un",
+    round: "--"
   };
 
   const containerVariants = {
