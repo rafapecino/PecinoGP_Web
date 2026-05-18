@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Header from "@/All/components/header";
-import { getLatestVideos, YouTubeVideo } from "@/lib/youtube-data";
+import type { YouTubeVideo } from "@/lib/youtube-data";
 import { YouTubeVideos } from "@/All/components/youtube-videos";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { Calendar, ChevronRight, Play } from "lucide-react";
@@ -18,9 +18,14 @@ export default function AnalisisGpPage() {
 
   useEffect(() => {
     async function fetchData() {
-      const latestVideos = await getLatestVideos(25);
-      setVideos(latestVideos);
-      setLoading(false);
+      try {
+        const res = await fetch('/api/youtube?max=25').then(r => r.json());
+        setVideos(res.latestVideos || []);
+      } catch (err) {
+        console.error('Error fetching videos:', err);
+      } finally {
+        setLoading(false);
+      }
     }
     fetchData();
   }, []);

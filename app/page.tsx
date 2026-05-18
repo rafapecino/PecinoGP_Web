@@ -4,7 +4,7 @@ import Header from "@/All/components/header";
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { getChannelStats, getLatestVideos, getVideosByIds, getLiveStream, YouTubeChannel, YouTubeVideo, LiveStream } from "@/lib/youtube-data";
+import type { YouTubeChannel, YouTubeVideo, LiveStream } from "@/lib/youtube-data";
 import { YouTubeStats } from "@/All/components/youtube-stats";
 import { YouTubeVideos } from "@/All/components/youtube-videos";
 import { LatestVideo } from "@/All/components/latest-video";
@@ -39,19 +39,24 @@ export default function Home() {
 
   useEffect(() => {
     async function fetchData() {
-      const stats = await getChannelStats();
-      const latest = await getLatestVideos(1);
-      const live = await getLiveStream();
-      const featuredVideoIds = ['EhRz4obCadU', 'b15kGQHfMwI', 'eCPrCjpQC2c'];
-      const featured = await getVideosByIds(featuredVideoIds);
+      try {
+        const featuredIds = ['EhRz4obCadU', 'b15kGQHfMwI', 'eCPrCjpQC2c'];
+        const [ytRes, liveRes] = await Promise.all([
+          fetch(`/api/youtube?max=1&featured=${featuredIds.join(',')}`).then(r => r.json()),
+          fetch('/api/live').then(r => r.json()),
+        ]);
 
-      setData({
-        channelStats: stats,
-        latestVideo: latest,
-        featuredVideos: featured,
-        liveStatus: live,
-      });
-      setLoading(false);
+        setData({
+          channelStats: ytRes.stats || null,
+          latestVideo: ytRes.latestVideos || [],
+          featuredVideos: ytRes.featuredVideos || [],
+          liveStatus: liveRes || null,
+        });
+      } catch (err) {
+        console.error('Error fetching home data:', err);
+      } finally {
+        setLoading(false);
+      }
     }
     fetchData();
   }, []);
