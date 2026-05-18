@@ -100,7 +100,7 @@ export const getLiveStream = cache(async (): Promise<LiveStream> => {
 
 export const getChannelStats = cache(async (): Promise<YouTubeChannel> => {
   const url = `https://www.googleapis.com/youtube/v3/channels?part=statistics&id=${CHANNEL_ID}`;
-  const data = await getData(url, "channelStats", { items: [FALLBACK_STATS] });
+  const data = await getData(url, "channelStats", { items: [] });
 
   if (!data.items || data.items.length === 0) {
     console.error("No channel data found in response, serving fallback.");
