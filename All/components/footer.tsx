@@ -8,14 +8,17 @@ export function Footer() {
     <footer className="px-4 sm:px-6 lg:px-8 py-16 border-t border-border bg-secondary">
       <div className="max-w-7xl mx-auto text-center">
         <Logo size="sm" />
-        <div className="flex justify-center gap-x-6 gap-y-4 flex-wrap mb-8 text-muted-foreground">
+        <div className="flex justify-center gap-x-6 gap-y-4 flex-wrap mb-6 text-muted-foreground">
           <Link href="/" className="hover:text-primary transition-colors">Inicio</Link>
           <Link href="/analisis-gp" className="hover:text-primary transition-colors">Vídeos GP</Link>
           <Link href="/calendario" className="hover:text-primary transition-colors">Calendario</Link>
           <Link href="/clasificacion" className="hover:text-primary transition-colors">Clasificación</Link>
           <Link href="/el-paddock" className="hover:text-primary transition-colors">El Paddock</Link>
-          <Link href="/privacy-policy" className="hover:text-primary transition-colors">Política de Privacidad</Link>
-          <Link href="/terms" className="hover:text-primary transition-colors">Términos</Link>
+        </div>
+        <div className="flex justify-center gap-x-6 gap-y-2 flex-wrap mb-8 text-xs text-muted-foreground/70">
+          <Link href="/aviso-legal" className="hover:text-primary transition-colors">Aviso Legal</Link>
+          <Link href="/politica-privacidad" className="hover:text-primary transition-colors">Política de Privacidad</Link>
+          <Link href="/politica-cookies" className="hover:text-primary transition-colors">Política de Cookies</Link>
         </div>
         {/* Placeholder for social icons */}
         <div className="flex justify-center gap-6 mb-8">
