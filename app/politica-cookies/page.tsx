@@ -1,6 +1,6 @@
 import type { Metadata } from "next"
 import Link from "next/link"
-import { Header } from "@/All/components/header"
+import Header from "@/All/components/header"
 import { Footer } from "@/All/components/footer"
 import { ManageCookiesButton } from "./manage-cookies-button"
 
