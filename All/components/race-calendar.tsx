@@ -6,7 +6,10 @@ import { motion } from "framer-motion";
 import { getRacesWithStatus } from "@/lib/races";
 
 export function RaceCalendar() {
-    const races = getRacesWithStatus();
+    const statusOrder = { next: 0, upcoming: 1, completed: 2 };
+    const races = getRacesWithStatus().sort(
+        (a, b) => statusOrder[a.status] - statusOrder[b.status]
+    );
     const listVariants = {
         hidden: { opacity: 0 },
         visible: {
