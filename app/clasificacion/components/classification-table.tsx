@@ -190,15 +190,15 @@ export default function ClassificationTable({ category, year }: ClassificationTa
                           </div>
                           
                           <div className="flex flex-col min-w-0">
-                            <div className="flex items-center gap-1 md:gap-2 overflow-hidden">
-                              <span className={`font-black text-[10px] md:text-lg tracking-tighter uppercase italic truncate ${isLeader ? 'text-white md:text-yellow-500' : 'text-white'}`}>
+                            <div className="flex items-start gap-1 md:gap-2">
+                              <span className={`font-black text-[10px] md:text-lg tracking-tighter uppercase italic leading-tight ${isLeader ? 'text-white md:text-yellow-500' : 'text-white'}`}>
                                 {piloto.driverName}
                               </span>
-                              <span className="text-[6px] md:text-[10px] bg-white/10 text-white/60 px-0.5 md:px-1.5 py-0.5 rounded font-mono shrink-0">
+                              <span className="text-[6px] md:text-[10px] bg-white/10 text-white/60 px-0.5 md:px-1.5 py-0.5 rounded font-mono shrink-0 mt-0.5">
                                 #{piloto.riderNumber}
                               </span>
                             </div>
-                            <span className="text-[6px] md:text-[10px] text-muted-foreground uppercase tracking-widest font-medium truncate">
+                            <span className="text-[6px] md:text-[10px] text-muted-foreground uppercase tracking-widest font-medium leading-tight mt-0.5">
                               {piloto.teamName}
                             </span>
                           </div>
