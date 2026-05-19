@@ -10,9 +10,9 @@ const CHANNEL_ID =
   process.env.YOUTUBE_CHANNEL_ID || process.env.NEXT_PUBLIC_YOUTUBE_CHANNEL_ID
 
 const FALLBACK_STATS = {
-  subscriberCount: "245000",
-  viewCount: "12500000",
-  videoCount: "156",
+  subscriberCount: "67900",
+  viewCount: "18458740",
+  videoCount: "1204",
 }
 
 const REVALIDATE_SECONDS = 3600
