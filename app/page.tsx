@@ -369,35 +369,82 @@ export default function Home() {
           <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-red-600/30 to-transparent" />
           <div className="absolute bottom-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-white/10 to-transparent" />
 
-          <div className="max-w-5xl mx-auto relative z-10 text-center">
+          {/* Resplandor rojo que respira detrás del título */}
+          <motion.div
+            aria-hidden
+            initial={{ opacity: 0.3, scale: 0.9 }}
+            animate={{ opacity: [0.3, 0.55, 0.3], scale: [0.9, 1.05, 0.9] }}
+            transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
+            className="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[300px] bg-red-600/20 blur-[140px] -z-0"
+          />
+
+          {/* Líneas de velocidad animadas */}
+          <motion.div
+            aria-hidden
+            initial={{ x: "-100%", opacity: 0 }}
+            whileInView={{ x: "0%", opacity: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 1, ease: [0.22, 1, 0.36, 1] }}
+            className="pointer-events-none absolute left-0 top-1/3 w-1/4 h-px bg-gradient-to-r from-red-600/60 to-transparent"
+          />
+          <motion.div
+            aria-hidden
+            initial={{ x: "100%", opacity: 0 }}
+            whileInView={{ x: "0%", opacity: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 1, delay: 0.15, ease: [0.22, 1, 0.36, 1] }}
+            className="pointer-events-none absolute right-0 bottom-1/3 w-1/4 h-px bg-gradient-to-l from-red-600/60 to-transparent"
+          />
+
+          <motion.div
+            variants={containerVariants}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, amount: 0.4 }}
+            className="max-w-5xl mx-auto relative z-10 text-center"
+          >
             <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.8 }}
+              variants={itemVariants}
+              className="flex items-center justify-center gap-2 mb-6"
             >
-              <div className="flex items-center justify-center gap-2 mb-6">
-                <div className="w-8 h-1 bg-red-600 rounded-full" />
-                <span className="text-red-500 font-black uppercase tracking-[0.4em] text-[10px]">
-                  Trabaja con nosotros
-                </span>
-                <div className="w-8 h-1 bg-red-600 rounded-full" />
-              </div>
+              <motion.div
+                initial={{ width: 0 }}
+                whileInView={{ width: 32 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.6, delay: 0.3 }}
+                className="h-1 bg-red-600 rounded-full"
+              />
+              <span className="text-red-500 font-black uppercase tracking-[0.4em] text-[10px]">
+                Trabaja con nosotros
+              </span>
+              <motion.div
+                initial={{ width: 0 }}
+                whileInView={{ width: 32 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.6, delay: 0.3 }}
+                className="h-1 bg-red-600 rounded-full"
+              />
+            </motion.div>
 
-              <h2
-                className="text-5xl sm:text-6xl md:text-8xl font-black text-white italic tracking-tighter leading-[0.85] mb-8"
-                style={{ filter: "drop-shadow(0 10px 30px rgba(0,0,0,0.8))" }}
-              >
-                ¿TIENES ALGO <br />
-                <span className="text-red-600">QUE PROPONERNOS?</span>
-              </h2>
+            <motion.h2
+              variants={itemVariants}
+              className="text-5xl sm:text-6xl md:text-8xl font-black text-white italic tracking-tighter leading-[0.85] mb-8"
+              style={{ filter: "drop-shadow(0 10px 30px rgba(0,0,0,0.8))" }}
+            >
+              ¿TIENES ALGO <br />
+              <span className="text-red-600">QUE PROPONERNOS?</span>
+            </motion.h2>
 
-              <p className="max-w-2xl mx-auto text-gray-400 text-lg md:text-xl font-medium italic mb-12">
-                Marcas, equipos, creadores y medios: estamos abiertos a
-                colaboraciones que sumen al paddock digital. Escríbenos y
-                hablamos.
-              </p>
+            <motion.p
+              variants={itemVariants}
+              className="max-w-2xl mx-auto text-gray-400 text-lg md:text-xl font-medium italic mb-12"
+            >
+              Marcas, equipos, creadores y medios: estamos abiertos a
+              colaboraciones que sumen al paddock digital. Escríbenos y
+              hablamos.
+            </motion.p>
 
+            <motion.div variants={itemVariants}>
               <Link
                 href="/contacto"
                 className="group relative inline-flex items-center justify-center bg-gradient-to-r from-red-600 to-red-700 text-white font-black py-5 px-12 rounded-2xl text-lg overflow-hidden transition-all duration-500 hover:scale-110 active:scale-95 shadow-[0_0_40px_rgba(220,38,38,0.4)] hover:shadow-[0_0_70px_rgba(220,38,38,0.6)] border border-white/10"
@@ -412,7 +459,7 @@ export default function Home() {
                 </span>
               </Link>
             </motion.div>
-          </div>
+          </motion.div>
         </section>
 
         {/* Footer */}
