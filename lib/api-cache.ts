@@ -1,15 +1,32 @@
 import { promises as fs } from "fs";
 import path from "path";
+import os from "os";
 import crypto from "crypto";
 
-const CACHE_DIR = path.join(process.cwd(), ".api-cache");
+// Usamos el directorio temporal del sistema, que es escribible tanto en local
+// como en Vercel (/tmp). process.cwd() (/var/task) es de SOLO LECTURA en las
+// funciones serverless de Vercel, por lo que escribir ahí lanzaba ENOENT/EROFS.
+const CACHE_DIR = path.join(os.tmpdir(), "pecinogp-api-cache");
 const IS_DEV = process.env.NODE_ENV !== "production";
 
+// Si no se puede crear el directorio de caché (FS restringido), degradamos sin
+// romper: simplemente no cacheamos y siempre vamos a la fuente.
+let cacheUsable = true;
 let dirReady: Promise<void> | null = null;
 
 function ensureDir(): Promise<void> {
   if (!dirReady) {
-    dirReady = fs.mkdir(CACHE_DIR, { recursive: true }).then(() => {});
+    dirReady = fs
+      .mkdir(CACHE_DIR, { recursive: true })
+      .then(() => {})
+      .catch((err) => {
+        cacheUsable = false;
+        if (IS_DEV) {
+          console.warn(
+            `[api-cache] Caché en disco deshabilitado (${err?.code ?? "error"}). Se servirá sin caché.`,
+          );
+        }
+      });
   }
   return dirReady;
 }
@@ -43,6 +60,12 @@ export async function cachedJson<T>(
   fetcher: () => Promise<T>,
 ): Promise<T> {
   await ensureDir();
+
+  // FS no escribible: vamos directos a la fuente sin cachear.
+  if (!cacheUsable) {
+    return fetcher();
+  }
+
   const filePath = path.join(CACHE_DIR, `${safeKey(key)}.json`);
   const ttlSec = IS_DEV ? ttl.dev : ttl.prod;
 

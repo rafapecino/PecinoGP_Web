@@ -41,6 +41,10 @@ export default function Home() {
   const heroHeadlineRef = useRef<HTMLHeadingElement>(null);
   const heroContentRef = useRef<HTMLDivElement>(null);
 
+  // Refs para el bloque "Último análisis disponible".
+  const latestRef = useRef<HTMLDivElement>(null);
+  const latestCardRef = useRef<HTMLDivElement>(null);
+
   useEffect(() => {
     async function fetchData() {
       try {
@@ -146,6 +150,33 @@ export default function Home() {
       };
     },
     { scope: heroRef },
+  );
+
+  // --- ÚLTIMO ANÁLISIS: sube y escala ligado al scroll (scrub) ---
+  useGSAP(
+    () => {
+      const reduce = window.matchMedia(
+        "(prefers-reduced-motion: reduce)",
+      ).matches;
+      if (reduce || !latestCardRef.current) return;
+
+      gsap.fromTo(
+        latestCardRef.current,
+        { y: 110, scale: 0.9 },
+        {
+          y: 0,
+          scale: 1,
+          ease: "none",
+          scrollTrigger: {
+            trigger: latestRef.current,
+            start: "top bottom",
+            end: "center center",
+            scrub: 1,
+          },
+        },
+      );
+    },
+    { scope: latestRef },
   );
 
   return (
@@ -361,18 +392,16 @@ export default function Home() {
         {/* Se movieron las estadísticas al hero */}
 
         {/* --- LATEST VIDEO --- */}
-        <section className="px-4 py-24 md:py-32 overflow-hidden">
+        <section
+          ref={latestRef}
+          className="px-4 py-24 md:py-32 overflow-hidden"
+        >
           <div className="max-w-6xl mx-auto flex flex-col items-center">
-            <motion.div
-              initial={{ opacity: 0, scale: 0.95 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.6 }}
-              className="w-full relative"
-            >
+            <div ref={latestCardRef} className="w-full relative">
               <div className="absolute top-0 right-0 w-64 h-64 bg-red-600/10 blur-[120px] -z-10" />
               <div className="absolute bottom-0 left-0 w-64 h-64 bg-red-600/10 blur-[120px] -z-10" />
               <LatestVideo latestVideo={data.latestVideo[0] || null} />
-            </motion.div>
+            </div>
           </div>
         </section>
 

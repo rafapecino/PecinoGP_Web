@@ -2,6 +2,7 @@
 
 import Header from "@/All/components/header";
 import { Footer } from "@/All/components/footer";
+import { SplitHeadline } from "@/All/components/split-headline";
 import { motion, useScroll, useTransform } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
@@ -113,7 +114,10 @@ export default function ContactoPage() {
       <main>
         {/* --- CINEMATIC HERO --- */}
         <section className="relative py-16 md:py-48 flex items-center justify-center overflow-hidden">
-          <motion.div style={{ y: y1 }} className="absolute inset-0 z-0 scale-110">
+          <motion.div
+            style={{ y: y1 }}
+            className="absolute inset-0 z-0 scale-110"
+          >
             <Image
               src="/hero-stats-bg.png"
               alt="Fondo Contacto"
@@ -130,21 +134,23 @@ export default function ContactoPage() {
             animate="visible"
             className="relative z-20 max-w-7xl mx-auto px-4 text-center"
           >
-            <motion.div variants={itemVariants} className="flex items-center justify-center gap-2 mb-6">
+            <motion.div
+              variants={itemVariants}
+              className="flex items-center justify-center gap-2 mb-6"
+            >
               <div className="w-8 h-1 bg-red-600 rounded-full" />
               <span className="text-red-500 font-black uppercase tracking-[0.4em] text-[10px]">
                 Línea directa con el box
               </span>
             </motion.div>
 
-            <motion.h1
-              variants={itemVariants}
+            <SplitHeadline
               className="text-5xl sm:text-6xl md:text-8xl lg:text-9xl font-black text-white italic tracking-tighter leading-[0.85] mb-8"
               style={{ filter: "drop-shadow(0 10px 30px rgba(0,0,0,0.8))" }}
             >
               HABLEMOS <br />
               <span className="text-red-600">DE MOTOGP</span>
-            </motion.h1>
+            </SplitHeadline>
 
             <motion.p
               variants={itemVariants}
@@ -182,7 +188,9 @@ export default function ContactoPage() {
                   >
                     <div
                       className={`absolute -top-12 -right-12 w-40 h-40 rounded-full blur-3xl transition-opacity ${
-                        active ? "bg-red-600/20 opacity-100" : "bg-red-600/10 opacity-0 group-hover:opacity-60"
+                        active
+                          ? "bg-red-600/20 opacity-100"
+                          : "bg-red-600/10 opacity-0 group-hover:opacity-60"
                       }`}
                     />
                     <div className="relative z-10">
@@ -198,7 +206,9 @@ export default function ContactoPage() {
                       <h3 className="text-xl font-black italic uppercase tracking-tighter text-white mb-2">
                         {r.label}
                       </h3>
-                      <p className="text-sm text-white/50 leading-relaxed">{r.description}</p>
+                      <p className="text-sm text-white/50 leading-relaxed">
+                        {r.description}
+                      </p>
                       {active && (
                         <div className="absolute top-4 right-4 flex items-center gap-1 text-[9px] font-black uppercase tracking-[0.2em] text-red-500">
                           <Check size={12} /> Seleccionado
@@ -318,7 +328,10 @@ export default function ContactoPage() {
                   <p className="text-xs text-white/40 leading-relaxed max-w-md">
                     Al enviar se abrirá tu cliente de correo con el mensaje
                     listo para mandar a{" "}
-                    <span className="text-red-500 font-bold">{CONTACT_EMAIL}</span>.
+                    <span className="text-red-500 font-bold">
+                      {CONTACT_EMAIL}
+                    </span>
+                    .
                   </p>
 
                   <button
@@ -347,7 +360,10 @@ export default function ContactoPage() {
                     animate={{ opacity: 1, y: 0 }}
                     className="flex items-start gap-3 p-4 rounded-2xl bg-green-600/10 border border-green-600/30"
                   >
-                    <Check className="text-green-500 shrink-0 mt-0.5" size={18} />
+                    <Check
+                      className="text-green-500 shrink-0 mt-0.5"
+                      size={18}
+                    />
                     <p className="text-sm text-green-200/80 leading-relaxed">
                       Hemos abierto tu cliente de correo. Si no se ha abierto,
                       escríbenos directamente a{" "}
@@ -402,7 +418,10 @@ export default function ContactoPage() {
                     {CONTACT_EMAIL}
                   </p>
                 </div>
-                <ArrowUpRight className="text-white/30 group-hover:text-red-500 group-hover:translate-x-1 group-hover:-translate-y-1 transition-all" size={18} />
+                <ArrowUpRight
+                  className="text-white/30 group-hover:text-red-500 group-hover:translate-x-1 group-hover:-translate-y-1 transition-all"
+                  size={18}
+                />
               </a>
 
               {/* Social cards */}
@@ -423,7 +442,10 @@ export default function ContactoPage() {
                     @PecinoGP
                   </p>
                 </div>
-                <ArrowUpRight className="text-white/30 group-hover:text-red-500 group-hover:translate-x-1 group-hover:-translate-y-1 transition-all" size={18} />
+                <ArrowUpRight
+                  className="text-white/30 group-hover:text-red-500 group-hover:translate-x-1 group-hover:-translate-y-1 transition-all"
+                  size={18}
+                />
               </Link>
 
               <Link
@@ -443,7 +465,10 @@ export default function ContactoPage() {
                     @pecinogp
                   </p>
                 </div>
-                <ArrowUpRight className="text-white/30 group-hover:text-red-500 group-hover:translate-x-1 group-hover:-translate-y-1 transition-all" size={18} />
+                <ArrowUpRight
+                  className="text-white/30 group-hover:text-red-500 group-hover:translate-x-1 group-hover:-translate-y-1 transition-all"
+                  size={18}
+                />
               </Link>
 
               <div className="p-5 rounded-2xl bg-gradient-to-br from-red-600/10 to-transparent border border-red-600/20">
@@ -451,8 +476,8 @@ export default function ContactoPage() {
                   Tiempo de respuesta
                 </p>
                 <p className="text-sm text-white/70 leading-relaxed">
-                  Solemos responder entre 24 y 48 horas laborables. En fines
-                  de semana de GP puede tardar un poco más.
+                  Solemos responder entre 24 y 48 horas laborables. En fines de
+                  semana de GP puede tardar un poco más.
                 </p>
               </div>
             </motion.aside>
