@@ -3,7 +3,7 @@ import { Footer } from "@/All/components/footer";
 import Header from "@/All/components/header";
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import type {
   YouTubeChannel,
   YouTubeVideo,
@@ -12,8 +12,14 @@ import type {
 import { YouTubeStats } from "@/All/components/youtube-stats";
 import { YouTubeVideos } from "@/All/components/youtube-videos";
 import { LatestVideo } from "@/All/components/latest-video";
-import { motion, useScroll, useTransform, useSpring } from "framer-motion";
+import { motion } from "framer-motion";
 import { Play, ChevronRight, Youtube, Star, ArrowUpRight } from "lucide-react";
+import { gsap } from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { SplitText } from "gsap/SplitText";
+import { useGSAP } from "@gsap/react";
+
+gsap.registerPlugin(ScrollTrigger, SplitText, useGSAP);
 
 export default function Home() {
   const [data, setData] = useState<{
@@ -29,17 +35,11 @@ export default function Home() {
   });
   const [loading, setLoading] = useState(true);
 
-  const { scrollY } = useScroll();
-  const smoothScrollY = useSpring(scrollY, {
-    stiffness: 100,
-    damping: 30,
-    restDelta: 0.001,
-  });
-
-  const y1 = useTransform(smoothScrollY, [0, 500], [0, 200]);
-  const y2 = useTransform(smoothScrollY, [0, 500], [0, -150]);
-  const y3 = useTransform(smoothScrollY, [0, 500], [0, 100]);
-  const opacity = useTransform(smoothScrollY, [0, 400], [1, 0.2]);
+  // Refs para el hero cinematográfico controlado por GSAP/ScrollTrigger.
+  const heroRef = useRef<HTMLElement>(null);
+  const heroBgRef = useRef<HTMLDivElement>(null);
+  const heroHeadlineRef = useRef<HTMLHeadingElement>(null);
+  const heroContentRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     async function fetchData() {
@@ -93,17 +93,72 @@ export default function Home() {
     },
   };
 
+  // --- HERO CINEMATOGRÁFICO (GSAP) ---
+  useGSAP(
+    () => {
+      const reduce = window.matchMedia(
+        "(prefers-reduced-motion: reduce)",
+      ).matches;
+      if (reduce) return;
+
+      // Revelado del titular letra a letra al cargar (SplitText).
+      let split: SplitText | null = null;
+      if (heroHeadlineRef.current) {
+        split = new SplitText(heroHeadlineRef.current, { type: "chars" });
+        gsap.from(split.chars, {
+          yPercent: 120,
+          opacity: 0,
+          rotateX: -50,
+          stagger: 0.035,
+          duration: 0.9,
+          ease: "power4.out",
+          delay: 0.25,
+        });
+      }
+
+      // Pin + scrub: el hero se fija y la escena hace zoom/parallax con el scroll.
+      // Solo en escritorio para no entorpecer el scroll táctil en móvil.
+      const mm = gsap.matchMedia();
+      mm.add("(min-width: 768px)", () => {
+        const tl = gsap.timeline({
+          scrollTrigger: {
+            trigger: heroRef.current,
+            start: "top top",
+            end: "+=90%",
+            scrub: 1,
+            pin: true,
+          },
+        });
+        tl.to(
+          heroBgRef.current,
+          { scale: 1.55, yPercent: 14, ease: "none" },
+          0,
+        );
+        tl.to(
+          heroContentRef.current,
+          { yPercent: -12, opacity: 0, ease: "none" },
+          0,
+        );
+      });
+
+      return () => {
+        split?.revert();
+      };
+    },
+    { scope: heroRef },
+  );
+
   return (
     <div className="min-h-screen bg-black text-foreground overflow-x-hidden selection:bg-red-600 selection:text-white">
       <Header />
 
       <main className="">
         {/* --- CINEMATIC HERO --- */}
-        <section className="relative h-screen flex items-center justify-center overflow-hidden">
-          <motion.div
-            style={{ y: y1 }}
-            className="absolute inset-0 z-0 scale-125"
-          >
+        <section
+          ref={heroRef}
+          className="relative h-screen flex items-center justify-center overflow-hidden"
+        >
+          <div ref={heroBgRef} className="absolute inset-0 z-0 scale-125">
             <Image
               src="/motogp-race-moment---index-.jpg"
               alt="Fondo de carrera de MotoGP"
@@ -112,186 +167,194 @@ export default function Home() {
               priority
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-black/60"></div>
-          </motion.div>
+          </div>
 
-          <motion.div
-            variants={containerVariants}
-            initial="hidden"
-            animate="visible"
-            className="relative z-20 max-w-7xl mx-auto px-4 text-center md:text-left grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-32 items-center pt-24 md:pt-40"
+          <div
+            ref={heroContentRef}
+            className="relative z-20 w-full flex items-center justify-center"
           >
-            <div className="flex flex-col items-center md:items-start text-center md:text-left pb-12 md:pb-24">
+            <motion.div
+              variants={containerVariants}
+              initial="hidden"
+              animate="visible"
+              className="max-w-7xl mx-auto px-4 text-center md:text-left grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-32 items-center pt-24 md:pt-40"
+            >
+              <div className="flex flex-col items-center md:items-start text-center md:text-left pb-12 md:pb-24">
+                <motion.div
+                  variants={itemVariants}
+                  className="flex items-center gap-2 mb-4 md:mb-6"
+                >
+                  <div className="w-8 md:w-10 h-1 bg-red-600 rounded-full" />
+                  <span className="text-red-500 font-black uppercase tracking-[0.4em] text-[10px] md:text-xs">
+                    PecinoGP Oficial
+                  </span>
+                </motion.div>
+
+                <motion.div variants={itemVariants} className="relative z-10">
+                  {data.liveStatus?.isLive && (
+                    <motion.div
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      className="inline-flex items-center gap-3 bg-white/5 backdrop-blur-xl border border-white/10 rounded-full px-5 py-2 mb-10 shadow-2xl"
+                    >
+                      <span className="relative flex h-2 w-2">
+                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
+                        <span className="relative inline-flex rounded-full h-2 w-2 bg-red-600"></span>
+                      </span>
+                      <span className="text-white/80 text-xs font-bold tracking-widest uppercase italic">
+                        ¡Estamos en directo ahora!
+                      </span>
+                      <div className="flex items-center gap-1 text-red-500 font-black text-[10px] animate-bounce">
+                        SINTONIZAR ARRIBA{" "}
+                        <ArrowUpRight size={14} className="rotate-[-15deg]" />
+                      </div>
+                    </motion.div>
+                  )}
+                </motion.div>
+
+                <h1
+                  ref={heroHeadlineRef}
+                  className="relative text-5xl sm:text-6xl md:text-8xl lg:text-9xl font-black text-white italic tracking-tighter leading-[0.85] mb-12"
+                  style={{
+                    filter: "drop-shadow(0 10px 30px rgba(0,0,0,0.8))",
+                    perspective: "600px",
+                  }}
+                >
+                  PASIÓN <br /> <span className="text-red-600">AL LÍMITE</span>
+                </h1>
+
+                {/* Removiendo párrafo solicitado */}
+                <div className="flex flex-col sm:flex-row gap-4 md:gap-6 w-full sm:w-auto relative z-30">
+                  <Link
+                    href={
+                      data.latestVideo.length > 0
+                        ? getVideoUrl(data.latestVideo[0].id)
+                        : "#"
+                    }
+                    className="group relative inline-flex items-center justify-center bg-gradient-to-r from-red-600 to-red-700 text-white font-black py-4 md:py-6 px-10 rounded-2xl text-lg md:text-xl overflow-hidden transition-all duration-500 hover:scale-110 active:scale-95 shadow-[0_0_30px_rgba(220,38,38,0.4)] hover:shadow-[0_0_60px_rgba(220,38,38,0.6)] border border-white/10"
+                  >
+                    <div className="absolute inset-x-0 inset-y-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:animate-shimmer" />
+                    <span className="relative z-10 flex items-center gap-2 md:gap-3 italic tracking-tighter uppercase drop-shadow-lg">
+                      <Play className="fill-white" size={24} /> VER ÚLTIMO VÍDEO
+                    </span>
+                  </Link>
+                  <Link
+                    href="/analisis-gp"
+                    className="group relative inline-flex items-center justify-center bg-white/5 backdrop-blur-xl border border-white/10 text-white font-black py-4 md:py-6 px-10 rounded-2xl text-lg md:text-xl overflow-hidden transition-all duration-500 hover:scale-110 active:scale-95 hover:bg-white/10 group/btn"
+                  >
+                    <span className="relative z-10 flex items-center gap-2 md:gap-3 italic tracking-tighter uppercase whitespace-nowrap">
+                      Todos los Vídeos{" "}
+                      <ChevronRight
+                        size={24}
+                        className="group-hover/btn:translate-x-2 transition-transform duration-300"
+                      />
+                    </span>
+                  </Link>
+                </div>
+              </div>
+
+              {/* Columna Derecha: Estadísticas (solo escritorio) */}
               <motion.div
                 variants={itemVariants}
-                className="flex items-center gap-2 mb-4 md:mb-6"
+                className="hidden lg:block relative h-[500px] w-full"
               >
-                <div className="w-8 md:w-10 h-1 bg-red-600 rounded-full" />
-                <span className="text-red-500 font-black uppercase tracking-[0.4em] text-[10px] md:text-xs">
-                  PecinoGP Oficial
-                </span>
-              </motion.div>
-
-              <motion.div variants={itemVariants} className="relative z-10">
-                {data.liveStatus?.isLive && (
-                  <motion.div
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    className="inline-flex items-center gap-3 bg-white/5 backdrop-blur-xl border border-white/10 rounded-full px-5 py-2 mb-10 shadow-2xl"
-                  >
-                    <span className="relative flex h-2 w-2">
-                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
-                      <span className="relative inline-flex rounded-full h-2 w-2 bg-red-600"></span>
-                    </span>
-                    <span className="text-white/80 text-xs font-bold tracking-widest uppercase italic">
-                      ¡Estamos en directo ahora!
-                    </span>
-                    <div className="flex items-center gap-1 text-red-500 font-black text-[10px] animate-bounce">
-                      SINTONIZAR ARRIBA{" "}
-                      <ArrowUpRight size={14} className="rotate-[-15deg]" />
-                    </div>
-                  </motion.div>
-                )}
-              </motion.div>
-
-              <motion.h1
-                variants={itemVariants}
-                className="relative text-5xl sm:text-6xl md:text-8xl lg:text-9xl font-black text-white italic tracking-tighter leading-[0.85] mb-12"
-                style={{ filter: "drop-shadow(0 10px 30px rgba(0,0,0,0.8))" }}
-              >
-                PASIÓN <br /> <span className="text-red-600">AL LÍMITE</span>
-              </motion.h1>
-
-              {/* Removiendo párrafo solicitado */}
-              <div className="flex flex-col sm:flex-row gap-4 md:gap-6 w-full sm:w-auto relative z-30">
-                <Link
-                  href={
-                    data.latestVideo.length > 0
-                      ? getVideoUrl(data.latestVideo[0].id)
-                      : "#"
-                  }
-                  className="group relative inline-flex items-center justify-center bg-gradient-to-r from-red-600 to-red-700 text-white font-black py-4 md:py-6 px-10 rounded-2xl text-lg md:text-xl overflow-hidden transition-all duration-500 hover:scale-110 active:scale-95 shadow-[0_0_30px_rgba(220,38,38,0.4)] hover:shadow-[0_0_60px_rgba(220,38,38,0.6)] border border-white/10"
-                >
-                  <div className="absolute inset-x-0 inset-y-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:animate-shimmer" />
-                  <span className="relative z-10 flex items-center gap-2 md:gap-3 italic tracking-tighter uppercase drop-shadow-lg">
-                    <Play className="fill-white" size={24} /> VER ÚLTIMO VÍDEO
-                  </span>
-                </Link>
-                <Link
-                  href="/analisis-gp"
-                  className="group relative inline-flex items-center justify-center bg-white/5 backdrop-blur-xl border border-white/10 text-white font-black py-4 md:py-6 px-10 rounded-2xl text-lg md:text-xl overflow-hidden transition-all duration-500 hover:scale-110 active:scale-95 hover:bg-white/10 group/btn"
-                >
-                  <span className="relative z-10 flex items-center gap-2 md:gap-3 italic tracking-tighter uppercase whitespace-nowrap">
-                    Todos los Vídeos{" "}
-                    <ChevronRight
-                      size={24}
-                      className="group-hover/btn:translate-x-2 transition-transform duration-300"
-                    />
-                  </span>
-                </Link>
-              </div>
-            </div>
-
-            {/* Columna Derecha: Estadísticas (solo escritorio) */}
-            <motion.div
-              variants={itemVariants}
-              className="hidden lg:block relative h-[500px] w-full"
-            >
-              <div className="relative h-full w-full bg-white/[0.01] backdrop-blur-xl rounded-[32px] border border-white/5 p-12 shadow-2xl overflow-hidden group">
-                <div className="relative z-10 flex flex-col h-full justify-between">
-                  <div>
-                    <div className="flex items-center justify-between mb-10">
-                      <div className="relative flex items-center gap-2 translate-y-0 group-hover:-translate-y-1 transition-transform">
-                        <div className="w-8 h-1 bg-red-600 rounded-full shadow-[0_0_20px_rgba(220,38,38,1)]" />
-                        <span className="text-red-500 font-black uppercase tracking-[0.4em] text-[10px] whitespace-nowrap">
-                          Archivo PecinoGP
-                        </span>
+                <div className="relative h-full w-full bg-white/[0.01] backdrop-blur-xl rounded-[32px] border border-white/5 p-12 shadow-2xl overflow-hidden group">
+                  <div className="relative z-10 flex flex-col h-full justify-between">
+                    <div>
+                      <div className="flex items-center justify-between mb-10">
+                        <div className="relative flex items-center gap-2 translate-y-0 group-hover:-translate-y-1 transition-transform">
+                          <div className="w-8 h-1 bg-red-600 rounded-full shadow-[0_0_20px_rgba(220,38,38,1)]" />
+                          <span className="text-red-500 font-black uppercase tracking-[0.4em] text-[10px] whitespace-nowrap">
+                            Archivo PecinoGP
+                          </span>
+                        </div>
+                        {/* --- LIVE STATUS BUTTON --- */}
+                        <Link
+                          href={
+                            data.liveStatus?.isLive
+                              ? `https://www.youtube.com/watch?v=${data.liveStatus.videoId}`
+                              : "https://www.youtube.com/@PecinoGP/streams"
+                          }
+                          target="_blank"
+                          className={`group/live flex items-center gap-2 px-4 py-2 rounded-full border transition-all duration-300 ${
+                            data.liveStatus?.isLive
+                              ? "bg-red-600 border-red-500 text-white animate-pulse shadow-[0_0_30px_rgba(220,38,38,0.8)] scale-110"
+                              : "bg-white/5 border-white/10 text-white/40 hover:bg-white/10"
+                          }`}
+                        >
+                          <div
+                            className={`w-2.5 h-2.5 rounded-full ${data.liveStatus?.isLive ? "bg-white shadow-[0_0_15px_white]" : "bg-white/20"}`}
+                          />
+                          <span className="text-[10px] font-black uppercase tracking-widest italic pt-0.5">
+                            {data.liveStatus?.isLive
+                              ? "EN DIRECTO"
+                              : "CANAL DE DIRECTOS"}
+                          </span>
+                        </Link>
                       </div>
-                      {/* --- LIVE STATUS BUTTON --- */}
-                      <Link
-                        href={
-                          data.liveStatus?.isLive
-                            ? `https://www.youtube.com/watch?v=${data.liveStatus.videoId}`
-                            : "https://www.youtube.com/@PecinoGP/streams"
-                        }
-                        target="_blank"
-                        className={`group/live flex items-center gap-2 px-4 py-2 rounded-full border transition-all duration-300 ${
-                          data.liveStatus?.isLive
-                            ? "bg-red-600 border-red-500 text-white animate-pulse shadow-[0_0_30px_rgba(220,38,38,0.8)] scale-110"
-                            : "bg-white/5 border-white/10 text-white/40 hover:bg-white/10"
-                        }`}
-                      >
-                        <div
-                          className={`w-2.5 h-2.5 rounded-full ${data.liveStatus?.isLive ? "bg-white shadow-[0_0_15px_white]" : "bg-white/20"}`}
-                        />
-                        <span className="text-[10px] font-black uppercase tracking-widest italic pt-0.5">
-                          {data.liveStatus?.isLive
-                            ? "EN DIRECTO"
-                            : "CANAL DE DIRECTOS"}
-                        </span>
-                      </Link>
+
+                      {data.channelStats && (
+                        <div className="space-y-12">
+                          <div className="flex flex-col group/item">
+                            <span className="text-[10px] font-black uppercase tracking-[0.2em] text-white/50 mb-1">
+                              Fanáticos Reales
+                            </span>
+                            <div className="flex items-baseline gap-2">
+                              <span className="text-7xl md:text-9xl font-black text-white italic tracking-tighter leading-none [text-shadow:0_15px_30px_rgba(0,0,0,0.5)]">
+                                {Math.floor(
+                                  Number(data.channelStats.subscriberCount) /
+                                    1000,
+                                )}
+                                K
+                              </span>
+                            </div>
+                            <div className="w-full bg-white/10 h-1.5 mt-6 rounded-full overflow-hidden">
+                              <motion.div
+                                initial={{ width: 0 }}
+                                whileInView={{ width: "88%" }}
+                                transition={{ duration: 2, ease: "circOut" }}
+                                className="h-full bg-red-600 shadow-[0_0_15px_rgba(220,38,38,0.5)]"
+                              />
+                            </div>
+                          </div>
+                        </div>
+                      )}
                     </div>
 
                     {data.channelStats && (
-                      <div className="space-y-12">
-                        <div className="flex flex-col group/item">
-                          <span className="text-[10px] font-black uppercase tracking-[0.2em] text-white/50 mb-1">
-                            Fanáticos Reales
+                      <div className="grid grid-cols-2 gap-10 pt-10 border-t border-white/10">
+                        <div className="flex flex-col">
+                          <span className="text-[9px] font-black uppercase tracking-[0.3em] text-white/40 mb-2">
+                            Contenido
                           </span>
-                          <div className="flex items-baseline gap-2">
-                            <span className="text-7xl md:text-9xl font-black text-white italic tracking-tighter leading-none [text-shadow:0_15px_30px_rgba(0,0,0,0.5)]">
-                              {Math.floor(
-                                Number(data.channelStats.subscriberCount) /
-                                  1000,
-                              )}
-                              K
+                          <span className="text-4xl font-black text-white italic tracking-tighter">
+                            {data.channelStats.videoCount}{" "}
+                            <span className="text-xs text-red-500 not-italic ml-1">
+                              VÍDEOS
                             </span>
-                          </div>
-                          <div className="w-full bg-white/10 h-1.5 mt-6 rounded-full overflow-hidden">
-                            <motion.div
-                              initial={{ width: 0 }}
-                              whileInView={{ width: "88%" }}
-                              transition={{ duration: 2, ease: "circOut" }}
-                              className="h-full bg-red-600 shadow-[0_0_15px_rgba(220,38,38,0.5)]"
-                            />
-                          </div>
+                          </span>
+                        </div>
+                        <div className="flex flex-col">
+                          <span className="text-[9px] font-black uppercase tracking-[0.3em] text-white/40 mb-2">
+                            Impacto
+                          </span>
+                          <span className="text-4xl font-black text-white italic tracking-tighter">
+                            {Math.floor(
+                              Number(data.channelStats.viewCount) / 1000000,
+                            )}
+                            M{" "}
+                            <span className="text-xs text-red-500 not-italic ml-1">
+                              VISTAS
+                            </span>
+                          </span>
                         </div>
                       </div>
                     )}
                   </div>
-
-                  {data.channelStats && (
-                    <div className="grid grid-cols-2 gap-10 pt-10 border-t border-white/10">
-                      <div className="flex flex-col">
-                        <span className="text-[9px] font-black uppercase tracking-[0.3em] text-white/40 mb-2">
-                          Contenido
-                        </span>
-                        <span className="text-4xl font-black text-white italic tracking-tighter">
-                          {data.channelStats.videoCount}{" "}
-                          <span className="text-xs text-red-500 not-italic ml-1">
-                            VÍDEOS
-                          </span>
-                        </span>
-                      </div>
-                      <div className="flex flex-col">
-                        <span className="text-[9px] font-black uppercase tracking-[0.3em] text-white/40 mb-2">
-                          Impacto
-                        </span>
-                        <span className="text-4xl font-black text-white italic tracking-tighter">
-                          {Math.floor(
-                            Number(data.channelStats.viewCount) / 1000000,
-                          )}
-                          M{" "}
-                          <span className="text-xs text-red-500 not-italic ml-1">
-                            VISTAS
-                          </span>
-                        </span>
-                      </div>
-                    </div>
-                  )}
                 </div>
-              </div>
+              </motion.div>
             </motion.div>
-          </motion.div>
+          </div>
         </section>
 
         {/* --- STATS SECTION --- */}
