@@ -5,8 +5,9 @@ import { QAndA } from "@/All/components/q-and-a";
 import { QuickPoll } from "@/All/components/quick-poll";
 import { motion, useScroll, useTransform } from "framer-motion";
 import Image from "next/image";
+import Link from "next/link";
 import { Footer } from "@/All/components/footer";
-import { MessageSquare, Vote } from "lucide-react";
+import { MessageSquare, Vote, Mail, ArrowUpRight, Handshake } from "lucide-react";
 
 export default function ElPaddockPage() {
   const { scrollY } = useScroll();
@@ -133,8 +134,90 @@ export default function ElPaddockPage() {
             </div>
           </div>
         </section>
+
+        {/* --- CONTACT CTA --- */}
+        <section className="px-4 sm:px-6 lg:px-8 py-20 md:py-28 relative overflow-hidden">
+          <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-red-600/30 to-transparent" />
+          <div className="absolute -top-32 left-1/2 -translate-x-1/2 w-[600px] h-[600px] bg-red-600/10 blur-[140px] rounded-full -z-10" />
+
+          <div className="max-w-7xl mx-auto">
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.8 }}
+              className="relative overflow-hidden rounded-[32px] border border-white/10 bg-gradient-to-br from-white/[0.04] via-white/[0.02] to-transparent backdrop-blur-xl p-8 md:p-16"
+            >
+              <div className="absolute -top-20 -right-20 w-80 h-80 bg-red-600/20 blur-3xl rounded-full" />
+              <div className="absolute -bottom-20 -left-20 w-80 h-80 bg-red-600/10 blur-3xl rounded-full" />
+
+              <div className="relative z-10 grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16 items-center">
+                <div>
+                  <div className="flex items-center gap-2 mb-6">
+                    <div className="w-8 h-1 bg-red-600 rounded-full" />
+                    <span className="text-red-500 font-black uppercase tracking-[0.4em] text-[10px]">
+                      ¿Algo más que contarnos?
+                    </span>
+                  </div>
+
+                  <h2 className="text-4xl md:text-6xl font-black text-white italic tracking-tighter leading-[0.9] mb-6">
+                    HABLEMOS <span className="text-red-600">EN PRIVADO</span>
+                  </h2>
+
+                  <p className="text-white/60 text-base md:text-lg leading-relaxed max-w-xl">
+                    ¿Tienes una propuesta de colaboración, una pregunta que no
+                    encaja en el debate público o quieres trabajar con el
+                    equipo? Escríbenos directamente.
+                  </p>
+                </div>
+
+                <div className="flex flex-col gap-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div className="p-5 rounded-2xl bg-black/40 border border-white/10">
+                      <div className="p-2.5 inline-flex rounded-xl bg-red-600/10 border border-red-600/20 text-red-500 mb-3">
+                        <Handshake size={18} />
+                      </div>
+                      <p className="text-[9px] font-black uppercase tracking-[0.3em] text-white/40 mb-1">
+                        Colaboraciones
+                      </p>
+                      <p className="text-sm text-white/80">
+                        Marcas, equipos y creadores
+                      </p>
+                    </div>
+
+                    <div className="p-5 rounded-2xl bg-black/40 border border-white/10">
+                      <div className="p-2.5 inline-flex rounded-xl bg-red-600/10 border border-red-600/20 text-red-500 mb-3">
+                        <Mail size={18} />
+                      </div>
+                      <p className="text-[9px] font-black uppercase tracking-[0.3em] text-white/40 mb-1">
+                        Atención directa
+                      </p>
+                      <p className="text-sm text-white/80">
+                        Respondemos en 24-48h
+                      </p>
+                    </div>
+                  </div>
+
+                  <Link
+                    href="/contacto"
+                    className="group relative inline-flex items-center justify-between gap-3 bg-gradient-to-r from-red-600 to-red-700 text-white font-black py-5 px-8 rounded-2xl overflow-hidden transition-all duration-500 hover:scale-[1.02] active:scale-95 shadow-[0_0_30px_rgba(220,38,38,0.3)] hover:shadow-[0_0_50px_rgba(220,38,38,0.6)] border border-white/10"
+                  >
+                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:animate-shimmer" />
+                    <span className="relative z-10 flex items-center gap-3 italic tracking-tighter uppercase text-base md:text-lg">
+                      <Mail size={20} /> Ir a Contacto
+                    </span>
+                    <ArrowUpRight
+                      className="relative z-10 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform"
+                      size={22}
+                    />
+                  </Link>
+                </div>
+              </div>
+            </motion.div>
+          </div>
+        </section>
       </main>
-      
+
       <Footer />
     </div>
   );

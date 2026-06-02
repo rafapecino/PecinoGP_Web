@@ -7,6 +7,9 @@
 /.next/
 /out/
 
+# persistent API cache (used in dev to avoid burning external API quotas)
+/.api-cache/
+
 # production
 /build
 

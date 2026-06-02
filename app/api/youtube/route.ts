@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server"
+import { cachedJson } from "@/lib/api-cache"
 
 const API_KEYS = [
   process.env.YOUTUBE_API_KEY || process.env.NEXT_PUBLIC_YOUTUBE_API_KEY,
@@ -17,7 +18,11 @@ const FALLBACK_STATS = {
 
 const REVALIDATE_SECONDS = 3600
 
-async function fetchWithRotation(baseUrl: string): Promise<any | null> {
+// Caché persistente en disco: en dev usa 24h para no quemar cuota con HMR.
+// En prod mantiene el comportamiento original (1h).
+const YT_TTL = { dev: 24 * 3600, prod: REVALIDATE_SECONDS }
+
+async function fetchYoutube(baseUrl: string): Promise<any | null> {
   for (let i = 0; i < API_KEYS.length; i++) {
     const url = `${baseUrl}&key=${API_KEYS[i]}`
     try {
@@ -34,6 +39,10 @@ async function fetchWithRotation(baseUrl: string): Promise<any | null> {
     }
   }
   return null
+}
+
+function fetchWithRotation(baseUrl: string): Promise<any | null> {
+  return cachedJson(`yt:${baseUrl}`, YT_TTL, () => fetchYoutube(baseUrl))
 }
 
 function parseIsoDurationSeconds(d: string): number {

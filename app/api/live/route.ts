@@ -1,44 +1,38 @@
 import { NextResponse } from 'next/server';
+import { cachedJson } from '@/lib/api-cache';
 
-// Lee las claves de API desde las variables de entorno del servidor.
-// No es necesario el prefijo NEXT_PUBLIC_ ya que esto se ejecuta en el servidor.
 const API_KEYS = [
   process.env.YOUTUBE_API_KEY || process.env.NEXT_PUBLIC_YOUTUBE_API_KEY,
   process.env.YOUTUBE_API_KEY_2 || process.env.NEXT_PUBLIC_YOUTUBE_API_KEY_2,
-  process.env.YOUTUBE_API_KEY_3 || process.env.NEXT_PUBLIC_YOUTUBE_API_KEY_3
+  process.env.YOUTUBE_API_KEY_3 || process.env.NEXT_PUBLIC_YOUTUBE_API_KEY_3,
 ].filter((key): key is string => typeof key === 'string' && key.length > 0);
 
-const CHANNEL_ID = process.env.YOUTUBE_CHANNEL_ID || process.env.NEXT_PUBLIC_YOUTUBE_CHANNEL_ID;
+const CHANNEL_ID =
+  process.env.YOUTUBE_CHANNEL_ID || process.env.NEXT_PUBLIC_YOUTUBE_CHANNEL_ID;
+
+// Caché persistente en disco (dev sobrevive a HMR / restart).
+// dev: 6h; prod: 5 min (300s).
+const LIVE_TTL = { dev: 6 * 3600, prod: 300 };
+
+// TTL del caché interno de Next.js sobre la respuesta de YouTube (en segundos).
+const NEXT_FETCH_TTL = 300;
 
 /**
- * README:
- * Este endpoint comprueba si un canal de YouTube está en directo de forma optimizada.
+ * --- ESTRATEGIA EFICIENTE EN CUOTA ---
  *
- * --- REQUISITOS DE CONFIGURACIÓN ---
- * Para que este endpoint funcione, necesitas añadir las siguientes variables
- * de entorno a tu archivo `.env.local` en la raíz del proyecto:
+ * En lugar de usar `search?eventType=live` (cuesta **100 unidades**),
+ * comprobamos el último vídeo subido y leemos su `liveBroadcastContent` +
+ * `liveStreamingDetails`:
+ *   - playlistItems (1 unidad) → último vídeo
+ *   - videos (1 unidad) → estado de directo
+ * Total: **2 unidades** por comprobación (50× más barato).
  *
- * 1. YOUTUBE_API_KEY: Tu clave de API de Google Cloud para la API de YouTube Data v3.
- *    (Opcional) YOUTUBE_API_KEY_2, YOUTUBE_API_KEY_3, etc. para rotación de claves.
- *
- * 2. YOUTUBE_CHANNEL_ID: El ID del canal de YouTube que quieres monitorizar.
- * 
- * --- FUNCIONAMIENTO ---
- * - **Caché Inteligente**: Esta ruta utiliza el sistema de caché de datos de Next.js.
- *   La respuesta de la API de YouTube se cachea durante 60 segundos (`revalidate: 60`).
- *   Esto significa que, sin importar cuántos usuarios visiten la página, solo se
- *   realizará una llamada a la API de YouTube como máximo cada minuto.
- *
- * - **Rotación de API Keys**: Si se proporcionan múltiples `YOUTUBE_API_KEY_...`,
- *   el sistema intentará con la siguiente clave si la actual falla por cuota (error 403).
- *   Esto aumenta la robustez del sistema.
- * 
- * - **Manejo de Errores**: Si todas las claves fallan o hay otro error, se devuelve
- *   un estado `{ isLive: false }` para no interrumpir al cliente.
+ * Combinado con caché de 5 min (prod) y polling cada 5 min en el header,
+ * el consumo es ~24 unidades/hora (vs 6.000 unidades/hora con search@60s).
  */
 async function fetchWithRotation(baseUrl: string): Promise<any> {
   if (API_KEYS.length === 0) {
-    throw new Error("No se han proporcionado claves de API de YouTube en el servidor.");
+    throw new Error('No se han proporcionado claves de API de YouTube en el servidor.');
   }
 
   for (let i = 0; i < API_KEYS.length; i++) {
@@ -46,82 +40,73 @@ async function fetchWithRotation(baseUrl: string): Promise<any> {
     const url = `${baseUrl}&key=${apiKey}`;
 
     try {
-      // Usamos el caché de Next.js con revalidación de 60 segundos.
-      const res = await fetch(url, { next: { revalidate: 60 } });
+      const res = await fetch(url, { next: { revalidate: NEXT_FETCH_TTL } });
 
       if (res.ok) {
         return await res.json();
       }
 
       if (res.status === 403) {
-        console.warn(`[YouTube API] Clave #${i + 1} falló (403). Probando la siguiente.`);
-        // No cacheamos el error 403 para poder reintentar con otra clave en la siguiente petición.
-        // Pero para esta petición, continuamos al siguiente loop.
+        console.warn(`[YouTube API/live] Clave #${i + 1} (403). Probando siguiente.`);
         continue;
       }
-      
-      // Para otros errores HTTP, no reintentamos y lanzamos excepción.
-      throw new Error(`Error HTTP ${res.status}`);
 
+      throw new Error(`Error HTTP ${res.status}`);
     } catch (err) {
-      console.warn(`[YouTube API] Error con la Clave #${i + 1}.`, err);
-      // Continuamos al siguiente bucle para probar con la siguiente clave.
+      console.warn(`[YouTube API/live] Error con Clave #${i + 1}.`, err);
       continue;
     }
   }
 
-  throw new Error("Todas las claves de API de YouTube fallaron.");
+  throw new Error('Todas las claves de API de YouTube fallaron.');
 }
 
 export async function GET() {
   if (API_KEYS.length === 0 || !CHANNEL_ID) {
-    console.warn('ADVERTENCIA: YOUTUBE_API_KEY(s) o YOUTUBE_CHANNEL_ID no están configuradas. El estado "en vivo" no funcionará.');
+    console.warn(
+      'ADVERTENCIA: YOUTUBE_API_KEY(s) o YOUTUBE_CHANNEL_ID no configuradas. Estado "en vivo" deshabilitado.',
+    );
     return NextResponse.json({ isLive: false });
   }
 
-  const baseUrl = `https://www.googleapis.com/youtube/v3/search?part=snippet&channelId=${CHANNEL_ID}&eventType=live&type=video`;
-
   try {
-    const data = await fetchWithRotation(baseUrl);
+    const result = await cachedJson(
+      `live:${CHANNEL_ID}`,
+      LIVE_TTL,
+      async () => {
+        // 1) Último vídeo de la playlist de subidas (1 unidad)
+        const playlistId = CHANNEL_ID.startsWith('UC')
+          ? `UU${CHANNEL_ID.substring(2)}`
+          : CHANNEL_ID;
+        const latestUrl = `https://www.googleapis.com/youtube/v3/playlistItems?playlistId=${playlistId}&part=snippet&maxResults=1`;
 
-    if (data.items && data.items.length > 0) {
-      return NextResponse.json({
-        isLive: true,
-        videoId: data.items[0].id.videoId,
-      });
-    }
+        const latestData = await fetchWithRotation(latestUrl);
+        const videoId = latestData?.items?.[0]?.snippet?.resourceId?.videoId;
+        if (!videoId) return { isLive: false };
 
-    // --- FALLBACK: Check latest video status ---
-    // Sometimes search API is delayed. We check the latest video directly.
-    const playlistId = CHANNEL_ID.startsWith("UC") ? `UU${CHANNEL_ID.substring(2)}` : CHANNEL_ID;
-    const latestVideoUrl = `https://www.googleapis.com/youtube/v3/playlistItems?playlistId=${playlistId}&part=snippet&maxResults=1`;
-    
-    try {
-      const latestData = await fetchWithRotation(latestVideoUrl);
-      if (latestData.items && latestData.items.length > 0) {
-        const videoId = latestData.items[0].snippet.resourceId.videoId;
-        const videoStatusUrl = `https://www.googleapis.com/youtube/v3/videos?id=${videoId}&part=snippet,liveStreamingDetails`;
-        const videoData = await fetchWithRotation(videoStatusUrl);
-        
-        if (videoData.items && videoData.items.length > 0) {
-          const item = videoData.items[0];
-          const isActuallyLive = item.snippet.liveBroadcastContent === 'live' || !!item.liveStreamingDetails?.actualStartTime && !item.liveStreamingDetails?.actualEndTime;
-          
-          if (isActuallyLive) {
-            return NextResponse.json({
-              isLive: true,
-              videoId: videoId,
-            });
-          }
-        }
-      }
-    } catch (fallbackError) {
-      console.warn("Fallback check failed:", fallbackError);
-    }
+        // 2) Estado de directo del vídeo (1 unidad)
+        const statusUrl = `https://www.googleapis.com/youtube/v3/videos?id=${videoId}&part=snippet,liveStreamingDetails`;
+        const videoData = await fetchWithRotation(statusUrl);
+        const item = videoData?.items?.[0];
+        if (!item) return { isLive: false };
 
-    return NextResponse.json({ isLive: false });
+        const broadcast = item.snippet?.liveBroadcastContent;
+        const details = item.liveStreamingDetails;
+        const isActuallyLive =
+          broadcast === 'live' ||
+          (!!details?.actualStartTime && !details?.actualEndTime);
+
+        return isActuallyLive ? { isLive: true, videoId } : { isLive: false };
+      },
+    );
+
+    return NextResponse.json(result, {
+      headers: {
+        'Cache-Control': `public, s-maxage=${NEXT_FETCH_TTL}, stale-while-revalidate=86400`,
+      },
+    });
   } catch (error) {
-    console.error("Error final al obtener el estado en vivo de YouTube:", error);
+    console.error('Error final al obtener el estado en vivo de YouTube:', error);
     return NextResponse.json({ isLive: false });
   }
 }

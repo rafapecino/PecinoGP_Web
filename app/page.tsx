@@ -4,7 +4,11 @@ import Header from "@/All/components/header";
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import type { YouTubeChannel, YouTubeVideo, LiveStream } from "@/lib/youtube-data";
+import type {
+  YouTubeChannel,
+  YouTubeVideo,
+  LiveStream,
+} from "@/lib/youtube-data";
 import { YouTubeStats } from "@/All/components/youtube-stats";
 import { YouTubeVideos } from "@/All/components/youtube-videos";
 import { LatestVideo } from "@/All/components/latest-video";
@@ -29,9 +33,9 @@ export default function Home() {
   const smoothScrollY = useSpring(scrollY, {
     stiffness: 100,
     damping: 30,
-    restDelta: 0.001
+    restDelta: 0.001,
   });
-  
+
   const y1 = useTransform(smoothScrollY, [0, 500], [0, 200]);
   const y2 = useTransform(smoothScrollY, [0, 500], [0, -150]);
   const y3 = useTransform(smoothScrollY, [0, 500], [0, 100]);
@@ -40,10 +44,12 @@ export default function Home() {
   useEffect(() => {
     async function fetchData() {
       try {
-        const featuredIds = ['EhRz4obCadU', 'b15kGQHfMwI', 'eCPrCjpQC2c'];
+        const featuredIds = ["EhRz4obCadU", "b15kGQHfMwI", "eCPrCjpQC2c"];
         const [ytRes, liveRes] = await Promise.all([
-          fetch(`/api/youtube?max=1&featured=${featuredIds.join(',')}`).then(r => r.json()),
-          fetch('/api/live').then(r => r.json()),
+          fetch(`/api/youtube?max=1&featured=${featuredIds.join(",")}`).then(
+            (r) => r.json(),
+          ),
+          fetch("/api/live").then((r) => r.json()),
         ]);
 
         setData({
@@ -53,7 +59,7 @@ export default function Home() {
           liveStatus: liveRes || null,
         });
       } catch (err) {
-        console.error('Error fetching home data:', err);
+        console.error("Error fetching home data:", err);
       } finally {
         setLoading(false);
       }
@@ -61,7 +67,8 @@ export default function Home() {
     fetchData();
   }, []);
 
-  const getVideoUrl = (videoId: string) => `https://www.youtube.com/watch?v=${videoId}`;
+  const getVideoUrl = (videoId: string) =>
+    `https://www.youtube.com/watch?v=${videoId}`;
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -81,8 +88,8 @@ export default function Home() {
       y: 0,
       transition: {
         duration: 0.8,
-        ease: [0.22, 1, 0.36, 1] as [number, number, number, number]
-      }
+        ease: [0.22, 1, 0.36, 1] as [number, number, number, number],
+      },
     },
   };
 
@@ -93,7 +100,10 @@ export default function Home() {
       <main className="">
         {/* --- CINEMATIC HERO --- */}
         <section className="relative h-screen flex items-center justify-center overflow-hidden">
-          <motion.div style={{ y: y1 }} className="absolute inset-0 z-0 scale-125">
+          <motion.div
+            style={{ y: y1 }}
+            className="absolute inset-0 z-0 scale-125"
+          >
             <Image
               src="/motogp-race-moment---index-.jpg"
               alt="Fondo de carrera de MotoGP"
@@ -111,9 +121,14 @@ export default function Home() {
             className="relative z-20 max-w-7xl mx-auto px-4 text-center md:text-left grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-32 items-center pt-24 md:pt-40"
           >
             <div className="flex flex-col items-center md:items-start text-center md:text-left pb-12 md:pb-24">
-              <motion.div variants={itemVariants} className="flex items-center gap-2 mb-4 md:mb-6">
+              <motion.div
+                variants={itemVariants}
+                className="flex items-center gap-2 mb-4 md:mb-6"
+              >
                 <div className="w-8 md:w-10 h-1 bg-red-600 rounded-full" />
-                <span className="text-red-500 font-black uppercase tracking-[0.4em] text-[10px] md:text-xs">PecinoGP Oficial</span>
+                <span className="text-red-500 font-black uppercase tracking-[0.4em] text-[10px] md:text-xs">
+                  PecinoGP Oficial
+                </span>
               </motion.div>
 
               <motion.div variants={itemVariants} className="relative z-10">
@@ -131,7 +146,8 @@ export default function Home() {
                       ¡Estamos en directo ahora!
                     </span>
                     <div className="flex items-center gap-1 text-red-500 font-black text-[10px] animate-bounce">
-                      SINTONIZAR ARRIBA <ArrowUpRight size={14} className="rotate-[-15deg]" />
+                      SINTONIZAR ARRIBA{" "}
+                      <ArrowUpRight size={14} className="rotate-[-15deg]" />
                     </div>
                   </motion.div>
                 )}
@@ -148,7 +164,11 @@ export default function Home() {
               {/* Removiendo párrafo solicitado */}
               <div className="flex flex-col sm:flex-row gap-4 md:gap-6 w-full sm:w-auto relative z-30">
                 <Link
-                  href={data.latestVideo.length > 0 ? getVideoUrl(data.latestVideo[0].id) : "#"}
+                  href={
+                    data.latestVideo.length > 0
+                      ? getVideoUrl(data.latestVideo[0].id)
+                      : "#"
+                  }
                   className="group relative inline-flex items-center justify-center bg-gradient-to-r from-red-600 to-red-700 text-white font-black py-4 md:py-6 px-10 rounded-2xl text-lg md:text-xl overflow-hidden transition-all duration-500 hover:scale-110 active:scale-95 shadow-[0_0_30px_rgba(220,38,38,0.4)] hover:shadow-[0_0_60px_rgba(220,38,38,0.6)] border border-white/10"
                 >
                   <div className="absolute inset-x-0 inset-y-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:animate-shimmer" />
@@ -161,7 +181,11 @@ export default function Home() {
                   className="group relative inline-flex items-center justify-center bg-white/5 backdrop-blur-xl border border-white/10 text-white font-black py-4 md:py-6 px-10 rounded-2xl text-lg md:text-xl overflow-hidden transition-all duration-500 hover:scale-110 active:scale-95 hover:bg-white/10 group/btn"
                 >
                   <span className="relative z-10 flex items-center gap-2 md:gap-3 italic tracking-tighter uppercase whitespace-nowrap">
-                    Todos los Vídeos <ChevronRight size={24} className="group-hover/btn:translate-x-2 transition-transform duration-300" />
+                    Todos los Vídeos{" "}
+                    <ChevronRight
+                      size={24}
+                      className="group-hover/btn:translate-x-2 transition-transform duration-300"
+                    />
                   </span>
                 </Link>
               </div>
@@ -184,16 +208,25 @@ export default function Home() {
                       </div>
                       {/* --- LIVE STATUS BUTTON --- */}
                       <Link
-                        href={data.liveStatus?.isLive ? `https://www.youtube.com/watch?v=${data.liveStatus.videoId}` : "https://www.youtube.com/@PecinoGP/streams"}
+                        href={
+                          data.liveStatus?.isLive
+                            ? `https://www.youtube.com/watch?v=${data.liveStatus.videoId}`
+                            : "https://www.youtube.com/@PecinoGP/streams"
+                        }
                         target="_blank"
-                        className={`group/live flex items-center gap-2 px-4 py-2 rounded-full border transition-all duration-300 ${data.liveStatus?.isLive
+                        className={`group/live flex items-center gap-2 px-4 py-2 rounded-full border transition-all duration-300 ${
+                          data.liveStatus?.isLive
                             ? "bg-red-600 border-red-500 text-white animate-pulse shadow-[0_0_30px_rgba(220,38,38,0.8)] scale-110"
                             : "bg-white/5 border-white/10 text-white/40 hover:bg-white/10"
-                          }`}
+                        }`}
                       >
-                        <div className={`w-2.5 h-2.5 rounded-full ${data.liveStatus?.isLive ? "bg-white shadow-[0_0_15px_white]" : "bg-white/20"}`} />
+                        <div
+                          className={`w-2.5 h-2.5 rounded-full ${data.liveStatus?.isLive ? "bg-white shadow-[0_0_15px_white]" : "bg-white/20"}`}
+                        />
                         <span className="text-[10px] font-black uppercase tracking-widest italic pt-0.5">
-                          {data.liveStatus?.isLive ? "EN DIRECTO" : "CANAL DE DIRECTOS"}
+                          {data.liveStatus?.isLive
+                            ? "EN DIRECTO"
+                            : "CANAL DE DIRECTOS"}
                         </span>
                       </Link>
                     </div>
@@ -201,14 +234,25 @@ export default function Home() {
                     {data.channelStats && (
                       <div className="space-y-12">
                         <div className="flex flex-col group/item">
-                          <span className="text-[10px] font-black uppercase tracking-[0.2em] text-white/50 mb-1">Fanáticos Reales</span>
+                          <span className="text-[10px] font-black uppercase tracking-[0.2em] text-white/50 mb-1">
+                            Fanáticos Reales
+                          </span>
                           <div className="flex items-baseline gap-2">
                             <span className="text-7xl md:text-9xl font-black text-white italic tracking-tighter leading-none [text-shadow:0_15px_30px_rgba(0,0,0,0.5)]">
-                              {Math.floor(Number(data.channelStats.subscriberCount) / 1000)}K
+                              {Math.floor(
+                                Number(data.channelStats.subscriberCount) /
+                                  1000,
+                              )}
+                              K
                             </span>
                           </div>
                           <div className="w-full bg-white/10 h-1.5 mt-6 rounded-full overflow-hidden">
-                            <motion.div initial={{ width: 0 }} whileInView={{ width: "88%" }} transition={{ duration: 2, ease: "circOut" }} className="h-full bg-red-600 shadow-[0_0_15px_rgba(220,38,38,0.5)]" />
+                            <motion.div
+                              initial={{ width: 0 }}
+                              whileInView={{ width: "88%" }}
+                              transition={{ duration: 2, ease: "circOut" }}
+                              className="h-full bg-red-600 shadow-[0_0_15px_rgba(220,38,38,0.5)]"
+                            />
                           </div>
                         </div>
                       </div>
@@ -218,13 +262,28 @@ export default function Home() {
                   {data.channelStats && (
                     <div className="grid grid-cols-2 gap-10 pt-10 border-t border-white/10">
                       <div className="flex flex-col">
-                        <span className="text-[9px] font-black uppercase tracking-[0.3em] text-white/40 mb-2">Contenido</span>
-                        <span className="text-4xl font-black text-white italic tracking-tighter">{data.channelStats.videoCount} <span className="text-xs text-red-500 not-italic ml-1">VÍDEOS</span></span>
+                        <span className="text-[9px] font-black uppercase tracking-[0.3em] text-white/40 mb-2">
+                          Contenido
+                        </span>
+                        <span className="text-4xl font-black text-white italic tracking-tighter">
+                          {data.channelStats.videoCount}{" "}
+                          <span className="text-xs text-red-500 not-italic ml-1">
+                            VÍDEOS
+                          </span>
+                        </span>
                       </div>
                       <div className="flex flex-col">
-                        <span className="text-[9px] font-black uppercase tracking-[0.3em] text-white/40 mb-2">Impacto</span>
+                        <span className="text-[9px] font-black uppercase tracking-[0.3em] text-white/40 mb-2">
+                          Impacto
+                        </span>
                         <span className="text-4xl font-black text-white italic tracking-tighter">
-                          {Math.floor(Number(data.channelStats.viewCount) / 1000000)}M <span className="text-xs text-red-500 not-italic ml-1">VISTAS</span>
+                          {Math.floor(
+                            Number(data.channelStats.viewCount) / 1000000,
+                          )}
+                          M{" "}
+                          <span className="text-xs text-red-500 not-italic ml-1">
+                            VISTAS
+                          </span>
                         </span>
                       </div>
                     </div>
@@ -259,24 +318,100 @@ export default function Home() {
           <div className="max-w-7xl mx-auto">
             <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-16">
               <div>
-                <motion.div initial={{ x: -20, opacity: 0 }} whileInView={{ x: 0, opacity: 1 }} className="flex items-center gap-2 mb-2">
+                <motion.div
+                  initial={{ x: -20, opacity: 0 }}
+                  whileInView={{ x: 0, opacity: 1 }}
+                  className="flex items-center gap-2 mb-2"
+                >
                   <div className="w-8 h-1 bg-red-600 rounded-full" />
-                  <span className="text-red-500 font-black uppercase tracking-[0.2em] text-[10px]">Contenido a pie de pista</span>
+                  <span className="text-red-500 font-black uppercase tracking-[0.2em] text-[10px]">
+                    Contenido a pie de pista
+                  </span>
                 </motion.div>
-                <h2 className="text-4xl md:text-6xl font-black text-white italic tracking-tighter">LO MEJOR DE <span className="text-red-600">ESTE AÑO</span></h2>
+                <h2 className="text-4xl md:text-6xl font-black text-white italic tracking-tighter">
+                  LO MEJOR DE <span className="text-red-600">ESTE AÑO</span>
+                </h2>
               </div>
-              <Link href="/analisis-gp" className="group flex items-center gap-3 bg-white/5 border border-white/10 text-white font-black py-3 px-8 rounded-xl hover:bg-red-600 transition-all tracking-wider text-sm uppercase italic">
-                VER TODOS LOS VÍDEOS <ChevronRight className="group-hover:translate-x-1 transition-transform" />
+              <Link
+                href="/analisis-gp"
+                className="group flex items-center gap-3 bg-white/5 border border-white/10 text-white font-black py-3 px-8 rounded-xl hover:bg-red-600 transition-all tracking-wider text-sm uppercase italic"
+              >
+                VER TODOS LOS VÍDEOS{" "}
+                <ChevronRight className="group-hover:translate-x-1 transition-transform" />
               </Link>
             </div>
 
             {loading ? (
               <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                {[1, 2, 3].map(i => <div key={i} className="aspect-video bg-white/5 animate-pulse rounded-2xl" />)}
+                {[1, 2, 3].map((i) => (
+                  <div
+                    key={i}
+                    className="aspect-video bg-white/5 animate-pulse rounded-2xl"
+                  />
+                ))}
               </div>
             ) : (
-              <YouTubeVideos videos={data.featuredVideos} specialVideoId={data.featuredVideos.length > 0 ? data.featuredVideos[0].id : null} />
+              <YouTubeVideos
+                videos={data.featuredVideos}
+                specialVideoId={
+                  data.featuredVideos.length > 0
+                    ? data.featuredVideos[0].id
+                    : null
+                }
+              />
             )}
+          </div>
+        </section>
+
+        {/* --- COLABORA CON NOSOTROS --- */}
+        <section className="px-4 sm:px-6 lg:px-8 py-24 md:py-32 relative overflow-hidden">
+          <div className="absolute inset-0 bg-gradient-to-br from-red-600/5 via-transparent to-transparent" />
+          <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-red-600/30 to-transparent" />
+          <div className="absolute bottom-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-white/10 to-transparent" />
+
+          <div className="max-w-5xl mx-auto relative z-10 text-center">
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.8 }}
+            >
+              <div className="flex items-center justify-center gap-2 mb-6">
+                <div className="w-8 h-1 bg-red-600 rounded-full" />
+                <span className="text-red-500 font-black uppercase tracking-[0.4em] text-[10px]">
+                  Trabaja con nosotros
+                </span>
+                <div className="w-8 h-1 bg-red-600 rounded-full" />
+              </div>
+
+              <h2
+                className="text-5xl sm:text-6xl md:text-8xl font-black text-white italic tracking-tighter leading-[0.85] mb-8"
+                style={{ filter: "drop-shadow(0 10px 30px rgba(0,0,0,0.8))" }}
+              >
+                ¿TIENES ALGO <br />
+                <span className="text-red-600">QUE PROPONERNOS?</span>
+              </h2>
+
+              <p className="max-w-2xl mx-auto text-gray-400 text-lg md:text-xl font-medium italic mb-12">
+                Marcas, equipos, creadores y medios: estamos abiertos a
+                colaboraciones que sumen al paddock digital. Escríbenos y
+                hablamos.
+              </p>
+
+              <Link
+                href="/contacto"
+                className="group relative inline-flex items-center justify-center bg-gradient-to-r from-red-600 to-red-700 text-white font-black py-5 px-12 rounded-2xl text-lg overflow-hidden transition-all duration-500 hover:scale-110 active:scale-95 shadow-[0_0_40px_rgba(220,38,38,0.4)] hover:shadow-[0_0_70px_rgba(220,38,38,0.6)] border border-white/10"
+              >
+                <div className="absolute inset-x-0 inset-y-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:animate-shimmer" />
+                <span className="relative z-10 flex items-center gap-3 italic tracking-tighter uppercase">
+                  Contacta con nosotros{" "}
+                  <ChevronRight
+                    size={22}
+                    className="group-hover:translate-x-1 transition-transform duration-300"
+                  />
+                </span>
+              </Link>
+            </motion.div>
           </div>
         </section>
 

@@ -1,12 +1,12 @@
-"use client"
+"use client";
 
 import Image from "next/image";
-import Link from "next/link"
-import { useState, useEffect } from "react"
-import { AnimatePresence, motion } from "framer-motion"
-import { ChevronRight } from "lucide-react"
-import { Logo } from "./logo"
-import { LiveStream } from "@/lib/youtube-service"
+import Link from "next/link";
+import { useState, useEffect } from "react";
+import { AnimatePresence, motion } from "framer-motion";
+import { ChevronRight } from "lucide-react";
+import { Logo } from "./logo";
+import { LiveStream } from "@/lib/youtube-service";
 
 const NAV_LINKS = [
   { href: "/", label: "Inicio" },
@@ -14,30 +14,31 @@ const NAV_LINKS = [
   { href: "/calendario", label: "Calendario" },
   { href: "/clasificacion", label: "Clasificación" },
   { href: "/el-paddock", label: "El Paddock" },
-]
+  { href: "/contacto", label: "Contacto" },
+];
 
 export default function Header() {
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [liveInfo, setLiveInfo] = useState<LiveStream>({ isLive: false });
-  const [scrolled, setScrolled] = useState(false)
+  const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
-      const isScrolled = window.scrollY > 0
-      setScrolled(isScrolled)
-    }
+      const isScrolled = window.scrollY > 0;
+      setScrolled(isScrolled);
+    };
 
-    window.addEventListener("scroll", handleScroll)
+    window.addEventListener("scroll", handleScroll);
 
     return () => {
-      window.removeEventListener("scroll", handleScroll)
-    }
-  }, [])
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
 
   useEffect(() => {
     async function fetchLiveStatus() {
       try {
-        const res = await fetch('/api/live');
+        const res = await fetch("/api/live");
         if (res.ok) {
           const status: LiveStream = await res.json();
           setLiveInfo(status);
@@ -48,7 +49,9 @@ export default function Header() {
     }
 
     fetchLiveStatus();
-    const interval = setInterval(fetchLiveStatus, 60000); // Check every minute
+    // Polling cada 5 min (era 60s). Combinado con caché de 5 min en /api/live
+    // baja el consumo de cuota de YouTube ~250× sin perder utilidad real.
+    const interval = setInterval(fetchLiveStatus, 5 * 60 * 1000);
     return () => clearInterval(interval);
   }, []);
 
@@ -56,17 +59,23 @@ export default function Header() {
     <header
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
         isMobileMenuOpen
-          ? "py-3 bg-black" 
-          : scrolled 
-            ? "py-3 bg-black/80 backdrop-blur-2xl border-b border-white/10 shadow-[0_10px_40px_rgba(0,0,0,0.5)]" 
+          ? "py-3 bg-black"
+          : scrolled
+            ? "py-3 bg-black/80 backdrop-blur-2xl border-b border-white/10 shadow-[0_10px_40px_rgba(0,0,0,0.5)]"
             : "py-6 md:py-14 bg-transparent border-transparent"
       }`}
     >
       <div className="max-w-screen-2xl mx-auto px-4 sm:px-12 lg:px-16">
         <div className="flex items-center justify-between transition-all duration-500">
           <div className="flex items-center">
-            <Link href="/" className="shrink-0 active:scale-95 transition-transform duration-300">
-              <Logo size={scrolled ? "xs" : "sm"} className="md:scale-125 origin-left transition-transform" />
+            <Link
+              href="/"
+              className="shrink-0 active:scale-95 transition-transform duration-300"
+            >
+              <Logo
+                size={scrolled ? "xs" : "sm"}
+                className="md:scale-125 origin-left transition-transform"
+              />
             </Link>
             {liveInfo.isLive && (
               <motion.div
@@ -105,8 +114,12 @@ export default function Header() {
               >
                 <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:animate-shimmer" />
                 <div className="flex flex-col items-center relative z-10">
-                  <span className="text-[6px] sm:text-[8px] uppercase tracking-[0.2em] opacity-90 leading-none mb-0.5 sm:mb-1 shadow-sm">¡QUÉ SUERTE!</span>
-                  <span className="text-[9px] sm:text-[12px] uppercase tracking-tighter font-black leading-none drop-shadow-md">ENTRA YA</span>
+                  <span className="text-[6px] sm:text-[8px] uppercase tracking-[0.2em] opacity-90 leading-none mb-0.5 sm:mb-1 shadow-sm">
+                    ¡QUÉ SUERTE!
+                  </span>
+                  <span className="text-[9px] sm:text-[12px] uppercase tracking-tighter font-black leading-none drop-shadow-md">
+                    ENTRA YA
+                  </span>
                 </div>
                 <div className="w-1 h-1 sm:w-1.5 sm:h-1.5 bg-white rounded-full animate-pulse shadow-[0_0_10px_white] ml-0.5 sm:ml-1" />
               </a>
@@ -144,11 +157,22 @@ export default function Header() {
             className="xl:hidden p-2 rounded-lg hover:bg-secondary transition-colors"
             aria-label="Toggle menu"
           >
-            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+            <svg
+              className="w-6 h-6"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M4 6h16M4 12h16M4 18h16"
+              />
             </svg>
           </button>
-        </div>        {/* Mobile Navigation */}
+        </div>{" "}
+        {/* Mobile Navigation */}
         <AnimatePresence>
           {isMobileMenuOpen && (
             <motion.div
@@ -164,8 +188,18 @@ export default function Header() {
                   onClick={() => setIsMobileMenuOpen(false)}
                   className="p-3 bg-white/5 rounded-full text-white/70 hover:text-red-600 transition-colors"
                 >
-                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  <svg
+                    className="w-6 h-6"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M6 18L18 6M6 6l12 12"
+                    />
                   </svg>
                 </button>
               </div>
@@ -187,14 +221,19 @@ export default function Header() {
                         {link.label}
                         <span className="absolute -bottom-1 left-0 w-0 h-1 bg-red-600 transition-all group-hover:w-full" />
                       </span>
-                      <ChevronRight className="opacity-0 group-hover:opacity-40 transition-opacity" size={24} />
+                      <ChevronRight
+                        className="opacity-0 group-hover:opacity-40 transition-opacity"
+                        size={24}
+                      />
                     </Link>
                   </motion.div>
                 ))}
               </nav>
 
               <div className="p-10 border-t border-white/5 bg-white/[0.02]">
-                <p className="text-[10px] font-black uppercase tracking-[0.3em] text-white/30 mb-6 text-center italic">Únete a la Comunidad</p>
+                <p className="text-[10px] font-black uppercase tracking-[0.3em] text-white/30 mb-6 text-center italic">
+                  Únete a la Comunidad
+                </p>
                 <div className="flex flex-col gap-4">
                   {liveInfo.isLive ? (
                     <a
@@ -213,7 +252,9 @@ export default function Header() {
                       rel="noopener noreferrer"
                       className="group flex items-center justify-center gap-4 bg-white/5 border border-white/10 p-5 rounded-2xl hover:border-red-600/50 transition-all"
                     >
-                      <span className="text-white text-xs font-black uppercase tracking-widest italic group-hover:text-red-500 transition-colors">Visitar Canal de YouTube</span>
+                      <span className="text-white text-xs font-black uppercase tracking-widest italic group-hover:text-red-500 transition-colors">
+                        Visitar Canal de YouTube
+                      </span>
                       <svg
                         className="w-10 h-6 text-white/40 group-hover:text-red-600 transition-colors shrink-0"
                         viewBox="0 0 28 20"
@@ -231,5 +272,5 @@ export default function Header() {
         </AnimatePresence>
       </div>
     </header>
-  )
+  );
 }

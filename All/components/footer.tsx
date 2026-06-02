@@ -17,6 +17,7 @@ export function Footer() {
             <Link href="/calendario" className="hover:text-primary transition-colors">Calendario</Link>
             <Link href="/clasificacion" className="hover:text-primary transition-colors">Clasificación</Link>
             <Link href="/el-paddock" className="hover:text-primary transition-colors">El Paddock</Link>
+            <Link href="/contacto" className="hover:text-primary transition-colors">Contacto</Link>
           </nav>
 
           {/* Social icons */}
