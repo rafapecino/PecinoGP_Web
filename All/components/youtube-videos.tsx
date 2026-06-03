@@ -221,11 +221,10 @@ export function YouTubeVideos({
     </Link>
   );
 
-  // Construimos las celdas: la insignia va en la 3ª posición (índice 2).
+  // Construimos las celdas: la insignia va al final (última posición).
   const cells: React.ReactNode[] = videos.map(renderVideoCard);
   if (showSeeMore) {
-    const insertAt = Math.min(2, cells.length);
-    cells.splice(insertAt, 0, seeMoreCard);
+    cells.push(seeMoreCard);
   }
 
   return (
