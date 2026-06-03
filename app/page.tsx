@@ -18,8 +18,14 @@ import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { SplitText } from "gsap/SplitText";
 import { useGSAP } from "@gsap/react";
+import dynamic from "next/dynamic";
 
 gsap.registerPlugin(ScrollTrigger, SplitText, useGSAP);
+
+const ThreeBackground = dynamic(
+  () => import("@/All/components/three-background"),
+  { ssr: false },
+);
 
 export default function Home() {
   const [data, setData] = useState<{
@@ -138,11 +144,7 @@ export default function Home() {
           { scale: 1.55, yPercent: 14, ease: "none" },
           0,
         );
-        tl.to(
-          heroContentRef.current,
-          { yPercent: -12, opacity: 0, ease: "none" },
-          0,
-        );
+        tl.to(heroContentRef.current, { yPercent: -12, ease: "none" }, 0);
       });
 
       return () => {
@@ -290,6 +292,14 @@ export default function Home() {
                 className="hidden lg:block relative h-[500px] w-full"
               >
                 <div className="relative h-full w-full bg-white/[0.01] backdrop-blur-xl rounded-[32px] border border-white/5 p-12 shadow-2xl overflow-hidden group">
+                  {/* Fondo 3D con parallax de ratón + reactivo al scroll */}
+                  <ThreeBackground
+                    density={420}
+                    size={0.5}
+                    opacity={0.95}
+                    scrollReactive
+                  />
+
                   <div className="relative z-10 flex flex-col h-full justify-between">
                     <div>
                       <div className="flex items-center justify-between mb-10">

@@ -10,9 +10,8 @@ import { LiveStream } from "@/lib/youtube-service";
 
 const NAV_LINKS = [
   { href: "/", label: "Inicio" },
-  { href: "/analisis-gp", label: "Vídeos GP" },
-  { href: "/calendario", label: "Calendario" },
-  { href: "/clasificacion", label: "Clasificación" },
+  { href: "/pecinogp", label: "PecinoGP" },
+  { href: "/campeonato", label: "Campeonato" },
   { href: "/el-paddock", label: "El Paddock" },
   { href: "/contacto", label: "Contacto" },
 ];
