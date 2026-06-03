@@ -20,6 +20,11 @@ export default function Header() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [liveInfo, setLiveInfo] = useState<LiveStream>({ isLive: false });
   const [scrolled, setScrolled] = useState(false);
+  const [hovered, setHovered] = useState(false);
+
+  // Compacto solo si se ha hecho scroll Y no se está pasando el ratón por encima.
+  // Al pasar el ratón, el header recupera su tamaño grande de forma fluida.
+  const compact = scrolled && !hovered;
 
   useEffect(() => {
     const handleScroll = () => {
@@ -56,11 +61,13 @@ export default function Header() {
 
   return (
     <header
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ease-out ${
         isMobileMenuOpen
           ? "py-3 bg-black"
           : scrolled
-            ? "py-3 bg-black/80 backdrop-blur-2xl border-b border-white/10 shadow-[0_10px_40px_rgba(0,0,0,0.5)]"
+            ? `${compact ? "py-3" : "py-6 md:py-14"} bg-black/80 backdrop-blur-2xl border-b border-white/10 shadow-[0_10px_40px_rgba(0,0,0,0.5)]`
             : "py-6 md:py-14 bg-transparent border-transparent"
       }`}
     >
@@ -72,7 +79,7 @@ export default function Header() {
               className="shrink-0 active:scale-95 transition-transform duration-300"
             >
               <Logo
-                size={scrolled ? "xs" : "sm"}
+                size={compact ? "xs" : "sm"}
                 className="md:scale-125 origin-left transition-transform"
               />
             </Link>
