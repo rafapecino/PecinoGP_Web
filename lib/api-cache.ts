@@ -69,11 +69,15 @@ export async function cachedJson<T>(
   const filePath = path.join(CACHE_DIR, `${safeKey(key)}.json`);
   const ttlSec = IS_DEV ? ttl.dev : ttl.prod;
 
+  // Guardamos la copia anterior (aunque esté caducada) por si el fetch falla:
+  // así servimos datos antiguos en vez de dejar la UI en blanco.
+  let staleRaw: string | null = null;
+
   try {
     const stat = await fs.stat(filePath);
     const ageSec = (Date.now() - stat.mtimeMs) / 1000;
+    const raw = await fs.readFile(filePath, "utf-8");
     if (ageSec < ttlSec) {
-      const raw = await fs.readFile(filePath, "utf-8");
       if (IS_DEV) {
         console.log(
           `[api-cache] HIT  ${key.slice(0, 60)} (age=${Math.floor(ageSec)}s, ttl=${ttlSec}s)`,
@@ -81,6 +85,7 @@ export async function cachedJson<T>(
       }
       return JSON.parse(raw) as T;
     }
+    staleRaw = raw; // caducada, pero válida como fallback
   } catch {
     // miss
   }
@@ -90,7 +95,23 @@ export async function cachedJson<T>(
   }
 
   const fresh = await fetcher();
-  // Write asynchronously without blocking response.
-  fs.writeFile(filePath, JSON.stringify(fresh)).catch(() => {});
+
+  // Solo cacheamos resultados con contenido. Si el fetch devuelve null/undefined
+  // (p. ej. cuota agotada), NO sobrescribimos la caché y, si tenemos copia
+  // anterior, la servimos para no vaciar la página.
+  if (fresh !== null && fresh !== undefined) {
+    fs.writeFile(filePath, JSON.stringify(fresh)).catch(() => {});
+    return fresh;
+  }
+
+  if (staleRaw !== null) {
+    if (IS_DEV) {
+      console.warn(
+        `[api-cache] Fetch sin datos para ${key.slice(0, 60)} → sirviendo copia anterior (stale).`,
+      );
+    }
+    return JSON.parse(staleRaw) as T;
+  }
+
   return fresh;
 }

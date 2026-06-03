@@ -1,9 +1,15 @@
-"use client"
+"use client";
 
-import Image from "next/image"
-import Link from "next/link"
-import { YouTubeVideo, getVideoUrl, formatDate } from "@/lib/youtube-service"
-import { Star, Play, Calendar, Youtube } from "lucide-react"
+import Image from "next/image";
+import Link from "next/link";
+import { useRef } from "react";
+import { gsap } from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { useGSAP } from "@gsap/react";
+import { YouTubeVideo, getVideoUrl, formatDate } from "@/lib/youtube-service";
+import { Star, Play, Calendar, Youtube } from "lucide-react";
+
+gsap.registerPlugin(ScrollTrigger, useGSAP);
 
 interface YouTubeVideosProps {
   videos: YouTubeVideo[];
@@ -12,9 +18,56 @@ interface YouTubeVideosProps {
   showSeeMore?: boolean;
 }
 
-export function YouTubeVideos({ videos, specialVideoId, specialLabel = "EDICIÓN ESPECIAL", showSeeMore = false }: YouTubeVideosProps) {
+export function YouTubeVideos({
+  videos,
+  specialVideoId,
+  specialLabel = "EDICIÓN ESPECIAL",
+  showSeeMore = false,
+}: YouTubeVideosProps) {
+  const gridRef = useRef<HTMLDivElement>(null);
+
+  useGSAP(
+    () => {
+      const grid = gridRef.current;
+      if (!grid) return;
+
+      const reduce = window.matchMedia(
+        "(prefers-reduced-motion: reduce)",
+      ).matches;
+      if (reduce) return;
+
+      // Entrada en cascada de las tarjetas al aparecer en el viewport.
+      const cards = grid.querySelectorAll<HTMLElement>(".yt-card");
+      gsap.from(cards, {
+        opacity: 0,
+        y: 60,
+        scale: 0.96,
+        duration: 0.7,
+        ease: "power3.out",
+        stagger: 0.08,
+        scrollTrigger: { trigger: grid, start: "top 80%" },
+      });
+
+      // Insignia: flotación continua suave.
+      const coin = grid.querySelector<HTMLElement>(".yt-badge-coin");
+      if (coin) {
+        gsap.to(coin, {
+          y: -12,
+          duration: 2.2,
+          ease: "sine.inOut",
+          repeat: -1,
+          yoyo: true,
+        });
+      }
+    },
+    { scope: gridRef },
+  );
+
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-10">
+    <div
+      ref={gridRef}
+      className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-10"
+    >
       {videos.map((video) => {
         const isSpecial = video.id === specialVideoId;
         return (
@@ -23,8 +76,10 @@ export function YouTubeVideos({ videos, specialVideoId, specialLabel = "EDICIÓN
             href={getVideoUrl(video.id)}
             target="_blank"
             rel="noopener noreferrer"
-            className={`group relative flex flex-col bg-white/5 backdrop-blur-xl border rounded-[24px] md:rounded-[32px] overflow-hidden transition-all duration-500 hover:scale-[1.03] hover:shadow-[0_40px_80px_rgba(0,0,0,0.7)] ${
-              isSpecial ? 'border-red-600 shadow-[0_0_30px_rgba(220,38,38,0.2)] ring-1 ring-inset ring-red-600/20' : 'border-white/10 hover:border-white/30'
+            className={`yt-card group relative flex flex-col bg-white/5 backdrop-blur-xl border rounded-[24px] md:rounded-[32px] overflow-hidden transition-all duration-500 hover:scale-[1.03] hover:-translate-y-1.5 hover:shadow-[0_40px_80px_rgba(0,0,0,0.7)] ${
+              isSpecial
+                ? "border-red-600 shadow-[0_0_30px_rgba(220,38,38,0.2)] ring-1 ring-inset ring-red-600/20"
+                : "border-white/10 hover:border-white/30"
             }`}
           >
             <div className="relative aspect-video overflow-hidden">
@@ -37,15 +92,20 @@ export function YouTubeVideos({ videos, specialVideoId, specialLabel = "EDICIÓN
               <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-60 group-hover:opacity-40 transition-opacity" />
 
               {isSpecial && (
-                <div className={`${specialLabel === 'MÁS RECIENTE' ? 'bg-red-600' : 'bg-yellow-500'} text-white px-3 py-1.5 rounded-full text-[10px] font-black flex items-center gap-1.5 shadow-xl animate-pulse absolute top-4 right-4 z-20`}>
+                <div
+                  className={`${specialLabel === "MÁS RECIENTE" ? "bg-red-600" : "bg-yellow-500"} text-white px-3 py-1.5 rounded-full text-[10px] font-black flex items-center gap-1.5 shadow-xl animate-pulse absolute top-4 right-4 z-20`}
+                >
                   <Star size={12} fill="currentColor" />
                   <span>{specialLabel}</span>
                 </div>
               )}
 
               <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-500">
-                <div className="w-16 h-16 bg-red-600 rounded-full flex items-center justify-center shadow-[0_0_30px_rgba(220,38,38,0.6)]">
-                  <Play className="fill-white text-white translate-x-0.5" size={24} />
+                <div className="w-16 h-16 bg-red-600 rounded-full flex items-center justify-center shadow-[0_0_30px_rgba(220,38,38,0.6)] scale-50 group-hover:scale-100 transition-transform duration-500">
+                  <Play
+                    className="fill-white text-white translate-x-0.5"
+                    size={24}
+                  />
                 </div>
               </div>
             </div>
@@ -59,7 +119,7 @@ export function YouTubeVideos({ videos, specialVideoId, specialLabel = "EDICIÓN
                 <div className="ml-auto flex items-center gap-1">
                   <div className="w-1 h-1 rounded-full bg-red-600" />
                   <span className="text-[9px] font-black text-gray-500 uppercase">
-                    {video.isLive ? 'Directo' : 'Vídeo'}
+                    {video.isLive ? "Directo" : "Vídeo"}
                   </span>
                 </div>
               </div>
@@ -69,36 +129,45 @@ export function YouTubeVideos({ videos, specialVideoId, specialLabel = "EDICIÓN
               </h3>
 
               <div className="mt-auto pt-6 border-t border-white/5 flex items-center justify-between">
-                <span className="text-[10px] font-black uppercase tracking-widest text-gray-500 group-hover:text-white transition-colors">Ver ahora</span>
+                <span className="text-[10px] font-black uppercase tracking-widest text-gray-500 group-hover:text-white transition-colors">
+                  Ver ahora
+                </span>
                 <div className="w-8 h-8 rounded-full border border-white/10 flex items-center justify-center group-hover:bg-red-600 group-hover:border-red-600 transition-all">
-                  <Play size={12} className="fill-white text-white opacity-0 group-hover:opacity-100 transition-opacity" />
+                  <Play
+                    size={12}
+                    className="fill-white text-white opacity-0 group-hover:opacity-100 transition-opacity"
+                  />
                 </div>
               </div>
             </div>
           </Link>
-        )
+        );
       })}
-      
+
       {showSeeMore && (
         <Link
           href="https://www.youtube.com/@PecinoGP"
           target="_blank"
           rel="noopener noreferrer"
-          className="group relative flex flex-col items-center justify-center bg-white/5 backdrop-blur-xl border border-white/10 rounded-[24px] md:rounded-[32px] overflow-hidden transition-all duration-500 hover:scale-[1.02] hover:bg-white/10"
+          className="yt-card group relative flex flex-col items-center justify-center bg-white/5 backdrop-blur-xl border border-white/10 rounded-[24px] md:rounded-[32px] overflow-hidden transition-all duration-500 hover:scale-[1.02] hover:border-yellow-500/40 hover:bg-white/10"
         >
           <div className="text-center p-8">
-            <div className="w-48 h-48 relative mb-6 mx-auto group-hover:scale-110 transition-transform duration-500 drop-shadow-[0_0_20px_rgba(234,179,8,0.4)]">
+            <div className="yt-badge-coin w-48 h-48 relative mb-6 mx-auto">
+              {/* Halo dorado que late detrás de la moneda */}
+              <div className="absolute inset-6 rounded-full bg-yellow-500/20 blur-2xl animate-pulse" />
               <Image
                 src="/insignia-member.png"
                 alt="PecinoGP Member"
                 fill
-                className="object-contain"
+                className="object-contain relative z-10 drop-shadow-[0_0_20px_rgba(234,179,8,0.45)] transition-transform duration-700 group-hover:scale-110 group-hover:rotate-[8deg]"
               />
             </div>
-            <h3 className="text-2xl font-black italic tracking-tighter text-white uppercase">Ver más</h3>
+            <h3 className="text-2xl font-black italic tracking-tighter text-white uppercase group-hover:text-yellow-400 transition-colors">
+              Ver más
+            </h3>
           </div>
         </Link>
       )}
     </div>
-  )
+  );
 }
