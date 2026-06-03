@@ -70,9 +70,10 @@ function mapVideo(item: any) {
     publishedAt: item.snippet?.publishedAt || "",
     viewCount: item.statistics?.viewCount || "0",
     channelTitle: item.snippet?.channelTitle || "PecinoGP",
-    isLive:
-      !!item.liveStreamingDetails ||
-      item.snippet?.liveBroadcastContent === "live",
+    // "Directo" solo si está EN VIVO ahora mismo. Una retransmisión ya
+    // finalizada tiene liveStreamingDetails pero es, a efectos del usuario,
+    // un vídeo normal → liveBroadcastContent === "none".
+    isLive: item.snippet?.liveBroadcastContent === "live",
   };
 }
 

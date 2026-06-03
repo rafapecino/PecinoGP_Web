@@ -146,7 +146,7 @@ export default function AnalisisGpPage() {
             ) : videos.length > 0 ? (
               /* Pasamos el ID del vídeo más reciente para que tenga el label especial */
               <YouTubeVideos
-                videos={videos}
+                videos={videos.slice(0, 11)}
                 specialVideoId={videos[0].id}
                 specialLabel="MÁS RECIENTE"
                 showSeeMore={true}
