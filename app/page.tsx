@@ -46,6 +46,9 @@ export default function Home() {
   const heroBgRef = useRef<HTMLDivElement>(null);
   const heroHeadlineRef = useRef<HTMLHeadingElement>(null);
   const heroContentRef = useRef<HTMLDivElement>(null);
+  const heroOverlayRef = useRef<HTMLDivElement>(null);
+  const heroButtonsRef = useRef<HTMLDivElement>(null);
+  const heroCardRef = useRef<HTMLDivElement>(null);
 
   // Refs para el bloque "Último análisis disponible".
   const latestRef = useRef<HTMLDivElement>(null);
@@ -134,17 +137,41 @@ export default function Home() {
           scrollTrigger: {
             trigger: heroRef.current,
             start: "top top",
-            end: "+=90%",
+            end: "+=130%",
             scrub: 1,
             pin: true,
           },
         });
+        // El fondo sigue haciendo zoom.
+        tl.to(heroBgRef.current, { scale: 1.6, yPercent: 16, ease: "none" }, 0);
+        // El contenido se eleva y "se vacía".
+        tl.to(heroContentRef.current, { yPercent: -22, ease: "none" }, 0);
+        // El titular se va volando hacia arriba al hacer scroll.
+        // (Se anima el bloque entero, NO las letras: animarlas chocaría con la
+        //  entrada letra a letra y las dejaría ocultas.)
         tl.to(
-          heroBgRef.current,
-          { scale: 1.55, yPercent: 14, ease: "none" },
+          heroHeadlineRef.current,
+          { yPercent: -120, autoAlpha: 0, ease: "power1.in" },
           0,
         );
-        tl.to(heroContentRef.current, { yPercent: -12, ease: "none" }, 0);
+        // Los botones también se van hacia arriba y se desvanecen.
+        tl.to(
+          heroButtonsRef.current,
+          { yPercent: -90, autoAlpha: 0, ease: "power1.in" },
+          0.05,
+        );
+        // La cajita de stats se aleja (encoge), sube y se desvanece.
+        tl.to(
+          heroCardRef.current,
+          { yPercent: -60, scale: 0.94, autoAlpha: 0, ease: "power1.in" },
+          0.1,
+        );
+        // Todo el hero se funde a negro de forma deliberada (no transparente).
+        tl.to(
+          heroOverlayRef.current,
+          { opacity: 0.94, ease: "power2.in" },
+          0.2,
+        );
       });
 
       return () => {
@@ -257,7 +284,10 @@ export default function Home() {
                 </h1>
 
                 {/* Removiendo párrafo solicitado */}
-                <div className="flex flex-col sm:flex-row gap-4 md:gap-6 w-full sm:w-auto relative z-30">
+                <div
+                  ref={heroButtonsRef}
+                  className="flex flex-col sm:flex-row gap-4 md:gap-6 w-full sm:w-auto relative z-30"
+                >
                   <Link
                     href={
                       data.latestVideo.length > 0
@@ -291,7 +321,10 @@ export default function Home() {
                 variants={itemVariants}
                 className="hidden lg:block relative h-[500px] w-full"
               >
-                <div className="relative h-full w-full bg-white/[0.01] backdrop-blur-xl rounded-[32px] border border-white/5 p-12 shadow-2xl overflow-hidden group">
+                <div
+                  ref={heroCardRef}
+                  className="relative h-full w-full bg-white/[0.01] backdrop-blur-xl rounded-[32px] border border-white/5 p-12 shadow-2xl overflow-hidden group"
+                >
                   {/* Fondo 3D con parallax de ratón + reactivo al scroll */}
                   <ThreeBackground
                     density={420}
@@ -385,7 +418,7 @@ export default function Home() {
                             )}
                             M{" "}
                             <span className="text-xs text-red-500 not-italic ml-1">
-                              VISTAS
+                              VISITAS
                             </span>
                           </span>
                         </div>
@@ -396,6 +429,13 @@ export default function Home() {
               </motion.div>
             </motion.div>
           </div>
+
+          {/* Velo de fundido a negro controlado por el scroll del hero */}
+          <div
+            ref={heroOverlayRef}
+            aria-hidden
+            className="pointer-events-none absolute inset-0 z-30 bg-black opacity-0"
+          />
         </section>
 
         {/* --- STATS SECTION --- */}

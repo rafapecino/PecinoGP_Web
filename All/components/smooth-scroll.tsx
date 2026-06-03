@@ -1,6 +1,7 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
+import { usePathname } from "next/navigation";
 import Lenis from "lenis";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -12,8 +13,14 @@ gsap.registerPlugin(ScrollTrigger);
  * Esta sincronización es la que permite que los efectos de scroll de GSAP
  * (pin, scrub en el hero) vayan perfectamente acoplados a la inercia de Lenis.
  * Respeta "prefers-reduced-motion" para accesibilidad.
+ *
+ * Además, al cambiar de ruta coloca siempre el scroll arriba del todo (Lenis
+ * mantiene la posición entre navegaciones, así que hay que reiniciarla a mano).
  */
 export function SmoothScroll({ children }: { children: React.ReactNode }) {
+  const lenisRef = useRef<Lenis | null>(null);
+  const pathname = usePathname();
+
   useEffect(() => {
     // Si el usuario pidió menos movimiento, no activamos el smooth scroll.
     const prefersReducedMotion = window.matchMedia(
@@ -27,6 +34,7 @@ export function SmoothScroll({ children }: { children: React.ReactNode }) {
       smoothWheel: true,
       touchMultiplier: 1.5,
     });
+    lenisRef.current = lenis;
 
     // Lenis avisa a ScrollTrigger en cada scroll para que recalcule.
     lenis.on("scroll", ScrollTrigger.update);
@@ -41,8 +49,20 @@ export function SmoothScroll({ children }: { children: React.ReactNode }) {
     return () => {
       gsap.ticker.remove(onTick);
       lenis.destroy();
+      lenisRef.current = null;
     };
   }, []);
+
+  // Al navegar a otra sección, siempre arriba del todo.
+  useEffect(() => {
+    if (lenisRef.current) {
+      lenisRef.current.scrollTo(0, { immediate: true });
+    } else {
+      window.scrollTo(0, 0);
+    }
+    // Recalcula posiciones de ScrollTrigger tras el cambio de página.
+    ScrollTrigger.refresh();
+  }, [pathname]);
 
   return <>{children}</>;
 }
