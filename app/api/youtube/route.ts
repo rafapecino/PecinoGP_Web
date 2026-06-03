@@ -110,7 +110,7 @@ export async function GET(request: Request) {
     : CHANNEL_ID;
 
   const playlistData = await fetchWithRotation(
-    `https://www.googleapis.com/youtube/v3/playlistItems?playlistId=${playlistId}&part=snippet&maxResults=30`,
+    `https://www.googleapis.com/youtube/v3/playlistItems?playlistId=${playlistId}&part=snippet&maxResults=50`,
   );
 
   let latestVideos: any[] = [];

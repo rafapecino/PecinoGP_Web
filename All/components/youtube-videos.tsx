@@ -36,16 +36,18 @@ export function YouTubeVideos({
       ).matches;
       if (reduce) return;
 
-      // Entrada en cascada de las tarjetas al aparecer en el viewport.
-      const cards = grid.querySelectorAll<HTMLElement>(".yt-card");
-      gsap.from(cards, {
-        opacity: 0,
-        y: 60,
-        scale: 0.96,
-        duration: 0.7,
-        ease: "power3.out",
-        stagger: 0.08,
-        scrollTrigger: { trigger: grid, start: "top 80%" },
+      // Entrada de cada tarjeta al aparecer: rápida y SIEMPRE termina visible.
+      // Usamos un trigger por tarjeta (más robusto que uno global) y once:true
+      // para que nunca se queden a media opacidad / oscurecidas.
+      const cards = gsap.utils.toArray<HTMLElement>(".yt-card", grid);
+      cards.forEach((card) => {
+        gsap.from(card, {
+          opacity: 0,
+          y: 28,
+          duration: 0.45,
+          ease: "power2.out",
+          scrollTrigger: { trigger: card, start: "top 92%", once: true },
+        });
       });
 
       // Insignia: flotación continua suave.
@@ -59,8 +61,12 @@ export function YouTubeVideos({
           yoyo: true,
         });
       }
+
+      // Recalcula posiciones tras cargar imágenes/datos asíncronos para que los
+      // triggers no queden desfasados (causa de tarjetas que se quedan oscuras).
+      ScrollTrigger.refresh();
     },
-    { scope: gridRef },
+    { scope: gridRef, dependencies: [videos.length] },
   );
 
   return (
