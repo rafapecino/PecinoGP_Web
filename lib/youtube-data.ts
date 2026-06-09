@@ -165,9 +165,18 @@ export const getLatestVideos = cache(
       return FALLBACK_VIDEOS.slice(0, maxResults);
     }
 
-    const videoIds = data.items.map(
-      (item: any) => item.snippet.resourceId.videoId,
-    );
+    // Algunos items de la playlist pueden venir sin snippet/resourceId
+    // (vídeos privados o borrados): los filtramos para no romper el build.
+    const videoIds = data.items
+      .map((item: any) => item?.snippet?.resourceId?.videoId)
+      .filter(
+        (id: any): id is string => typeof id === "string" && id.length > 0,
+      );
+
+    if (videoIds.length === 0) {
+      console.warn("No valid video IDs in playlist, serving fallback.");
+      return FALLBACK_VIDEOS.slice(0, maxResults);
+    }
 
     // Fetch video details (duration) to filter shorts
     const detailsUrl = `https://www.googleapis.com/youtube/v3/videos?id=${videoIds.join(",")}&part=contentDetails,snippet,statistics,liveStreamingDetails`;
@@ -197,18 +206,19 @@ export const getLatestVideos = cache(
         // This ensures Shorts and very short clips are filtered out.
         return totalSeconds > 120;
       })
+      .filter((item: any) => item?.snippet)
       .map((item: any) => ({
         id: item.id,
-        title: item.snippet.title,
-        description: item.snippet.description,
+        title: item.snippet.title ?? "",
+        description: item.snippet.description ?? "",
         thumbnail:
-          item.snippet.thumbnails.maxres?.url ||
-          item.snippet.thumbnails.high?.url ||
-          item.snippet.thumbnails.default?.url ||
+          item.snippet.thumbnails?.maxres?.url ||
+          item.snippet.thumbnails?.high?.url ||
+          item.snippet.thumbnails?.default?.url ||
           "",
-        publishedAt: item.snippet.publishedAt,
+        publishedAt: item.snippet.publishedAt ?? "",
         viewCount: item.statistics?.viewCount || "0",
-        channelTitle: item.snippet.channelTitle,
+        channelTitle: item.snippet.channelTitle ?? "",
         isLive:
           !!item.liveStreamingDetails ||
           item.snippet.liveBroadcastContent !== "none",
@@ -237,21 +247,23 @@ export const getVideosByIds = cache(
       return FALLBACK_VIDEOS.slice(0, videoIds.length);
     }
 
-    const videos = data.items.map((item: any) => ({
-      id: item.id,
-      title: item.snippet.title,
-      description: item.snippet.description,
-      thumbnail:
-        item.snippet.thumbnails.high?.url ||
-        item.snippet.thumbnails.default?.url ||
-        "",
-      publishedAt: item.snippet.publishedAt,
-      viewCount: item.statistics?.viewCount || "0",
-      channelTitle: item.snippet.channelTitle,
-      isLive:
-        !!item.liveStreamingDetails ||
-        item.snippet.liveBroadcastContent !== "none",
-    }));
+    const videos = data.items
+      .filter((item: any) => item?.snippet)
+      .map((item: any) => ({
+        id: item.id,
+        title: item.snippet.title ?? "",
+        description: item.snippet.description ?? "",
+        thumbnail:
+          item.snippet.thumbnails?.high?.url ||
+          item.snippet.thumbnails?.default?.url ||
+          "",
+        publishedAt: item.snippet.publishedAt ?? "",
+        viewCount: item.statistics?.viewCount || "0",
+        channelTitle: item.snippet.channelTitle ?? "",
+        isLive:
+          !!item.liveStreamingDetails ||
+          item.snippet.liveBroadcastContent !== "none",
+      }));
 
     console.log(`Successfully fetched ${videos.length} videos by ID.`);
     return videos;
