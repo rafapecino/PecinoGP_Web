@@ -1,10 +1,19 @@
-import { cache } from 'react'
-export type { YouTubeChannel, YouTubeVideo, LiveStream } from "./youtube-service";
-import { YouTubeChannel, YouTubeVideo, LiveStream, getLiveStream as getLiveStreamService } from "./youtube-service";
+import { cache } from "react";
+export type {
+  YouTubeChannel,
+  YouTubeVideo,
+  LiveStream,
+} from "./youtube-service";
+import {
+  YouTubeChannel,
+  YouTubeVideo,
+  LiveStream,
+  getLiveStream as getLiveStreamService,
+} from "./youtube-service";
 
 const KEYS = [
-  process.env['NEXT_PUBLIC_YOUTUBE_API_KEY'],
-  process.env['NEXT_PUBLIC_YOUTUBE_API_KEY_2']
+  process.env["NEXT_PUBLIC_YOUTUBE_API_KEY"],
+  process.env["NEXT_PUBLIC_YOUTUBE_API_KEY_2"],
 ].filter((k): k is string => !!k && k.length > 10);
 
 console.log(`[CONFIG] Número de API Keys detectadas: ${KEYS.length}`);
@@ -32,7 +41,11 @@ const FALLBACK_VIDEOS: YouTubeVideo[] = [
   },
 ];
 
-async function fetchWithRotation(baseUrl: string, cacheKey: string, revalidateTime: number) {
+async function fetchWithRotation(
+  baseUrl: string,
+  cacheKey: string,
+  revalidateTime: number,
+) {
   let lastError: any = new Error(`No API keys available for ${cacheKey}`);
 
   if (KEYS.length === 0) {
@@ -44,7 +57,9 @@ async function fetchWithRotation(baseUrl: string, cacheKey: string, revalidateTi
     const url = `${baseUrl}&key=${apiKey}`;
 
     try {
-      console.log(`[YouTube API] Intentando con Key #${i + 1} (${apiKey.substring(0, 4)}...) para ${cacheKey}`);
+      console.log(
+        `[YouTube API] Intentando con Key #${i + 1} (${apiKey.substring(0, 4)}...) para ${cacheKey}`,
+      );
 
       const res = await fetch(url, { next: { revalidate: revalidateTime } });
 
@@ -54,16 +69,21 @@ async function fetchWithRotation(baseUrl: string, cacheKey: string, revalidateTi
 
       if (res.status === 403) {
         const errorData = await res.json();
-        const message = errorData.error?.message || 'Quota Exceeded or Access Denied';
-        console.error(`[YouTube API] Key #${i + 1} para ${cacheKey} falló (403):`, message);
-        throw new Error('QUOTA_EXCEEDED');
+        const message =
+          errorData.error?.message || "Quota Exceeded or Access Denied";
+        console.error(
+          `[YouTube API] Key #${i + 1} para ${cacheKey} falló (403):`,
+          message,
+        );
+        throw new Error("QUOTA_EXCEEDED");
       }
 
       throw new Error(`HTTP error ${res.status}`);
-
     } catch (err) {
       lastError = err;
-      console.warn(`[YouTube API] Error con Key #${i + 1} para ${cacheKey}. Saltando a la siguiente...`);
+      console.warn(
+        `[YouTube API] Error con Key #${i + 1} para ${cacheKey}. Saltando a la siguiente...`,
+      );
       continue;
     }
   }
@@ -72,16 +92,15 @@ async function fetchWithRotation(baseUrl: string, cacheKey: string, revalidateTi
   throw lastError;
 }
 
-
 async function getData(
   baseUrl: string,
   cacheKey: string,
   fallbackData: any,
-  revalidateTime: number = 3600
+  revalidateTime: number = 3600,
 ) {
   if (!CHANNEL_ID) {
     console.warn(
-      `YouTube Channel ID not configured for ${cacheKey}, using fallback data.`
+      `YouTube Channel ID not configured for ${cacheKey}, using fallback data.`,
     );
     return fallbackData;
   }
@@ -89,7 +108,10 @@ async function getData(
   try {
     return await fetchWithRotation(baseUrl, cacheKey, revalidateTime);
   } catch (error) {
-    console.error(`Error final al obtener datos de YouTube para ${cacheKey}:`, error);
+    console.error(
+      `Error final al obtener datos de YouTube para ${cacheKey}:`,
+      error,
+    );
     return fallbackData;
   }
 }
@@ -121,7 +143,7 @@ export const getChannelStats = cache(async (): Promise<YouTubeChannel> => {
 const getUploadsPlaylistId = (channelId: string) => {
   if (!channelId.startsWith("UC")) {
     console.warn(
-      "Channel ID does not start with 'UC'. Playlist ID conversion might be incorrect."
+      "Channel ID does not start with 'UC'. Playlist ID conversion might be incorrect.",
     );
     // Return a default or transformed ID for safety, though it might not work.
     return `UU${channelId.substring(2)}`;
@@ -143,11 +165,17 @@ export const getLatestVideos = cache(
       return FALLBACK_VIDEOS.slice(0, maxResults);
     }
 
-    const videoIds = data.items.map((item: any) => item.snippet.resourceId.videoId);
+    const videoIds = data.items.map(
+      (item: any) => item.snippet.resourceId.videoId,
+    );
 
     // Fetch video details (duration) to filter shorts
     const detailsUrl = `https://www.googleapis.com/youtube/v3/videos?id=${videoIds.join(",")}&part=contentDetails,snippet,statistics,liveStreamingDetails`;
-    const detailsData = await getData(detailsUrl, `videoDetails-${videoIds.join('-')}`, { items: [] });
+    const detailsData = await getData(
+      detailsUrl,
+      `videoDetails-${videoIds.join("-")}`,
+      { items: [] },
+    );
 
     if (!detailsData.items) return FALLBACK_VIDEOS.slice(0, maxResults);
 
@@ -155,18 +183,19 @@ export const getLatestVideos = cache(
     // Shorts are typically under 61 seconds
     const filteredVideos = detailsData.items
       .filter((item: any) => {
-        const duration = item.contentDetails.duration;
+        const duration = item.contentDetails?.duration;
+        if (!duration) return true; // sin datos de duración → conservar
         // Parse ISO 8601 duration
         const match = duration.match(/PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?/);
         if (!match) return true;
-        const hours = parseInt(match[1] || '0');
-        const minutes = parseInt(match[2] || '0');
-        const seconds = parseInt(match[3] || '0');
+        const hours = parseInt(match[1] || "0");
+        const minutes = parseInt(match[2] || "0");
+        const seconds = parseInt(match[3] || "0");
         const totalSeconds = hours * 3600 + minutes * 60 + seconds;
-        
+
         // Exclude videos shorter than 2 minutes (120 seconds) as requested
         // This ensures Shorts and very short clips are filtered out.
-        return totalSeconds > 120; 
+        return totalSeconds > 120;
       })
       .map((item: any) => ({
         id: item.id,
@@ -180,22 +209,28 @@ export const getLatestVideos = cache(
         publishedAt: item.snippet.publishedAt,
         viewCount: item.statistics?.viewCount || "0",
         channelTitle: item.snippet.channelTitle,
-        isLive: !!item.liveStreamingDetails || item.snippet.liveBroadcastContent !== 'none',
+        isLive:
+          !!item.liveStreamingDetails ||
+          item.snippet.liveBroadcastContent !== "none",
       }))
       .slice(0, maxResults);
 
-    console.log(`Successfully fetched ${filteredVideos.length} non-short videos`);
+    console.log(
+      `Successfully fetched ${filteredVideos.length} non-short videos`,
+    );
     return filteredVideos;
-  }
+  },
 );
 
 export const getVideosByIds = cache(
   async (videoIds: string[]): Promise<YouTubeVideo[]> => {
     const url = `https://www.googleapis.com/youtube/v3/videos?id=${videoIds.join(
-      ","
+      ",",
     )}&part=snippet,statistics,liveStreamingDetails`;
 
-    const data = await getData(url, `videosByIds-${videoIds.join('-')}`, { items: [] });
+    const data = await getData(url, `videosByIds-${videoIds.join("-")}`, {
+      items: [],
+    });
 
     if (!data.items || data.items.length === 0) {
       console.warn(`No videos found for IDs: ${videoIds.join(",")}`);
@@ -213,10 +248,12 @@ export const getVideosByIds = cache(
       publishedAt: item.snippet.publishedAt,
       viewCount: item.statistics?.viewCount || "0",
       channelTitle: item.snippet.channelTitle,
-      isLive: !!item.liveStreamingDetails || item.snippet.liveBroadcastContent !== 'none',
+      isLive:
+        !!item.liveStreamingDetails ||
+        item.snippet.liveBroadcastContent !== "none",
     }));
 
     console.log(`Successfully fetched ${videos.length} videos by ID.`);
     return videos;
-  }
+  },
 );
