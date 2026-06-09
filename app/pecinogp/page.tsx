@@ -52,51 +52,52 @@ const ThreeBackground = dynamic(
   { ssr: false },
 );
 
-/* ─── DATOS MENSUALES ──────────────────────────────────────────────────── */
-const YT_MONTHLY = [
-  { mes: "Jul 25", views: 850, subs: 1200 },
-  { mes: "Ago 25", views: 920, subs: 1350 },
-  { mes: "Sep 25", views: 780, subs: 1100 },
-  { mes: "Oct 25", views: 1100, subs: 1600 },
-  { mes: "Nov 25", views: 940, subs: 1400 },
-  { mes: "Dic 25", views: 720, subs: 980 },
-  { mes: "Ene 26", views: 680, subs: 920 },
-  { mes: "Feb 26", views: 760, subs: 1100 },
-  { mes: "Mar 26", views: 1200, subs: 1800 },
-  { mes: "Abr 26", views: 1400, subs: 2100 },
-  { mes: "May 26", views: 1300, subs: 1950 },
-  { mes: "Jun 26", views: 1100, subs: 1700 },
+/* ─── DATOS REALES (YouTube Studio · jun 2025–jun 2026) ─────────────────── */
+
+// Top vídeos por visualizaciones de los últimos 28 días (en miles).
+const TOP_VIDEOS = [
+  { name: "Pedro Acosta estalla", views: 58.3 },
+  { name: "Entrevista Gino Borsoi", views: 44.2 },
+  { name: "A un paso de la tragedia", views: 42.2 },
+  { name: "Gregorio Lavilla: MotoGP 850", views: 38.4 },
+  { name: "Aprilia amarga a Ducati", views: 38.2 },
+  { name: "¿Qué está pasando en MGP?", views: 28.2 },
 ];
 
-const IG_MONTHLY = [
-  { mes: "Jul 25", followers: 8200, reach: 82 },
-  { mes: "Ago 25", followers: 8950, reach: 95 },
-  { mes: "Sep 25", followers: 9400, reach: 88 },
-  { mes: "Oct 25", followers: 10200, reach: 118 },
-  { mes: "Nov 25", followers: 10900, reach: 112 },
-  { mes: "Dic 25", followers: 11400, reach: 98 },
-  { mes: "Ene 26", followers: 11800, reach: 105 },
-  { mes: "Feb 26", followers: 12500, reach: 130 },
-  { mes: "Mar 26", followers: 13600, reach: 165 },
-  { mes: "Abr 26", followers: 14400, reach: 190 },
-  { mes: "May 26", followers: 15100, reach: 210 },
-  { mes: "Jun 26", followers: 15800, reach: 225 },
+// Reparto de tiempo de visualización por dispositivo (últimos 28 días, %).
+const DEVICES = [
+  { name: "Móvil", pct: 54.4 },
+  { name: "TV", pct: 24.7 },
+  { name: "Ordenador", pct: 13.7 },
+  { name: "Tablet", pct: 7.0 },
 ];
 
+// Audiencia por país según visualizaciones del último año (real, YT Studio).
 const COUNTRIES = [
-  { code: "es", name: "España", pct: 38 },
-  { code: "ve", name: "Venezuela", pct: 12 },
-  { code: "ar", name: "Argentina", pct: 10 },
-  { code: "co", name: "Colombia", pct: 8 },
-  { code: "us", name: "EE. UU.", pct: 6 },
-  { code: "mx", name: "México", pct: 6 },
-  { code: "pt", name: "Portugal", pct: 5 },
-  { code: "it", name: "Italia", pct: 4 },
-  { code: "cl", name: "Chile", pct: 3 },
-  { code: "br", name: "Brasil", pct: 3 },
-  { code: "do", name: "R. Dominicana", pct: 2 },
-  { code: "uy", name: "Uruguay", pct: 2 },
-  { code: "ot", name: "Otros", pct: 1 },
+  { code: "es", name: "España", pct: 40.1 },
+  { code: "ve", name: "Venezuela", pct: 33.5 },
+  { code: "co", name: "Colombia", pct: 4.9 },
+  { code: "ar", name: "Argentina", pct: 4.7 },
+  { code: "mx", name: "México", pct: 4.0 },
+  { code: "us", name: "EE. UU.", pct: 1.8 },
+  { code: "ot", name: "Otros", pct: 11.0 },
+];
+
+/* ─── DATOS REALES INSTAGRAM (@pecinogp · últimos 30 días) ──────────────── */
+
+// Top Reels por visualizaciones del último mes (en miles).
+const TOP_REELS = [
+  { name: "Reel #1", views: 16.1 },
+  { name: "Reel #2", views: 15.5 },
+  { name: "Reel #3", views: 13.4 },
+  { name: "Reel #4", views: 9.2 },
+  { name: "Reel #5", views: 6.8 },
+];
+
+// De dónde viene el alcance (% de cuentas alcanzadas, últimos 30 días).
+const IG_AUDIENCE = [
+  { name: "No seguidores", pct: 77.6 },
+  { name: "Seguidores", pct: 22.4 },
 ];
 
 /* ─── TOOLTIP CUSTOM ───────────────────────────────────────────────────── */
@@ -242,79 +243,6 @@ export default function MiCanalPage() {
           <ScrollHint />
         </section>
 
-        {/* ─── HIGHLIGHT VISUALIZACIONES ─── */}
-        <section className="px-4 sm:px-6 lg:px-8 pb-4 relative">
-          <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-red-600/30 to-transparent" />
-          <Reveal
-            className="max-w-5xl mx-auto text-center pt-16 md:pt-20"
-            y={40}
-          >
-            <p className="text-white/50 font-black uppercase tracking-[0.3em] text-[10px] md:text-xs mb-4">
-              El canal ha conseguido
-            </p>
-            <h2 className="text-4xl sm:text-5xl md:text-7xl font-black text-white italic tracking-tighter leading-[0.9]">
-              {views.toLocaleString("es-ES")}{" "}
-              <span className="text-red-600">visualizaciones</span>
-            </h2>
-          </Reveal>
-        </section>
-
-        {/* ─── STAT BADGES ─── */}
-        <section className="px-4 sm:px-6 lg:px-8 py-16 md:py-24">
-          <div className="max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 md:gap-6">
-            <StatBadge
-              value={views / 1_000_000}
-              suffix="M"
-              decimals={1}
-              label="Visualizaciones"
-              icon={Eye}
-              accent="red"
-            />
-            <StatBadge
-              value={subs / 1000}
-              suffix="K"
-              decimals={1}
-              label="Suscriptores"
-              icon={Users}
-              accent="gold"
-            />
-            <StatBadge
-              value={videoCount}
-              label="Vídeos publicados"
-              icon={Film}
-              accent="red"
-            />
-
-            {/* Países */}
-            <div className="group relative flex flex-col items-start gap-5 p-7 md:p-8 rounded-[28px] bg-white/[0.03] border border-white/10 backdrop-blur-xl overflow-hidden transition-all duration-500 hover:border-white/20 hover:-translate-y-1.5 hover:bg-white/[0.05]">
-              <div className="pointer-events-none absolute -top-16 -right-16 w-40 h-40 rounded-full blur-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 bg-yellow-500/10" />
-              <div className="relative z-10 inline-flex p-3.5 rounded-2xl bg-black/40 border border-yellow-500/30 text-yellow-400 shadow-[0_0_25px_rgba(234,179,8,0.25)]">
-                <Globe size={24} />
-              </div>
-              <div className="relative z-10 w-full">
-                <div className="flex flex-wrap gap-2 mb-4">
-                  {COUNTRIES.filter((c) => c.code !== "ot").map((c) => (
-                    <img
-                      key={c.code}
-                      src={`https://flagcdn.com/w40/${c.code}.png`}
-                      alt={c.name}
-                      title={c.name}
-                      loading="lazy"
-                      className="w-8 h-auto rounded-sm shadow-md ring-1 ring-white/10 transition-transform hover:scale-110"
-                    />
-                  ))}
-                </div>
-                <p className="text-[10px] md:text-[11px] font-black uppercase tracking-[0.25em] text-white/50">
-                  Países que nos ven
-                </p>
-                <p className="mt-1 text-[10px] text-white/30 font-medium">
-                  Audiencia repartida por todo el mundo
-                </p>
-              </div>
-            </div>
-          </div>
-        </section>
-
         {/* ═══════════════════════════════════════════════════════════════
             DASHBOARD DE CRECIMIENTO
         ═══════════════════════════════════════════════════════════════ */}
@@ -335,7 +263,7 @@ export default function MiCanalPage() {
                 </div>
                 <Reveal y={30}>
                   <h2 className="text-4xl md:text-6xl font-black text-white italic tracking-tighter">
-                    CRECIMIENTO <span className="text-red-600">MENSUAL</span>
+                    EL CANAL <span className="text-red-600">EN NÚMEROS</span>
                   </h2>
                 </Reveal>
               </div>
@@ -383,37 +311,37 @@ export default function MiCanalPage() {
                   exit={{ opacity: 0, y: -20 }}
                   transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
                 >
-                  {/* KPIs YouTube */}
+                  {/* KPIs YouTube (datos reales · YouTube Studio) */}
                   <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-8">
                     <MiniStat
                       label="Suscriptores"
                       value={`${(subs / 1000).toFixed(1)}K`}
-                      delta="↑ +1.7K este mes"
+                      delta="↑ +783 en 28 días"
                       color="red"
                     />
                     <MiniStat
-                      label="Vistas este mes"
-                      value="1.1M"
-                      delta="↑ +22% vs. anterior"
+                      label="Visualizaciones"
+                      value={`${(views / 1_000_000).toFixed(1)}M`}
+                      delta="histórico del canal"
                       color="red"
                     />
                     <MiniStat
-                      label="Nuevos subs/mes"
-                      value="1.7K"
-                      delta="↑ récord en mayo"
+                      label="Vistas (último año)"
+                      value="6,75M"
+                      delta="↑ 1,26M h de visión"
                       color="red"
                     />
                     <MiniStat
-                      label="Vídeos totales"
-                      value={videoCount.toString()}
-                      delta={`+${Math.round(videoCount / 12)} este año`}
+                      label="Audiencia mensual"
+                      value="134K"
+                      delta="usuarios únicos / 28 d"
                       color="red"
                     />
                   </div>
 
                   {/* Charts grid YouTube */}
                   <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                    {/* Views por mes */}
+                    {/* Top vídeos del mes (real) */}
                     <div className="p-6 md:p-8 rounded-[28px] bg-white/[0.03] border border-white/8 hover:border-red-600/20 transition-all duration-300">
                       <div className="flex items-center gap-3 mb-6">
                         <div className="p-2.5 rounded-xl bg-red-600/10 border border-red-600/20">
@@ -421,82 +349,69 @@ export default function MiCanalPage() {
                         </div>
                         <div>
                           <p className="text-sm font-black text-white italic tracking-tight">
-                            Visualizaciones mensuales
+                            Top vídeos del mes
                           </p>
                           <p className="text-[10px] text-white/30 font-bold uppercase tracking-widest">
-                            Últimos 12 meses · en miles
+                            Visualizaciones · últimos 28 días · en miles
                           </p>
                         </div>
                       </div>
                       {chartMounted && (
-                        <ResponsiveContainer width="100%" height={200}>
-                          <AreaChart
-                            data={YT_MONTHLY}
-                            margin={{ top: 5, right: 5, bottom: 0, left: -20 }}
+                        <ResponsiveContainer width="100%" height={220}>
+                          <BarChart
+                            layout="vertical"
+                            data={TOP_VIDEOS}
+                            margin={{ top: 0, right: 12, bottom: 0, left: 0 }}
                           >
                             <defs>
                               <linearGradient
-                                id="viewsGrad"
+                                id="topGrad"
                                 x1="0"
                                 y1="0"
-                                x2="0"
-                                y2="1"
+                                x2="1"
+                                y2="0"
                               >
                                 <stop
-                                  offset="5%"
-                                  stopColor="#dc2626"
-                                  stopOpacity={0.3}
+                                  offset="0%"
+                                  stopColor="#7f1d1d"
+                                  stopOpacity={0.7}
                                 />
                                 <stop
-                                  offset="95%"
+                                  offset="100%"
                                   stopColor="#dc2626"
-                                  stopOpacity={0}
+                                  stopOpacity={0.95}
                                 />
                               </linearGradient>
                             </defs>
-                            <CartesianGrid
-                              strokeDasharray="3 3"
-                              stroke="rgba(255,255,255,0.04)"
-                            />
-                            <XAxis
-                              dataKey="mes"
+                            <XAxis type="number" hide />
+                            <YAxis
+                              type="category"
+                              dataKey="name"
+                              width={140}
                               tick={{
-                                fill: "rgba(255,255,255,0.3)",
+                                fill: "rgba(255,255,255,0.55)",
                                 fontSize: 10,
                                 fontWeight: 700,
                               }}
                               axisLine={false}
                               tickLine={false}
                             />
-                            <YAxis
-                              tick={{
-                                fill: "rgba(255,255,255,0.3)",
-                                fontSize: 10,
-                              }}
-                              axisLine={false}
-                              tickLine={false}
+                            <Tooltip
+                              content={<CustomTooltip unit="K vistas" />}
+                              cursor={{ fill: "rgba(255,255,255,0.04)" }}
                             />
-                            <Tooltip content={<CustomTooltip unit="K" />} />
-                            <Area
-                              type="monotone"
+                            <Bar
                               dataKey="views"
-                              stroke="#dc2626"
-                              strokeWidth={2.5}
-                              fill="url(#viewsGrad)"
-                              dot={false}
-                              activeDot={{
-                                r: 5,
-                                fill: "#dc2626",
-                                stroke: "#000",
-                                strokeWidth: 2,
-                              }}
+                              fill="url(#topGrad)"
+                              radius={[0, 6, 6, 0]}
+                              maxBarSize={18}
                             />
-                          </AreaChart>
+                          </BarChart>
                         </ResponsiveContainer>
                       )}
                     </div>
 
-                    {/* Subs nuevos por mes */}
+                    {/* Audiencia por dispositivo (real) */}
                     <div className="p-6 md:p-8 rounded-[28px] bg-white/[0.03] border border-white/8 hover:border-red-600/20 transition-all duration-300">
                       <div className="flex items-center gap-3 mb-6">
                         <div className="p-2.5 rounded-xl bg-red-600/10 border border-red-600/20">
@@ -504,22 +419,22 @@ export default function MiCanalPage() {
                         </div>
                         <div>
                           <p className="text-sm font-black text-white italic tracking-tight">
-                            Nuevos suscriptores / mes
+                            Audiencia por dispositivo
                           </p>
                           <p className="text-[10px] text-white/30 font-bold uppercase tracking-widest">
-                            Últimos 12 meses
+                            Tiempo de visión · últimos 28 días · %
                           </p>
                         </div>
                       </div>
                       {chartMounted && (
-                        <ResponsiveContainer width="100%" height={200}>
+                        <ResponsiveContainer width="100%" height={220}>
                           <BarChart
-                            data={YT_MONTHLY}
+                            data={DEVICES}
                             margin={{ top: 5, right: 5, bottom: 0, left: -20 }}
                           >
                             <defs>
                               <linearGradient
-                                id="subsGrad"
+                                id="devGrad"
                                 x1="0"
                                 y1="0"
                                 x2="0"
@@ -528,7 +443,7 @@ export default function MiCanalPage() {
                                 <stop
                                   offset="5%"
                                   stopColor="#dc2626"
-                                  stopOpacity={0.9}
+                                  stopOpacity={0.95}
                                 />
                                 <stop
                                   offset="95%"
@@ -542,9 +457,9 @@ export default function MiCanalPage() {
                               stroke="rgba(255,255,255,0.04)"
                             />
                             <XAxis
-                              dataKey="mes"
+                              dataKey="name"
                               tick={{
-                                fill: "rgba(255,255,255,0.3)",
+                                fill: "rgba(255,255,255,0.5)",
                                 fontSize: 10,
                                 fontWeight: 700,
                               }}
@@ -558,13 +473,17 @@ export default function MiCanalPage() {
                               }}
                               axisLine={false}
                               tickLine={false}
+                              unit="%"
                             />
-                            <Tooltip content={<CustomTooltip unit=" subs" />} />
+                            <Tooltip
+                              content={<CustomTooltip unit="%" />}
+                              cursor={{ fill: "rgba(255,255,255,0.04)" }}
+                            />
                             <Bar
-                              dataKey="subs"
-                              fill="url(#subsGrad)"
+                              dataKey="pct"
+                              fill="url(#devGrad)"
                               radius={[6, 6, 0, 0]}
-                              maxBarSize={32}
+                              maxBarSize={48}
                             />
                           </BarChart>
                         </ResponsiveContainer>
@@ -580,121 +499,107 @@ export default function MiCanalPage() {
                   exit={{ opacity: 0, y: -20 }}
                   transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
                 >
-                  {/* KPIs Instagram */}
+                  {/* KPIs Instagram (datos reales · últimos 30 días) */}
                   <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-8">
                     <MiniStat
                       label="Seguidores"
-                      value="15.8K"
-                      delta="↑ +700 este mes"
+                      value="4.345"
+                      delta="comunidad fiel"
                       color="purple"
                     />
                     <MiniStat
-                      label="Alcance mensual"
-                      value="225K"
-                      delta="↑ +10% vs anterior"
+                      label="Visualizaciones"
+                      value="140,7K"
+                      delta="↑ 98,7% en Reels"
                       color="purple"
                     />
                     <MiniStat
-                      label="Engagement"
-                      value="4.2%"
-                      delta="↑ top 10% sector"
+                      label="Cuentas alcanzadas"
+                      value="50,0K"
+                      delta="↑ 77,6% no te siguen"
                       color="purple"
                     />
                     <MiniStat
-                      label="Publicaciones"
-                      value="340+"
-                      delta="+8 este mes"
+                      label="Interacciones"
+                      value="6.622"
+                      delta="↑ 4,7% engagement"
                       color="purple"
                     />
                   </div>
 
-                  {/* Charts grid Instagram */}
+                  {/* Charts grid Instagram (datos reales) */}
                   <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                    {/* Followers */}
+                    {/* Top Reels del mes */}
                     <div className="p-6 md:p-8 rounded-[28px] bg-white/[0.03] border border-white/8 hover:border-purple-600/20 transition-all duration-300">
                       <div className="flex items-center gap-3 mb-6">
                         <div className="p-2.5 rounded-xl bg-purple-600/10 border border-purple-600/20">
-                          <Users size={16} className="text-purple-400" />
+                          <Instagram size={16} className="text-purple-400" />
                         </div>
                         <div>
                           <p className="text-sm font-black text-white italic tracking-tight">
-                            Seguidores acumulados
+                            Top Reels del mes
                           </p>
                           <p className="text-[10px] text-white/30 font-bold uppercase tracking-widest">
-                            Últimos 12 meses
+                            Visualizaciones · últimos 30 días · en miles
                           </p>
                         </div>
                       </div>
                       {chartMounted && (
-                        <ResponsiveContainer width="100%" height={200}>
-                          <AreaChart
-                            data={IG_MONTHLY}
-                            margin={{ top: 5, right: 5, bottom: 0, left: -10 }}
+                        <ResponsiveContainer width="100%" height={220}>
+                          <BarChart
+                            layout="vertical"
+                            data={TOP_REELS}
+                            margin={{ top: 0, right: 12, bottom: 0, left: 0 }}
                           >
                             <defs>
                               <linearGradient
-                                id="igFollowersGrad"
+                                id="reelGrad"
                                 x1="0"
                                 y1="0"
-                                x2="0"
-                                y2="1"
+                                x2="1"
+                                y2="0"
                               >
                                 <stop
-                                  offset="5%"
-                                  stopColor="#a855f7"
-                                  stopOpacity={0.4}
+                                  offset="0%"
+                                  stopColor="#9333ea"
+                                  stopOpacity={0.7}
                                 />
                                 <stop
-                                  offset="95%"
-                                  stopColor="#a855f7"
-                                  stopOpacity={0}
+                                  offset="100%"
+                                  stopColor="#ec4899"
+                                  stopOpacity={0.95}
                                 />
                               </linearGradient>
                             </defs>
-                            <CartesianGrid
-                              strokeDasharray="3 3"
-                              stroke="rgba(255,255,255,0.04)"
-                            />
-                            <XAxis
-                              dataKey="mes"
+                            <XAxis type="number" hide />
+                            <YAxis
+                              type="category"
+                              dataKey="name"
+                              width={70}
                               tick={{
-                                fill: "rgba(255,255,255,0.3)",
+                                fill: "rgba(255,255,255,0.55)",
                                 fontSize: 10,
                                 fontWeight: 700,
                               }}
                               axisLine={false}
                               tickLine={false}
                             />
-                            <YAxis
-                              tick={{
-                                fill: "rgba(255,255,255,0.3)",
-                                fontSize: 10,
-                              }}
-                              axisLine={false}
-                              tickLine={false}
-                              tickFormatter={(v) => `${(v / 1000).toFixed(0)}K`}
+                            <Tooltip
+                              content={<CustomTooltip unit="K vistas" />}
+                              cursor={{ fill: "rgba(255,255,255,0.04)" }}
                             />
-                            <Tooltip content={<CustomTooltip unit=" seg." />} />
-                            <Area
-                              type="monotone"
-                              dataKey="followers"
-                              stroke="#a855f7"
-                              strokeWidth={2.5}
-                              fill="url(#igFollowersGrad)"
-                              dot={false}
-                              activeDot={{
-                                r: 5,
-                                fill: "#a855f7",
-                                stroke: "#000",
-                                strokeWidth: 2,
-                              }}
+                            <Bar
+                              dataKey="views"
+                              fill="url(#reelGrad)"
+                              radius={[0, 6, 6, 0]}
+                              maxBarSize={22}
                             />
-                          </AreaChart>
+                          </BarChart>
                         </ResponsiveContainer>
                       )}
                     </div>
 
-                    {/* Alcance mensual */}
+                    {/* De dónde viene el alcance */}
                     <div className="p-6 md:p-8 rounded-[28px] bg-white/[0.03] border border-white/8 hover:border-purple-600/20 transition-all duration-300">
                       <div className="flex items-center gap-3 mb-6">
                         <div className="p-2.5 rounded-xl bg-pink-600/10 border border-pink-600/20">
@@ -702,17 +607,17 @@ export default function MiCanalPage() {
                         </div>
                         <div>
                           <p className="text-sm font-black text-white italic tracking-tight">
-                            Alcance mensual
+                            ¿De dónde viene el alcance?
                           </p>
                           <p className="text-[10px] text-white/30 font-bold uppercase tracking-widest">
-                            En miles · últimos 12 meses
+                            Cuentas alcanzadas · últimos 30 días · %
                           </p>
                         </div>
                       </div>
                       {chartMounted && (
-                        <ResponsiveContainer width="100%" height={200}>
+                        <ResponsiveContainer width="100%" height={220}>
                           <BarChart
-                            data={IG_MONTHLY}
+                            data={IG_AUDIENCE}
                             margin={{ top: 5, right: 5, bottom: 0, left: -20 }}
                           >
                             <defs>
@@ -726,7 +631,7 @@ export default function MiCanalPage() {
                                 <stop
                                   offset="5%"
                                   stopColor="#ec4899"
-                                  stopOpacity={0.9}
+                                  stopOpacity={0.95}
                                 />
                                 <stop
                                   offset="95%"
@@ -740,9 +645,9 @@ export default function MiCanalPage() {
                               stroke="rgba(255,255,255,0.04)"
                             />
                             <XAxis
-                              dataKey="mes"
+                              dataKey="name"
                               tick={{
-                                fill: "rgba(255,255,255,0.3)",
+                                fill: "rgba(255,255,255,0.5)",
                                 fontSize: 10,
                                 fontWeight: 700,
                               }}
@@ -756,13 +661,17 @@ export default function MiCanalPage() {
                               }}
                               axisLine={false}
                               tickLine={false}
+                              unit="%"
                             />
-                            <Tooltip content={<CustomTooltip unit="K" />} />
+                            <Tooltip
+                              content={<CustomTooltip unit="%" />}
+                              cursor={{ fill: "rgba(255,255,255,0.04)" }}
+                            />
                             <Bar
-                              dataKey="reach"
+                              dataKey="pct"
                               fill="url(#igReachGrad)"
                               radius={[6, 6, 0, 0]}
-                              maxBarSize={32}
+                              maxBarSize={70}
                             />
                           </BarChart>
                         </ResponsiveContainer>
@@ -817,6 +726,9 @@ export default function MiCanalPage() {
               <h2 className="text-4xl md:text-5xl font-black text-white italic tracking-tighter">
                 AUDIENCIA <span className="text-red-600">POR PAÍS</span>
               </h2>
+              <p className="mt-2 text-[10px] text-white/30 font-bold uppercase tracking-[0.2em]">
+                Visualizaciones · últimos 12 meses
+              </p>
             </Reveal>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-3">
