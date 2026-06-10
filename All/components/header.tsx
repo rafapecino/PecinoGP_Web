@@ -95,15 +95,20 @@ export default function Header() {
           </div>
 
           {/* Desktop Navigation */}
-          <nav className="hidden xl:flex items-center gap-12">
+          <nav className="hidden xl:flex items-center gap-1">
             {NAV_LINKS.map((link) => (
               <Link
                 key={link.href}
                 href={link.href}
-                className="group relative px-2 py-1 text-xs font-black uppercase tracking-[0.2em] text-white/70 hover:text-white transition-all duration-300 italic"
+                className={`group flex items-center justify-center px-1 ${
+                  compact ? "-my-3 py-3" : "-my-6 py-6 md:-my-14 md:py-14"
+                }`}
               >
-                <span>{link.label}</span>
-                <span className="absolute bottom-0 left-0 w-0 h-[2px] bg-red-600 transition-all duration-300 group-hover:w-full" />
+                {/* Cajita visible redondeada; el <a> entero (alto del header) es clicable */}
+                <span className="relative px-5 py-2.5 rounded-xl text-xs font-black uppercase tracking-[0.2em] italic text-white/70 group-hover:text-white group-hover:bg-white/5 transition-colors duration-300">
+                  {link.label}
+                  <span className="absolute bottom-1 left-5 right-5 h-[2px] bg-red-600 scale-x-0 origin-left transition-transform duration-300 group-hover:scale-x-100" />
+                </span>
               </Link>
             ))}
           </nav>

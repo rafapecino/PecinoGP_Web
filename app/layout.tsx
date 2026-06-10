@@ -3,6 +3,7 @@ import "./globals.css";
 import "lenis/dist/lenis.css";
 import { CookieConsentBanner } from "@/All/components/cookie-consent";
 import { SmoothScroll } from "@/All/components/smooth-scroll";
+import { RaceProgressBar } from "@/All/components/race-progress-bar";
 
 export const metadata: Metadata = {
   title: "PecinoGP - Análisis de MotoGP",
@@ -27,6 +28,7 @@ export default function RootLayout({
         className="bg-background text-foreground antialiased"
         suppressHydrationWarning
       >
+        <RaceProgressBar />
         <SmoothScroll>{children}</SmoothScroll>
         <CookieConsentBanner />
       </body>

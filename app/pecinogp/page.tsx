@@ -1,13 +1,15 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import dynamic from "next/dynamic";
+import anime from "animejs";
 import Header from "@/All/components/header";
 import { Footer } from "@/All/components/footer";
 import { SplitHeadline } from "@/All/components/split-headline";
 import { StatBadge } from "@/All/components/stat-badge";
 import { Reveal } from "@/All/components/reveal";
 import { ScrollHint } from "@/All/components/scroll-hint";
+import { HeroUnderline } from "@/All/components/hero-underline";
 import type { YouTubeChannel, YouTubeVideo } from "@/lib/youtube-data";
 import { decodeHtmlEntities } from "@/lib/utils";
 import {
@@ -191,6 +193,56 @@ function AnimatedValue({ value }: { value: string }) {
   );
 }
 
+/* ─── PORCENTAJE TELEMETRÍA (anime.js count-up) ────────────────────────── */
+function TelemetryPercent({ pct }: { pct: number }) {
+  const ref = useRef<HTMLSpanElement>(null);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const fmt = (v: number) =>
+      `${v.toLocaleString("es-ES", {
+        minimumFractionDigits: 1,
+        maximumFractionDigits: 1,
+      })}%`;
+
+    const reduced = window.matchMedia(
+      "(prefers-reduced-motion: reduce)",
+    ).matches;
+    if (reduced) {
+      el.textContent = fmt(pct);
+      return;
+    }
+
+    el.textContent = fmt(0);
+    let anim: ReturnType<typeof anime> | null = null;
+    const io = new IntersectionObserver(
+      (entries) => {
+        if (!entries[0].isIntersecting) return;
+        io.disconnect();
+        const obj = { v: 0 };
+        anim = anime({
+          targets: obj,
+          v: pct,
+          duration: 1400,
+          easing: "easeOutExpo",
+          update: () => {
+            el.textContent = fmt(obj.v);
+          },
+        });
+      },
+      { threshold: 0.5 },
+    );
+    io.observe(el);
+    return () => {
+      io.disconnect();
+      anim?.pause();
+    };
+  }, [pct]);
+
+  return <span ref={ref} className="tabular-nums" />;
+}
+
 /* ─── MINI STAT CARD ───────────────────────────────────────────────────── */
 function MiniStat({
   label,
@@ -312,6 +364,9 @@ export default function MiCanalPage() {
                 EL <span className="text-red-600">CANAL</span>
               </SplitHeadline>
 
+              {/* Racing line dibujada a trazo bajo el titular */}
+              <HeroUnderline />
+
               <p className="max-w-2xl mx-auto text-gray-400 text-lg md:text-xl font-medium italic">
                 Años de pasión por MotoGP convertidos en números. Esto es lo que
                 la comunidad de PecinoGP ha construido.
@@ -340,6 +395,11 @@ export default function MiCanalPage() {
                 <div>
                   <div className="flex items-center gap-2 mb-2">
                     <div className="w-8 h-1 bg-red-600 rounded-full" />
+                    {/* Punto "en vivo" parpadeante */}
+                    <span className="relative flex h-2 w-2">
+                      <span className="motion-safe:animate-ping absolute inline-flex h-full w-full rounded-full bg-red-500 opacity-75" />
+                      <span className="relative inline-flex rounded-full h-2 w-2 bg-red-600" />
+                    </span>
                     <span className="text-red-500 font-black uppercase tracking-[0.2em] text-[10px]">
                       Analíticas en tiempo real
                     </span>
@@ -916,7 +976,7 @@ export default function MiCanalPage() {
                           {c.name}
                         </span>
                         <span className="text-[11px] font-black text-red-500 ml-2 shrink-0">
-                          {c.pct}%
+                          <TelemetryPercent pct={c.pct} />
                         </span>
                       </div>
                       <div className="w-full h-1.5 bg-white/5 rounded-full overflow-hidden">

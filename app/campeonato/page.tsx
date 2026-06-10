@@ -5,6 +5,8 @@ import dynamic from "next/dynamic";
 import Header from "@/All/components/header";
 import { Footer } from "@/All/components/footer";
 import { SplitHeadline } from "@/All/components/split-headline";
+import { ScrollHint } from "@/All/components/scroll-hint";
+import { HeroUnderline } from "@/All/components/hero-underline";
 import { getNextRace, races } from "@/lib/races";
 import { getDriverStandings, type DriverStanding } from "@/lib/motogp-service";
 import { motion, useScroll, useTransform } from "framer-motion";
@@ -186,11 +188,15 @@ export default function CampeonatoPage() {
               CAMPEONATO
             </SplitHeadline>
 
+            <HeroUnderline />
+
             <p className="max-w-2xl mx-auto text-gray-400 text-lg md:text-xl font-medium italic">
               El próximo Gran Premio y la clasificación del mundial, en un
               vistazo.
             </p>
           </div>
+
+          <ScrollHint />
         </section>
 
         {/* --- PRÓXIMO GP --- */}

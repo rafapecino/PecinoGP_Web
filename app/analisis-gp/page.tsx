@@ -10,6 +10,8 @@ import Image from "next/image";
 import { Footer } from "@/All/components/footer";
 import { SplitHeadline } from "@/All/components/split-headline";
 import { Reveal } from "@/All/components/reveal";
+import { ScrollHint } from "@/All/components/scroll-hint";
+import { HeroUnderline } from "@/All/components/hero-underline";
 
 export default function AnalisisGpPage() {
   const [videos, setVideos] = useState<YouTubeVideo[]>([]);
@@ -61,7 +63,7 @@ export default function AnalisisGpPage() {
 
       <main>
         {/* --- CINEMATIC HEADER --- */}
-        <section className="relative min-h-[50vh] md:h-[60vh] flex items-center justify-center overflow-hidden pt-16 md:pt-0">
+        <section className="relative py-20 md:py-44 flex items-center justify-center overflow-hidden">
           <motion.div
             style={{ y: y1 }}
             className="absolute inset-0 z-0 scale-110"
@@ -80,7 +82,7 @@ export default function AnalisisGpPage() {
             variants={containerVariants}
             initial="hidden"
             animate="visible"
-            className="relative z-20 max-w-7xl mx-auto px-4 text-center pt-20"
+            className="relative z-20 max-w-7xl mx-auto px-4 text-center"
           >
             <motion.div
               variants={itemVariants}
@@ -99,6 +101,8 @@ export default function AnalisisGpPage() {
               VÍDEOS <span className="text-red-600">GP</span>
             </SplitHeadline>
 
+            <HeroUnderline />
+
             <motion.p
               variants={itemVariants}
               className="max-w-2xl mx-auto text-gray-400 text-lg md:text-xl font-medium italic"
@@ -107,6 +111,8 @@ export default function AnalisisGpPage() {
               y coberturas exclusivas de MotoGP.
             </motion.p>
           </motion.div>
+
+          <ScrollHint />
         </section>
 
         {/* --- ALL VIDEOS GRID --- */}

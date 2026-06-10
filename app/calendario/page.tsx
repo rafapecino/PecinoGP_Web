@@ -8,6 +8,8 @@ import { Footer } from "@/All/components/footer";
 import { Calendar, Flag, MapPin, ChevronRight } from "lucide-react";
 import { SplitHeadline } from "@/All/components/split-headline";
 import { Reveal } from "@/All/components/reveal";
+import { ScrollHint } from "@/All/components/scroll-hint";
+import { HeroUnderline } from "@/All/components/hero-underline";
 
 import { getNextRace } from "@/lib/races";
 
@@ -54,7 +56,7 @@ export default function CalendarioPage() {
 
       <main>
         {/* --- NEXT RACE HERO --- */}
-        <section className="relative min-h-[70vh] flex items-center justify-center overflow-hidden">
+        <section className="relative py-20 md:py-44 flex items-center justify-center overflow-hidden">
           <motion.div
             style={{ y: y1 }}
             className="absolute inset-0 z-0 scale-110"
@@ -73,7 +75,7 @@ export default function CalendarioPage() {
             variants={containerVariants}
             initial="hidden"
             animate="visible"
-            className="relative z-20 max-w-7xl mx-auto px-4 text-center pt-32"
+            className="relative z-20 max-w-7xl mx-auto px-4 text-center"
           >
             <motion.div
               variants={itemVariants}
@@ -99,6 +101,8 @@ export default function CalendarioPage() {
               <span className="text-red-600">GP</span>
             </SplitHeadline>
 
+            <HeroUnderline />
+
             <motion.div
               variants={itemVariants}
               className="flex flex-wrap items-center justify-center gap-6 md:gap-10 text-white/80 font-bold italic"
@@ -119,6 +123,8 @@ export default function CalendarioPage() {
           </motion.div>
 
           <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-black to-transparent" />
+
+          <ScrollHint />
         </section>
 
         {/* --- FULL CALENDAR --- */}

@@ -15,6 +15,14 @@ import {
   Handshake,
 } from "lucide-react";
 import { SplitHeadline } from "@/All/components/split-headline";
+import { ScrollHint } from "@/All/components/scroll-hint";
+import { HeroUnderline } from "@/All/components/hero-underline";
+import dynamic from "next/dynamic";
+
+const ThreeBackground = dynamic(
+  () => import("@/All/components/three-background"),
+  { ssr: false },
+);
 
 export default function ElPaddockPage() {
   const { scrollY } = useScroll();
@@ -49,7 +57,7 @@ export default function ElPaddockPage() {
 
       <main>
         {/* --- CINEMATIC HERO --- */}
-        <section className="relative py-16 md:py-48 flex items-center justify-center overflow-hidden">
+        <section className="relative py-20 md:py-44 flex items-center justify-center overflow-hidden">
           <motion.div
             style={{ y: y1 }}
             className="absolute inset-0 z-0 scale-110"
@@ -63,6 +71,9 @@ export default function ElPaddockPage() {
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black via-black/80 to-transparent" />
           </motion.div>
+
+          {/* Fondo 3D (three.js): campo de partículas con parallax de ratón */}
+          <ThreeBackground className="z-[1] opacity-70" density={700} />
 
           <motion.div
             variants={containerVariants}
@@ -87,6 +98,8 @@ export default function ElPaddockPage() {
               EL <span className="text-red-600">PADDOCK</span>
             </SplitHeadline>
 
+            <HeroUnderline />
+
             <motion.p
               variants={itemVariants}
               className="max-w-2xl mx-auto text-gray-400 text-lg md:text-xl font-medium italic"
@@ -95,6 +108,8 @@ export default function ElPaddockPage() {
               del contenido junto a Manuel Pecino.
             </motion.p>
           </motion.div>
+
+          <ScrollHint />
         </section>
 
         {/* --- INTERACTIVE CONTENT --- */}
