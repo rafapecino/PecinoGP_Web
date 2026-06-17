@@ -6,6 +6,7 @@ import { useState, useEffect } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { ChevronRight } from "lucide-react";
 import { Logo } from "./logo";
+import { Magnetic } from "./magnetic";
 import { LiveStream } from "@/lib/youtube-service";
 
 const NAV_LINKS = [
@@ -117,48 +118,52 @@ export default function Header() {
           <div className="flex items-center gap-4">
             <div className="hidden lg:block w-px h-6 bg-white/10 mx-2" />
             {liveInfo.isLive ? (
-              <a
-                href={`https://www.youtube.com/watch?v=${liveInfo.videoId}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="group relative inline-flex items-center gap-2 bg-gradient-to-br from-red-500 via-red-600 to-red-800 text-white font-black italic px-3 sm:px-5 py-2 sm:py-2.5 rounded-xl transition-all duration-500 hover:scale-110 active:scale-95 shadow-[0_0_20px_rgba(220,38,38,0.6)] border border-white/30 overflow-hidden"
-              >
-                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:animate-shimmer" />
-                <div className="flex flex-col items-center relative z-10">
-                  <span className="text-[6px] sm:text-[8px] uppercase tracking-[0.2em] opacity-90 leading-none mb-0.5 sm:mb-1 shadow-sm">
-                    ¡QUÉ SUERTE!
-                  </span>
-                  <span className="text-[9px] sm:text-[12px] uppercase tracking-tighter font-black leading-none drop-shadow-md">
-                    ENTRA YA
-                  </span>
-                </div>
-                <div className="w-1 h-1 sm:w-1.5 sm:h-1.5 bg-white rounded-full animate-pulse shadow-[0_0_10px_white] ml-0.5 sm:ml-1" />
-              </a>
+              <Magnetic strength={0.4}>
+                <a
+                  href={`https://www.youtube.com/watch?v=${liveInfo.videoId}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="group relative inline-flex items-center gap-2 bg-gradient-to-br from-red-500 via-red-600 to-red-800 text-white font-black italic px-3 sm:px-5 py-2 sm:py-2.5 rounded-xl transition-all duration-500 hover:scale-110 active:scale-95 shadow-[0_0_20px_rgba(220,38,38,0.6)] border border-white/30 overflow-hidden"
+                >
+                  <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:animate-shimmer" />
+                  <div className="flex flex-col items-center relative z-10">
+                    <span className="text-[6px] sm:text-[8px] uppercase tracking-[0.2em] opacity-90 leading-none mb-0.5 sm:mb-1 shadow-sm">
+                      ¡QUÉ SUERTE!
+                    </span>
+                    <span className="text-[9px] sm:text-[12px] uppercase tracking-tighter font-black leading-none drop-shadow-md">
+                      ENTRA YA
+                    </span>
+                  </div>
+                  <div className="w-1 h-1 sm:w-1.5 sm:h-1.5 bg-white rounded-full animate-pulse shadow-[0_0_10px_white] ml-0.5 sm:ml-1" />
+                </a>
+              </Magnetic>
             ) : (
-              <a
-                href="https://www.youtube.com/channel/UCSvr3yH2NkqlAHfuRDphz4g"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="group relative inline-flex items-center transition-all duration-300 hover:scale-125 active:scale-95"
-              >
-                <Image
-                  src="/YouTube_Logo/Digital/01 Full Color/yt_logo_fullcolor_white_digital.png"
-                  alt="YouTube Logo"
-                  width={80}
-                  height={20}
-                  className="opacity-60 group-hover:opacity-100 transition-opacity hidden sm:block"
-                />
-                <div className="sm:hidden text-white/60 group-hover:text-red-600 transition-colors">
-                  <svg
-                    className="w-8 h-8"
-                    viewBox="0 0 28 20"
-                    fill="currentColor"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path d="M27.3733 3.033C27.0433 1.841 26.0913 0.889 24.9 0.559C22.7163 0 14.0003 0 14.0003 0C14.0003 0 5.28433 0 3.10033 0.559C1.90833 0.889 0.957333 1.841 0.627333 3.033C0.0683334 5.217 0 9.8 0 9.8S0.0683334 14.383 0.627333 16.567C0.957333 17.759 1.90833 18.711 3.10033 19.041C5.28433 19.6 14.0003 19.6 14.0003 19.6C14.0003 19.6 22.7163 19.6 24.9003 19.041C26.0923 18.711 27.0433 17.759 27.3733 16.567C27.9323 14.383 28.0003 9.8 28.0003 9.8S27.9323 5.217 27.3733 3.033ZM11.2003 14V5.6L18.4803 9.8L11.2003 14Z" />
-                  </svg>
-                </div>
-              </a>
+              <Magnetic strength={0.4}>
+                <a
+                  href="https://www.youtube.com/channel/UCSvr3yH2NkqlAHfuRDphz4g"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="group relative inline-flex items-center transition-all duration-300 hover:scale-125 active:scale-95"
+                >
+                  <Image
+                    src="/YouTube_Logo/Digital/01 Full Color/yt_logo_fullcolor_white_digital.png"
+                    alt="YouTube Logo"
+                    width={80}
+                    height={20}
+                    className="opacity-60 group-hover:opacity-100 transition-opacity hidden sm:block"
+                  />
+                  <div className="sm:hidden text-white/60 group-hover:text-red-600 transition-colors">
+                    <svg
+                      className="w-8 h-8"
+                      viewBox="0 0 28 20"
+                      fill="currentColor"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path d="M27.3733 3.033C27.0433 1.841 26.0913 0.889 24.9 0.559C22.7163 0 14.0003 0 14.0003 0C14.0003 0 5.28433 0 3.10033 0.559C1.90833 0.889 0.957333 1.841 0.627333 3.033C0.0683334 5.217 0 9.8 0 9.8S0.0683334 14.383 0.627333 16.567C0.957333 17.759 1.90833 18.711 3.10033 19.041C5.28433 19.6 14.0003 19.6 14.0003 19.6C14.0003 19.6 22.7163 19.6 24.9003 19.041C26.0923 18.711 27.0433 17.759 27.3733 16.567C27.9323 14.383 28.0003 9.8 28.0003 9.8S27.9323 5.217 27.3733 3.033ZM11.2003 14V5.6L18.4803 9.8L11.2003 14Z" />
+                    </svg>
+                  </div>
+                </a>
+              </Magnetic>
             )}
           </div>
 

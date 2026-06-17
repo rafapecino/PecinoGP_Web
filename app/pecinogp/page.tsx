@@ -10,6 +10,7 @@ import { StatBadge } from "@/All/components/stat-badge";
 import { Reveal } from "@/All/components/reveal";
 import { ScrollHint } from "@/All/components/scroll-hint";
 import { HeroUnderline } from "@/All/components/hero-underline";
+import { Magnetic } from "@/All/components/magnetic";
 import type { YouTubeChannel, YouTubeVideo } from "@/lib/youtube-data";
 import { decodeHtmlEntities } from "@/lib/utils";
 import {
@@ -1015,13 +1016,15 @@ export default function MiCanalPage() {
                     ÚLTIMOS <span className="text-red-600">VÍDEOS</span>
                   </h2>
                 </div>
-                <Link
-                  href="/analisis-gp"
-                  className="group flex items-center gap-3 bg-white/5 border border-white/10 text-white font-black py-3 px-8 rounded-xl hover:bg-red-600 transition-all tracking-wider text-sm uppercase italic"
-                >
-                  Ver todos los vídeos{" "}
-                  <ChevronRight className="group-hover:translate-x-1 transition-transform" />
-                </Link>
+                <Magnetic>
+                  <Link
+                    href="/analisis-gp"
+                    className="group flex items-center gap-3 bg-white/5 border border-white/10 text-white font-black py-3 px-8 rounded-xl hover:bg-red-600 transition-all tracking-wider text-sm uppercase italic"
+                  >
+                    Ver todos los vídeos{" "}
+                    <ChevronRight className="group-hover:translate-x-1 transition-transform" />
+                  </Link>
+                </Magnetic>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">

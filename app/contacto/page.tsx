@@ -5,6 +5,7 @@ import { Footer } from "@/All/components/footer";
 import { SplitHeadline } from "@/All/components/split-headline";
 import { ScrollHint } from "@/All/components/scroll-hint";
 import { HeroUnderline } from "@/All/components/hero-underline";
+import { Magnetic } from "@/All/components/magnetic";
 import { motion, useScroll, useTransform } from "framer-motion";
 import dynamic from "next/dynamic";
 import Image from "next/image";
@@ -349,24 +350,26 @@ export default function ContactoPage() {
                     .
                   </p>
 
-                  <button
-                    type="submit"
-                    disabled={!isValid}
-                    className="group relative inline-flex items-center justify-center gap-3 bg-gradient-to-r from-red-600 to-red-700 disabled:from-white/10 disabled:to-white/10 disabled:cursor-not-allowed text-white font-black py-4 px-8 rounded-2xl overflow-hidden transition-all duration-500 enabled:hover:scale-105 active:scale-95 shadow-[0_0_30px_rgba(220,38,38,0.3)] enabled:hover:shadow-[0_0_50px_rgba(220,38,38,0.5)] border border-white/10"
-                  >
-                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-enabled:group-hover:animate-shimmer" />
-                    <span className="relative z-10 flex items-center gap-2 italic tracking-tighter uppercase text-sm">
-                      {sent ? (
-                        <>
-                          <Check size={18} /> Enviado
-                        </>
-                      ) : (
-                        <>
-                          <Send size={18} /> Enviar Mensaje
-                        </>
-                      )}
-                    </span>
-                  </button>
+                  <Magnetic strength={isValid ? 0.35 : 0}>
+                    <button
+                      type="submit"
+                      disabled={!isValid}
+                      className="group relative inline-flex items-center justify-center gap-3 bg-gradient-to-r from-red-600 to-red-700 disabled:from-white/10 disabled:to-white/10 disabled:cursor-not-allowed text-white font-black py-4 px-8 rounded-2xl overflow-hidden transition-all duration-500 enabled:hover:scale-105 active:scale-95 shadow-[0_0_30px_rgba(220,38,38,0.3)] enabled:hover:shadow-[0_0_50px_rgba(220,38,38,0.5)] border border-white/10"
+                    >
+                      <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-enabled:group-hover:animate-shimmer" />
+                      <span className="relative z-10 flex items-center gap-2 italic tracking-tighter uppercase text-sm">
+                        {sent ? (
+                          <>
+                            <Check size={18} /> Enviado
+                          </>
+                        ) : (
+                          <>
+                            <Send size={18} /> Enviar Mensaje
+                          </>
+                        )}
+                      </span>
+                    </button>
+                  </Magnetic>
                 </div>
 
                 {sent && (

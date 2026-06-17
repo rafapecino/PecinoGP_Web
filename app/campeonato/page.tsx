@@ -7,6 +7,7 @@ import { Footer } from "@/All/components/footer";
 import { SplitHeadline } from "@/All/components/split-headline";
 import { ScrollHint } from "@/All/components/scroll-hint";
 import { HeroUnderline } from "@/All/components/hero-underline";
+import { Magnetic } from "@/All/components/magnetic";
 import { getNextRace, races } from "@/lib/races";
 import { getDriverStandings, type DriverStanding } from "@/lib/motogp-service";
 import { motion, useScroll, useTransform } from "framer-motion";
@@ -396,16 +397,18 @@ export default function CampeonatoPage() {
             )}
 
             <div className="mt-10 flex justify-center">
-              <Link
-                href="/clasificacion"
-                className="group relative inline-flex items-center justify-center gap-3 bg-white/5 border border-white/10 text-white font-black py-4 px-10 rounded-2xl overflow-hidden transition-all duration-500 hover:bg-red-600 hover:border-red-600 active:scale-95 italic tracking-tighter uppercase"
-              >
-                Ver clasificación completa
-                <ChevronRight
-                  size={22}
-                  className="group-hover:translate-x-1 transition-transform"
-                />
-              </Link>
+              <Magnetic strength={0.4}>
+                <Link
+                  href="/clasificacion"
+                  className="group relative inline-flex items-center justify-center gap-3 bg-white/5 border border-white/10 text-white font-black py-4 px-10 rounded-2xl overflow-hidden transition-all duration-500 hover:bg-red-600 hover:border-red-600 active:scale-95 italic tracking-tighter uppercase"
+                >
+                  Ver clasificación completa
+                  <ChevronRight
+                    size={22}
+                    className="group-hover:translate-x-1 transition-transform"
+                  />
+                </Link>
+              </Magnetic>
             </div>
           </div>
         </section>
