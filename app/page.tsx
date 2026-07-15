@@ -241,16 +241,6 @@ export default function Home() {
               className="max-w-7xl mx-auto px-4 text-center md:text-left grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-32 items-center pt-24 md:pt-40"
             >
               <div className="flex flex-col items-center md:items-start text-center md:text-left pb-12 md:pb-24">
-                <motion.div
-                  variants={itemVariants}
-                  className="flex items-center gap-2 mb-4 md:mb-6"
-                >
-                  <div className="w-8 md:w-10 h-1 bg-red-600 rounded-full" />
-                  <span className="text-red-500 font-black uppercase tracking-[0.4em] text-[10px] md:text-xs">
-                    PecinoGP Oficial
-                  </span>
-                </motion.div>
-
                 <motion.div variants={itemVariants} className="relative z-10">
                   {data.liveStatus?.isLive && (
                     <motion.div

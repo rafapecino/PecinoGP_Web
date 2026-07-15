@@ -77,16 +77,6 @@ export default function CalendarioPage() {
             animate="visible"
             className="relative z-20 max-w-7xl mx-auto px-4 text-center"
           >
-            <motion.div
-              variants={itemVariants}
-              className="flex items-center justify-center gap-2 mb-6"
-            >
-              <div className="w-8 h-1 bg-red-600 rounded-full" />
-              <span className="text-red-500 font-black uppercase tracking-[0.4em] text-[10px]">
-                Próxima Cita
-              </span>
-            </motion.div>
-
             <motion.div variants={itemVariants} className="mb-4">
               <span className="bg-red-600 text-white font-black italic px-4 py-1 text-sm rounded-sm">
                 ROUND {nextRace.round}
