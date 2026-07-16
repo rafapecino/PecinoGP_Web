@@ -277,31 +277,31 @@ export default function Home() {
                 {/* Removiendo párrafo solicitado */}
                 <div
                   ref={heroButtonsRef}
-                  className="flex flex-col sm:flex-row gap-4 md:gap-6 w-full sm:w-auto relative z-30"
+                  className="grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-6 w-full sm:w-auto relative z-30"
                 >
-                  <Magnetic strength={0.4} className="w-full sm:w-auto">
+                  <Magnetic strength={0.4} className="w-full">
                     <Link
                       href={
                         data.latestVideo.length > 0
                           ? getVideoUrl(data.latestVideo[0].id)
                           : "#"
                       }
-                      className="group relative inline-flex w-full items-center justify-center bg-gradient-to-r from-red-600 to-red-700 text-white font-black py-4 md:py-6 px-10 rounded-2xl text-lg md:text-xl overflow-hidden transition-all duration-500 hover:scale-110 active:scale-95 shadow-[0_0_30px_rgba(220,38,38,0.4)] hover:shadow-[0_0_60px_rgba(220,38,38,0.6)] border border-white/10"
+                      className="group relative inline-flex w-full h-full items-center justify-center bg-gradient-to-r from-red-600 to-red-700 text-white font-black py-4 md:py-6 px-8 rounded-2xl text-lg md:text-xl overflow-hidden transition-all duration-500 hover:scale-110 active:scale-95 shadow-[0_0_30px_rgba(220,38,38,0.4)] hover:shadow-[0_0_60px_rgba(220,38,38,0.6)] border border-white/10"
                     >
                       <div className="absolute inset-x-0 inset-y-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:animate-shimmer" />
-                      <span className="relative z-10 flex items-center gap-2 md:gap-3 italic tracking-tighter uppercase drop-shadow-lg">
-                        <Play className="fill-white" size={24} /> VER ÚLTIMO
-                        VÍDEO
+                      <span className="relative z-10 flex items-center gap-2 md:gap-3 italic tracking-tighter uppercase drop-shadow-lg whitespace-nowrap">
+                        <Play className="fill-white" size={24} /> Ver último
+                        vídeo
                       </span>
                     </Link>
                   </Magnetic>
-                  <Magnetic className="w-full sm:w-auto">
+                  <Magnetic className="w-full">
                     <Link
                       href="/analisis-gp"
-                      className="group relative inline-flex w-full items-center justify-center bg-white/5 backdrop-blur-xl border border-white/10 text-white font-black py-4 md:py-6 px-10 rounded-2xl text-lg md:text-xl overflow-hidden transition-all duration-500 hover:scale-110 active:scale-95 hover:bg-white/10 group/btn"
+                      className="group relative inline-flex w-full h-full items-center justify-center bg-white/5 backdrop-blur-xl border border-white/10 text-white font-black py-4 md:py-6 px-8 rounded-2xl text-lg md:text-xl overflow-hidden transition-all duration-500 hover:scale-110 active:scale-95 hover:bg-white/10 group/btn"
                     >
                       <span className="relative z-10 flex items-center gap-2 md:gap-3 italic tracking-tighter uppercase whitespace-nowrap">
-                        Todos los Vídeos{" "}
+                        Todos los vídeos{" "}
                         <ChevronRight
                           size={24}
                           className="group-hover/btn:translate-x-2 transition-transform duration-300"
