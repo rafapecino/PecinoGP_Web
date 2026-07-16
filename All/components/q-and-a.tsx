@@ -147,7 +147,8 @@ export function QAndA() {
                     />
                   </FormControl>
                   <FormDescription className="text-[10px] font-medium text-white/20 italic mt-2">
-                    Tu pregunta será revisada antes de ser publicada.
+                    Se filtra automáticamente el lenguaje ofensivo. Sé
+                    respetuoso.
                   </FormDescription>
                   <FormMessage className="text-red-500 text-[10px] font-bold" />
                 </FormItem>

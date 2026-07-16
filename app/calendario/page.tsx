@@ -56,7 +56,7 @@ export default function CalendarioPage() {
 
       <main>
         {/* --- NEXT RACE HERO --- */}
-        <section className="relative py-20 md:py-44 flex items-center justify-center overflow-hidden">
+        <section className="relative min-h-[88vh] py-20 flex items-center justify-center overflow-hidden">
           <motion.div
             style={{ y: y1 }}
             className="absolute inset-0 z-0 scale-110"
