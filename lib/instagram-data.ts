@@ -29,6 +29,8 @@ export interface InstagramStats {
   engagement: number;
   /** true si los datos vienen en vivo de la Graph API. */
   live: boolean;
+  /** Motivo por el que no hay datos en vivo (diagnóstico). */
+  reason?: string;
 }
 
 // Últimos datos reales conocidos (de tus Insights). Se usan como respaldo.
@@ -45,10 +47,17 @@ const FALLBACK: InstagramStats = {
 async function fetchJson(url: string): Promise<any | null> {
   try {
     const res = await fetch(url);
-    if (!res.ok) return null;
-    return await res.json();
-  } catch {
-    return null;
+    const json = await res.json().catch(() => null);
+    if (!res.ok) {
+      // Devolvemos el cuerpo del error de Meta para poder diagnosticarlo.
+      const msg = json?.error?.message ?? `HTTP ${res.status}`;
+      console.warn("[instagram] Graph API error:", msg);
+      return { __error: msg };
+    }
+    return json;
+  } catch (err) {
+    console.warn("[instagram] Fetch falló:", err);
+    return { __error: String(err) };
   }
 }
 
@@ -63,13 +72,20 @@ async function fetchInsight(
 ): Promise<number> {
   const url = `${GRAPH}/${IG_ID}/insights?metric=${metric}&period=${period}&metric_type=total_value&access_token=${TOKEN}`;
   const data = await fetchJson(url);
+  if (data?.__error) return 0;
   const val = data?.data?.[0]?.total_value?.value;
   return typeof val === "number" ? val : 0;
 }
 
 export async function getInstagramStats(): Promise<InstagramStats> {
   if (!IG_ID || !TOKEN) {
-    return FALLBACK;
+    const missing = [
+      !IG_ID && "INSTAGRAM_BUSINESS_ID",
+      !TOKEN && "INSTAGRAM_GRAPH_TOKEN",
+    ]
+      .filter(Boolean)
+      .join(" y ");
+    return { ...FALLBACK, reason: `Faltan variables de entorno: ${missing}` };
   }
 
   return cachedJson<InstagramStats>(
@@ -82,9 +98,10 @@ export async function getInstagramStats(): Promise<InstagramStats> {
         `${GRAPH}/${IG_ID}?fields=followers_count,media_count&access_token=${TOKEN}`,
       );
 
-      if (!profile) {
-        console.warn("[instagram] Perfil no disponible; usando fallback.");
-        return FALLBACK;
+      if (!profile || profile.__error) {
+        const reason = profile?.__error ?? "Perfil no disponible";
+        console.warn("[instagram] Usando fallback:", reason);
+        return { ...FALLBACK, reason: `Graph API: ${reason}` };
       }
 
       // Insights de los últimos 28 días (cada uno tolerante a fallos)
