@@ -161,6 +161,24 @@ export function QAndA() {
             >
               {isSubmitting ? "ENVIANDO..." : "ENVIAR PREGUNTA"}
             </Button>
+
+            {/* Aviso RGPD en el punto de recogida (art. 13 RGPD / capa básica) */}
+            <p className="text-[10px] leading-relaxed text-white/30 mt-4">
+              Al enviar, tu nombre (si lo indicas) y tu pregunta se almacenarán
+              y podrán publicarse para moderación y participación en la
+              comunidad. Responsable:{" "}
+              <span className="text-white/50 font-semibold">
+                MPC Network SL
+              </span>
+              . Puedes ejercer tus derechos y consultar los detalles en la{" "}
+              <a
+                href="/politica-privacidad"
+                className="text-red-500 hover:text-red-400 underline"
+              >
+                Política de Privacidad
+              </a>
+              .
+            </p>
           </form>
         </Form>
       </motion.div>
