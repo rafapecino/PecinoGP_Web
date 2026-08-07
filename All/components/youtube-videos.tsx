@@ -113,6 +113,8 @@ export function YouTubeVideos({
         rel="noopener noreferrer"
         onMouseMove={handleTilt}
         onMouseLeave={resetTilt}
+        // El cursor personalizado se abre y muestra esta etiqueta encima.
+        data-cursor-label="Ver"
         className={`yt-card group relative flex flex-col bg-white/5 backdrop-blur-xl border rounded-[24px] md:rounded-[32px] overflow-hidden transition-shadow duration-500 hover:shadow-[0_40px_80px_rgba(0,0,0,0.7)] will-change-transform ${
           isSpecial
             ? "border-red-600 shadow-[0_0_30px_rgba(220,38,38,0.2)] ring-1 ring-inset ring-red-600/20"

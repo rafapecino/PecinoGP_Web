@@ -1,5 +1,5 @@
-@import url('https://fonts.googleapis.com/css2?family=Exo+2:wght@700&family=Roboto:wght@400&display=swap');
-@import 'tailwindcss';
+@import url("https://fonts.googleapis.com/css2?family=Exo+2:wght@700&family=Roboto:wght@400&display=swap");
+@import "tailwindcss";
 
 :root {
   --background: 26 26 26; /* #1A1A1A */
@@ -38,12 +38,14 @@
 body {
   background-color: rgb(var(--background));
   color: rgb(var(--foreground));
-  font-family: 'Roboto', sans-serif;
+  font-family: "Roboto", sans-serif;
   line-height: 1.6;
 }
 
-h1, h2, h3 {
-  font-family: 'Exo 2', sans-serif;
+h1,
+h2,
+h3 {
+  font-family: "Exo 2", sans-serif;
   font-weight: 700;
 }
 
@@ -140,7 +142,8 @@ h1, h2, h3 {
 }
 
 @keyframes glow {
-  0%, 100% {
+  0%,
+  100% {
     box-shadow: 0 0 5px rgba(255, 255, 255, 0.2);
   }
   50% {
@@ -168,4 +171,201 @@ h1, h2, h3 {
 
 .animate-glow {
   animation: glow 2s infinite;
+}
+
+/* ==========================================================================
+   Sistema de animaciones (All/components/motion/*)
+   Efectos inspirados en Animmaster Lib, Skiper UI y Vengeance UI, reescritos
+   con el rojo/negro de PecinoGP. Todo lo de aquí se apaga con
+   prefers-reduced-motion.
+   ========================================================================== */
+
+/* --- Cursor personalizado ------------------------------------------------ */
+/* Con ratón ocultamos el puntero del sistema y mandan el punto + anillo de
+   <CursorFollower/>. En táctil y con "menos movimiento" no se toca nada. */
+/* La clase .has-custom-cursor la pone <CursorFollower/> al activarse. Si el JS
+   falla o el componente no llega a montar, el puntero del sistema sigue ahí:
+   nunca dejamos al usuario sin cursor. */
+@media (pointer: fine) {
+  html.has-custom-cursor,
+  html.has-custom-cursor * {
+    cursor: none;
+  }
+
+  /* En campos de texto sí queremos el cursor del sistema: la barra de
+     inserción es la única señal fiable de dónde vas a escribir. */
+  html.has-custom-cursor input,
+  html.has-custom-cursor textarea,
+  html.has-custom-cursor [contenteditable="true"] {
+    cursor: text;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html,
+  html * {
+    cursor: auto;
+  }
+}
+
+/* --- GlowCard: borde cónico giratorio + foco que sigue al ratón ---------- */
+/* Registrar el ángulo como propiedad tipada es lo que permite interpolarlo:
+   sin @property, un gradiente cónico no se puede animar. */
+@property --glow-angle {
+  syntax: "<angle>";
+  initial-value: 0deg;
+  inherits: false;
+}
+
+@keyframes glow-spin {
+  to {
+    --glow-angle: 360deg;
+  }
+}
+
+.glow-card {
+  --mx: 50%;
+  --my: 50%;
+  --spot: 0;
+  --glow-size: 1.5px;
+  position: relative;
+  background-clip: padding-box;
+}
+
+/* El borde es un pseudo-elemento por debajo del contenido, recortado con
+   máscara para que solo se vea el contorno y no un bloque de color. */
+.glow-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: var(--glow-size);
+  background: conic-gradient(
+    from var(--glow-angle),
+    transparent 0deg,
+    rgba(220, 38, 38, 0.9) 60deg,
+    rgba(255, 255, 255, 0.75) 110deg,
+    transparent 190deg,
+    transparent 360deg
+  );
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  mask-composite: exclude;
+  opacity: 0.55;
+  transition: opacity 0.4s ease;
+  pointer-events: none;
+}
+
+.glow-card[data-intensity="strong"] {
+  --glow-size: 2px;
+}
+
+.glow-card[data-intensity="strong"]::before {
+  opacity: 0.9;
+}
+
+.glow-card:hover::before {
+  opacity: 1;
+}
+
+.glow-card--rotating::before {
+  animation: glow-spin 6s linear infinite;
+}
+
+.glow-card[data-intensity="strong"].glow-card--rotating::before {
+  animation-duration: 4s;
+}
+
+/* Foco de luz: se enciende con --spot y se coloca en --mx/--my, que escribe
+   el componente en cada pointermove. */
+.glow-card__spot {
+  background: radial-gradient(
+    260px circle at var(--mx) var(--my),
+    rgba(220, 38, 38, 0.16),
+    transparent 65%
+  );
+  opacity: var(--spot);
+  transition: opacity 0.45s ease;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .glow-card--rotating::before {
+    animation: none;
+  }
+  .glow-card__spot {
+    display: none;
+  }
+}
+
+/* --- LiquidButton: metal líquido sin WebGL ------------------------------- */
+.liquid-btn {
+  --bx: 50%;
+  --by: 50%;
+  background: linear-gradient(135deg, #b91c1c, #dc2626 45%, #7f1d1d);
+  box-shadow:
+    0 0 30px rgba(220, 38, 38, 0.35),
+    inset 0 1px 0 rgba(255, 255, 255, 0.18);
+}
+
+.liquid-btn:hover {
+  box-shadow:
+    0 0 60px rgba(220, 38, 38, 0.55),
+    inset 0 1px 0 rgba(255, 255, 255, 0.25);
+}
+
+/* Capa metálica: dos gradientes cónicos girando a distinta velocidad. El
+   desenfoque los funde y produce el vaivén cromático del original. */
+.liquid-btn__metal {
+  position: absolute;
+  inset: -60%;
+  background: conic-gradient(
+    from var(--glow-angle),
+    rgba(255, 255, 255, 0) 0deg,
+    rgba(255, 255, 255, 0.35) 45deg,
+    rgba(255, 120, 120, 0.5) 120deg,
+    rgba(255, 255, 255, 0) 200deg,
+    rgba(255, 255, 255, 0.3) 300deg,
+    rgba(255, 255, 255, 0) 360deg
+  );
+  filter: blur(18px);
+  opacity: 0.55;
+  animation: glow-spin 7s linear infinite;
+  pointer-events: none;
+}
+
+/* Brillo que persigue al cursor por encima del metal. */
+.liquid-btn__sheen {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    180px circle at var(--bx) var(--by),
+    rgba(255, 255, 255, 0.35),
+    transparent 70%
+  );
+  opacity: 0;
+  transition: opacity 0.35s ease;
+  pointer-events: none;
+}
+
+.liquid-btn:hover .liquid-btn__sheen {
+  opacity: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .liquid-btn__metal {
+    animation: none;
+    opacity: 0.3;
+  }
+}
+
+/* --- Marquee ------------------------------------------------------------- */
+/* Sin JS (o con movimiento reducido) la cinta se queda quieta y legible;
+   el desplazamiento lo aporta GSAP desde el componente. */
+.marquee__track {
+  backface-visibility: hidden;
 }

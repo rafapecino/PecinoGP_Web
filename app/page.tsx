@@ -10,17 +10,21 @@ import type {
   LiveStream,
 } from "@/lib/youtube-data";
 import { YouTubeStats } from "@/All/components/youtube-stats";
-import { YouTubeVideos } from "@/All/components/youtube-videos";
+import { FeaturedStack } from "@/All/components/featured-stack";
 import { LatestVideo } from "@/All/components/latest-video";
+import { Magnetic } from "@/All/components/magnetic";
+import { ScatterText } from "@/All/components/motion/scatter-text";
+import { MaskReveal } from "@/All/components/motion/mask-reveal";
+import { Marquee } from "@/All/components/motion/marquee";
+import { LiquidButton } from "@/All/components/motion/liquid-button";
 import { motion } from "framer-motion";
 import { Play, ChevronRight, Youtube, Star, ArrowUpRight } from "lucide-react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { SplitText } from "gsap/SplitText";
 import { useGSAP } from "@gsap/react";
 import dynamic from "next/dynamic";
 
-gsap.registerPlugin(ScrollTrigger, SplitText, useGSAP);
+gsap.registerPlugin(ScrollTrigger, useGSAP);
 
 const ThreeBackground = dynamic(
   () => import("@/All/components/three-background"),
@@ -44,7 +48,7 @@ export default function Home() {
   // Refs para el hero cinematográfico controlado por GSAP/ScrollTrigger.
   const heroRef = useRef<HTMLElement>(null);
   const heroBgRef = useRef<HTMLDivElement>(null);
-  const heroHeadlineRef = useRef<HTMLHeadingElement>(null);
+  const heroHeadlineRef = useRef<HTMLDivElement>(null);
   const heroContentRef = useRef<HTMLDivElement>(null);
   const heroOverlayRef = useRef<HTMLDivElement>(null);
   const heroButtonsRef = useRef<HTMLDivElement>(null);
@@ -114,20 +118,8 @@ export default function Home() {
       ).matches;
       if (reduce) return;
 
-      // Revelado del titular letra a letra al cargar (SplitText).
-      let split: SplitText | null = null;
-      if (heroHeadlineRef.current) {
-        split = new SplitText(heroHeadlineRef.current, { type: "chars" });
-        gsap.from(split.chars, {
-          yPercent: 120,
-          opacity: 0,
-          rotateX: -50,
-          stagger: 0.035,
-          duration: 0.9,
-          ease: "power4.out",
-          delay: 0.25,
-        });
-      }
+      // La entrada del titular (letras dispersas que se ensamblan) la gestiona
+      // <ScatterText/>; aquí solo nos ocupamos del comportamiento con scroll.
 
       // Pin + scrub: el hero se fija y la escena hace zoom/parallax con el scroll.
       // Solo en escritorio para no entorpecer el scroll táctil en móvil.
@@ -174,9 +166,7 @@ export default function Home() {
         );
       });
 
-      return () => {
-        split?.revert();
-      };
+      return () => mm.revert();
     },
     { scope: heroRef },
   );
@@ -209,7 +199,10 @@ export default function Home() {
   );
 
   return (
-    <div className="min-h-screen bg-black text-foreground overflow-x-hidden selection:bg-red-600 selection:text-white">
+    // overflow-x-clip (y no -hidden) a propósito: "hidden" convertiría este
+    // div en contenedor de scroll y rompería el position:sticky de la baraja
+    // de vídeos destacados. "clip" recorta igual sin crear scrollport.
+    <div className="min-h-screen bg-black text-foreground overflow-x-clip selection:bg-red-600 selection:text-white">
       <Header />
 
       <main className="">
@@ -272,47 +265,56 @@ export default function Home() {
                   )}
                 </motion.div>
 
-                <h1
-                  ref={heroHeadlineRef}
-                  className="relative text-5xl sm:text-6xl md:text-8xl lg:text-9xl font-black text-white italic tracking-tighter leading-[0.85] mb-12"
-                  style={{
-                    filter: "drop-shadow(0 10px 30px rgba(0,0,0,0.8))",
-                    perspective: "600px",
-                  }}
-                >
-                  PASIÓN <br /> <span className="text-red-600">AL LÍMITE</span>
-                </h1>
+                {/* Las letras arrancan dispersas y se ensamblan de golpe. */}
+                <div ref={heroHeadlineRef} className="relative mb-12">
+                  <ScatterText
+                    spread={260}
+                    delay={0.35}
+                    className="text-5xl sm:text-6xl md:text-8xl lg:text-9xl font-black text-white italic tracking-tighter leading-[0.85]"
+                    style={{
+                      filter: "drop-shadow(0 10px 30px rgba(0,0,0,0.8))",
+                    }}
+                  >
+                    PASIÓN <br />{" "}
+                    <span className="text-red-600">AL LÍMITE</span>
+                  </ScatterText>
+                </div>
 
                 {/* Removiendo párrafo solicitado */}
                 <div
                   ref={heroButtonsRef}
                   className="flex flex-col sm:flex-row gap-4 md:gap-6 w-full sm:w-auto relative z-30"
                 >
-                  <Link
-                    href={
-                      data.latestVideo.length > 0
-                        ? getVideoUrl(data.latestVideo[0].id)
-                        : "#"
-                    }
-                    className="group relative inline-flex items-center justify-center bg-gradient-to-r from-red-600 to-red-700 text-white font-black py-4 md:py-6 px-10 rounded-2xl text-lg md:text-xl overflow-hidden transition-all duration-500 hover:scale-110 active:scale-95 shadow-[0_0_30px_rgba(220,38,38,0.4)] hover:shadow-[0_0_60px_rgba(220,38,38,0.6)] border border-white/10"
-                  >
-                    <div className="absolute inset-x-0 inset-y-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:animate-shimmer" />
-                    <span className="relative z-10 flex items-center gap-2 md:gap-3 italic tracking-tighter uppercase drop-shadow-lg">
-                      <Play className="fill-white" size={24} /> VER ÚLTIMO VÍDEO
-                    </span>
-                  </Link>
-                  <Link
-                    href="/analisis-gp"
-                    className="group relative inline-flex items-center justify-center bg-white/5 backdrop-blur-xl border border-white/10 text-white font-black py-4 md:py-6 px-10 rounded-2xl text-lg md:text-xl overflow-hidden transition-all duration-500 hover:scale-110 active:scale-95 hover:bg-white/10 group/btn"
-                  >
-                    <span className="relative z-10 flex items-center gap-2 md:gap-3 italic tracking-tighter uppercase whitespace-nowrap">
-                      Todos los Vídeos{" "}
-                      <ChevronRight
-                        size={24}
-                        className="group-hover/btn:translate-x-2 transition-transform duration-300"
-                      />
-                    </span>
-                  </Link>
+                  <Magnetic className="w-full sm:w-auto">
+                    <Link
+                      href={
+                        data.latestVideo.length > 0
+                          ? getVideoUrl(data.latestVideo[0].id)
+                          : "#"
+                      }
+                      className="group relative inline-flex w-full items-center justify-center bg-gradient-to-r from-red-600 to-red-700 text-white font-black py-4 md:py-6 px-10 rounded-2xl text-lg md:text-xl overflow-hidden transition-all duration-500 hover:scale-110 active:scale-95 shadow-[0_0_30px_rgba(220,38,38,0.4)] hover:shadow-[0_0_60px_rgba(220,38,38,0.6)] border border-white/10"
+                    >
+                      <div className="absolute inset-x-0 inset-y-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:animate-shimmer" />
+                      <span className="relative z-10 flex items-center gap-2 md:gap-3 italic tracking-tighter uppercase drop-shadow-lg">
+                        <Play className="fill-white" size={24} /> VER ÚLTIMO
+                        VÍDEO
+                      </span>
+                    </Link>
+                  </Magnetic>
+                  <Magnetic className="w-full sm:w-auto">
+                    <Link
+                      href="/analisis-gp"
+                      className="group relative inline-flex w-full items-center justify-center bg-white/5 backdrop-blur-xl border border-white/10 text-white font-black py-4 md:py-6 px-10 rounded-2xl text-lg md:text-xl overflow-hidden transition-all duration-500 hover:scale-110 active:scale-95 hover:bg-white/10 group/btn"
+                    >
+                      <span className="relative z-10 flex items-center gap-2 md:gap-3 italic tracking-tighter uppercase whitespace-nowrap">
+                        Todos los Vídeos{" "}
+                        <ChevronRight
+                          size={24}
+                          className="group-hover/btn:translate-x-2 transition-transform duration-300"
+                        />
+                      </span>
+                    </Link>
+                  </Magnetic>
                 </div>
               </div>
 
@@ -438,8 +440,30 @@ export default function Home() {
           />
         </section>
 
-        {/* --- STATS SECTION --- */}
-        {/* Se movieron las estadísticas al hero */}
+        {/* --- CINTA DE VELOCIDAD --- */}
+        {/* Separa el hero del contenido y reacciona al scroll: acelera e
+            invierte el sentido según hacia dónde te muevas. */}
+        <section
+          aria-hidden
+          className="relative border-y border-white/5 bg-red-600/[0.04] py-5 md:py-7"
+        >
+          <Marquee speed={26}>
+            {[
+              "PASIÓN AL LÍMITE",
+              "ANÁLISIS SIN FILTROS",
+              "MOTOGP EN ESPAÑOL",
+              "DESDE EL PADDOCK",
+            ].map((word) => (
+              <span
+                key={word}
+                className="flex items-center gap-8 px-8 text-2xl font-black uppercase italic tracking-tighter text-white/70 md:text-4xl"
+              >
+                {word}
+                <span className="h-2 w-2 shrink-0 rounded-full bg-red-600 shadow-[0_0_18px_rgba(220,38,38,0.9)]" />
+              </span>
+            ))}
+          </Marquee>
+        </section>
 
         {/* --- LATEST VIDEO --- */}
         <section
@@ -470,36 +494,41 @@ export default function Home() {
                     Contenido a pie de pista
                   </span>
                 </motion.div>
-                <h2 className="text-4xl md:text-6xl font-black text-white italic tracking-tighter">
+                <MaskReveal className="text-4xl md:text-6xl font-black text-white italic tracking-tighter">
                   LO MEJOR DE <span className="text-red-600">ESTE AÑO</span>
-                </h2>
+                </MaskReveal>
               </div>
-              <Link
-                href="/analisis-gp"
-                className="group flex items-center gap-3 bg-white/5 border border-white/10 text-white font-black py-3 px-8 rounded-xl hover:bg-red-600 transition-all tracking-wider text-sm uppercase italic"
-              >
-                VER TODOS LOS VÍDEOS{" "}
-                <ChevronRight className="group-hover:translate-x-1 transition-transform" />
-              </Link>
+              <Magnetic>
+                <Link
+                  href="/analisis-gp"
+                  className="group flex items-center gap-3 bg-white/5 border border-white/10 text-white font-black py-3 px-8 rounded-xl hover:bg-red-600 transition-all tracking-wider text-sm uppercase italic"
+                >
+                  VER TODOS LOS VÍDEOS{" "}
+                  <ChevronRight className="group-hover:translate-x-1 transition-transform" />
+                </Link>
+              </Magnetic>
             </div>
 
             {loading ? (
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+              <div className="space-y-8">
                 {[1, 2, 3].map((i) => (
                   <div
                     key={i}
-                    className="aspect-video bg-white/5 animate-pulse rounded-2xl"
+                    className="h-[340px] bg-white/5 animate-pulse rounded-[28px]"
                   />
                 ))}
               </div>
             ) : (
-              <YouTubeVideos
+              /* Baraja apilada por scroll: cada análisis se queda pegado
+                 arriba y el siguiente lo cubre. */
+              <FeaturedStack
                 videos={data.featuredVideos}
                 specialVideoId={
                   data.featuredVideos.length > 0
                     ? data.featuredVideos[0].id
                     : null
                 }
+                specialLabel="MÁS DESTACADO"
               />
             )}
           </div>
@@ -568,14 +597,15 @@ export default function Home() {
               />
             </motion.div>
 
-            <motion.h2
-              variants={itemVariants}
+            {/* Revelado por máscara línea a línea (cada renglón sube desde
+                detrás de un recorte). */}
+            <MaskReveal
               className="text-5xl sm:text-6xl md:text-8xl font-black text-white italic tracking-tighter leading-[0.85] mb-8"
               style={{ filter: "drop-shadow(0 10px 30px rgba(0,0,0,0.8))" }}
             >
               ¿TIENES ALGO <br />
               <span className="text-red-600">QUE PROPONERNOS?</span>
-            </motion.h2>
+            </MaskReveal>
 
             <motion.p
               variants={itemVariants}
@@ -587,19 +617,17 @@ export default function Home() {
             </motion.p>
 
             <motion.div variants={itemVariants}>
-              <Link
-                href="/contacto"
-                className="group relative inline-flex items-center justify-center bg-gradient-to-r from-red-600 to-red-700 text-white font-black py-5 px-12 rounded-2xl text-lg overflow-hidden transition-all duration-500 hover:scale-110 active:scale-95 shadow-[0_0_40px_rgba(220,38,38,0.4)] hover:shadow-[0_0_70px_rgba(220,38,38,0.6)] border border-white/10"
-              >
-                <div className="absolute inset-x-0 inset-y-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:animate-shimmer" />
-                <span className="relative z-10 flex items-center gap-3 italic tracking-tighter uppercase">
-                  Contacta con nosotros{" "}
+              {/* Botón "metal líquido": gradiente cónico girando dentro y
+                  halo que persigue al cursor. */}
+              <Magnetic strength={0.4}>
+                <LiquidButton href="/contacto">
+                  Contacta con nosotros
                   <ChevronRight
                     size={22}
-                    className="group-hover:translate-x-1 transition-transform duration-300"
+                    className="transition-transform duration-300 group-hover:translate-x-1"
                   />
-                </span>
-              </Link>
+                </LiquidButton>
+              </Magnetic>
             </motion.div>
           </motion.div>
         </section>
