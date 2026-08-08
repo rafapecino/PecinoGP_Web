@@ -1,5 +1,14 @@
 import Header from "@/All/components/header";
 import { getChannelStats } from "@/lib/youtube-data";
+import { buildMetadata } from "@/lib/seo";
+
+export const metadata = buildMetadata({
+  title: "Estadísticas del canal en tiempo real",
+  description:
+    "Datos en tiempo real del canal PecinoGP: suscriptores, visualizaciones totales y vídeos publicados sobre MotoGP y el mundial de motociclismo.",
+  path: "/estadisticas",
+  keywords: ["estadísticas PecinoGP", "suscriptores PecinoGP", "canal MotoGP"],
+});
 
 // Render bajo demanda: el build no debe depender de la API de YouTube.
 export const dynamic = "force-dynamic";

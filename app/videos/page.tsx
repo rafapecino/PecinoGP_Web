@@ -1,6 +1,20 @@
 import Header from "@/All/components/header";
 import { getLatestVideos } from "@/lib/youtube-data";
 import { YouTubeVideos } from "@/All/components/youtube-videos";
+import { buildMetadata } from "@/lib/seo";
+
+export const metadata = buildMetadata({
+  title: "Vídeos de MotoGP: análisis, previas y actualidad",
+  description:
+    "Todos los vídeos de MotoGP del canal PecinoGP: análisis post-carrera, previas de cada Gran Premio, actualidad del mundial y debates del paddock.",
+  path: "/videos",
+  keywords: [
+    "vídeos MotoGP",
+    "MotoGP en español",
+    "análisis post-carrera MotoGP",
+    "previa Gran Premio MotoGP",
+  ],
+});
 
 // Render bajo demanda: el build no debe depender de la API de YouTube.
 export const dynamic = "force-dynamic";

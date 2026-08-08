@@ -8,12 +8,14 @@ import { ChevronRight } from "lucide-react";
 import { Logo } from "./logo";
 import { Magnetic } from "./magnetic";
 import { LiveStream } from "@/lib/youtube-service";
+import { trackEvent } from "@/lib/analytics";
 
 const NAV_LINKS = [
   { href: "/", label: "Inicio" },
   { href: "/pecinogp", label: "PecinoGP" },
   { href: "/campeonato", label: "Campeonato" },
   { href: "/el-paddock", label: "El Paddock" },
+  { href: "/membresia", label: "Membresía" },
   { href: "/contacto", label: "Contacto" },
 ];
 
@@ -121,6 +123,7 @@ export default function Header() {
               <Magnetic strength={0.4}>
                 <a
                   href={`https://www.youtube.com/watch?v=${liveInfo.videoId}`}
+                  onClick={() => trackEvent("youtube_click", { location: "header", variant: "desktop_live" })}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="group relative inline-flex items-center gap-2 bg-gradient-to-br from-red-500 via-red-600 to-red-800 text-white font-black italic px-3 sm:px-5 py-2 sm:py-2.5 rounded-xl transition-all duration-500 hover:scale-110 active:scale-95 shadow-[0_0_20px_rgba(220,38,38,0.6)] border border-white/30 overflow-hidden"
@@ -141,6 +144,7 @@ export default function Header() {
               <Magnetic strength={0.4}>
                 <a
                   href="https://www.youtube.com/channel/UCSvr3yH2NkqlAHfuRDphz4g"
+                  onClick={() => trackEvent("youtube_click", { location: "header", variant: "desktop_channel" })}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="group relative inline-flex items-center transition-all duration-300 hover:scale-125 active:scale-95"
@@ -254,6 +258,7 @@ export default function Header() {
                   {liveInfo.isLive ? (
                     <a
                       href={`https://www.youtube.com/watch?v=${liveInfo.videoId}`}
+                      onClick={() => trackEvent("youtube_click", { location: "header", variant: "mobile_live" })}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="flex items-center justify-center gap-3 bg-red-600 text-white font-black italic py-5 rounded-2xl animate-pulse shadow-[0_0_30px_rgba(220,38,38,0.4)]"
@@ -264,6 +269,7 @@ export default function Header() {
                   ) : (
                     <a
                       href="https://www.youtube.com/channel/UCSvr3yH2NkqlAHfuRDphz4g"
+                      onClick={() => trackEvent("youtube_click", { location: "header", variant: "mobile_channel" })}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="group flex items-center justify-center gap-4 bg-white/5 border border-white/10 p-5 rounded-2xl hover:border-red-600/50 transition-all"

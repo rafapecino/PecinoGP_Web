@@ -7,7 +7,9 @@ import { motion, AnimatePresence } from "framer-motion";
 import { X, Cookie, ChevronRight } from "lucide-react";
 
 const CONSENT_KEY = "pecinogp_cookie_consent_v1";
-const CONSENT_UPDATED_EVENT = "pecinogp:cookie-consent-updated";
+/* Se exporta para que <AnalyticsSuite/> pueda escuchar los cambios de
+   consentimiento y activar o desactivar el rastreo sin recargar la página. */
+export const CONSENT_UPDATED_EVENT = "pecinogp:cookie-consent-updated";
 
 export type CookieConsent = {
   necessary: true;
@@ -65,8 +67,15 @@ export function CookieConsentBanner() {
       setShowPanel(true);
       setShowBanner(false);
     };
-    window.addEventListener("pecinogp:open-cookie-preferences", handleOpenPrefs);
-    return () => window.removeEventListener("pecinogp:open-cookie-preferences", handleOpenPrefs);
+    window.addEventListener(
+      "pecinogp:open-cookie-preferences",
+      handleOpenPrefs,
+    );
+    return () =>
+      window.removeEventListener(
+        "pecinogp:open-cookie-preferences",
+        handleOpenPrefs,
+      );
   }, []);
 
   const persist = (next: CookieConsent) => {
@@ -74,14 +83,26 @@ export function CookieConsentBanner() {
     setConsent(next);
     setShowBanner(false);
     setShowPanel(false);
-    window.dispatchEvent(new CustomEvent(CONSENT_UPDATED_EVENT, { detail: next }));
+    window.dispatchEvent(
+      new CustomEvent(CONSENT_UPDATED_EVENT, { detail: next }),
+    );
   };
 
   const acceptAll = () =>
-    persist({ necessary: true, analytics: true, marketing: true, timestamp: Date.now() });
+    persist({
+      necessary: true,
+      analytics: true,
+      marketing: true,
+      timestamp: Date.now(),
+    });
 
   const rejectAll = () =>
-    persist({ necessary: true, analytics: false, marketing: false, timestamp: Date.now() });
+    persist({
+      necessary: true,
+      analytics: false,
+      marketing: false,
+      timestamp: Date.now(),
+    });
 
   const saveCustom = () =>
     persist({ necessary: true, analytics, marketing, timestamp: Date.now() });
@@ -119,15 +140,25 @@ export function CookieConsentBanner() {
                 <div className="flex-1">
                   <div className="flex items-center gap-3 mb-3">
                     <Cookie className="text-red-500" size={20} />
-                    <h2 id="cookie-banner-title" className="text-white font-black italic uppercase tracking-tighter text-lg md:text-xl">
+                    <h2
+                      id="cookie-banner-title"
+                      className="text-white font-black italic uppercase tracking-tighter text-lg md:text-xl"
+                    >
                       Cookies en PecinoGP
                     </h2>
                   </div>
-                  <p id="cookie-banner-desc" className="text-white/70 text-sm md:text-base leading-relaxed">
-                    Usamos cookies propias y de terceros para fines técnicos, analíticos y publicitarios.
-                    Puedes aceptar todas, rechazarlas o configurarlas. Hasta entonces, no se activará ningún
-                    rastreo no esencial. Más información en nuestra{" "}
-                    <Link href="/politica-cookies" className="text-red-500 hover:text-red-400 underline">
+                  <p
+                    id="cookie-banner-desc"
+                    className="text-white/70 text-sm md:text-base leading-relaxed"
+                  >
+                    Usamos cookies propias y de terceros para fines técnicos,
+                    analíticos y publicitarios. Puedes aceptar todas,
+                    rechazarlas o configurarlas. Hasta entonces, no se activará
+                    ningún rastreo no esencial. Más información en nuestra{" "}
+                    <Link
+                      href="/politica-cookies"
+                      className="text-red-500 hover:text-red-400 underline"
+                    >
                       Política de Cookies
                     </Link>
                     .
@@ -184,9 +215,14 @@ export function CookieConsentBanner() {
                 <div>
                   <div className="flex items-center gap-2 mb-2">
                     <div className="w-6 h-1 bg-red-600 rounded-full" />
-                    <span className="text-red-500 font-black uppercase tracking-[0.3em] text-[10px]">Preferencias</span>
+                    <span className="text-red-500 font-black uppercase tracking-[0.3em] text-[10px]">
+                      Preferencias
+                    </span>
                   </div>
-                  <h2 id="cookie-panel-title" className="text-white font-black italic uppercase tracking-tighter text-2xl md:text-3xl">
+                  <h2
+                    id="cookie-panel-title"
+                    className="text-white font-black italic uppercase tracking-tighter text-2xl md:text-3xl"
+                  >
                     Configura tus cookies
                   </h2>
                 </div>
@@ -194,7 +230,10 @@ export function CookieConsentBanner() {
                   type="button"
                   onClick={() => {
                     if (consent) setShowPanel(false);
-                    else { setShowPanel(false); setShowBanner(true); }
+                    else {
+                      setShowPanel(false);
+                      setShowBanner(true);
+                    }
                   }}
                   className="p-2 rounded-full bg-white/5 hover:bg-white/10 text-white"
                   aria-label="Cerrar panel"
@@ -207,9 +246,12 @@ export function CookieConsentBanner() {
                 <div className="p-5 rounded-2xl bg-white/5 border border-white/10">
                   <div className="flex items-start justify-between gap-4 mb-2">
                     <div>
-                      <h3 className="text-white font-black italic uppercase text-sm tracking-wider">Necesarias</h3>
+                      <h3 className="text-white font-black italic uppercase text-sm tracking-wider">
+                        Necesarias
+                      </h3>
                       <p className="text-white/60 text-sm mt-1">
-                        Imprescindibles para el funcionamiento del sitio. No se pueden desactivar.
+                        Imprescindibles para el funcionamiento del sitio. No se
+                        pueden desactivar.
                       </p>
                     </div>
                     <div className="px-3 py-1 rounded-full bg-red-600 text-white text-[10px] font-black uppercase tracking-widest">
@@ -220,9 +262,12 @@ export function CookieConsentBanner() {
 
                 <label className="flex items-start justify-between gap-4 p-5 rounded-2xl bg-white/5 border border-white/10 cursor-pointer hover:bg-white/[0.07]">
                   <div className="flex-1">
-                    <h3 className="text-white font-black italic uppercase text-sm tracking-wider">Analíticas</h3>
+                    <h3 className="text-white font-black italic uppercase text-sm tracking-wider">
+                      Analíticas
+                    </h3>
                     <p className="text-white/60 text-sm mt-1">
-                      Nos ayudan a entender cómo se usa la web (páginas más visitadas, errores, etc.).
+                      Nos ayudan a entender cómo se usa la web (páginas más
+                      visitadas, errores, etc.).
                     </p>
                   </div>
                   <input
@@ -235,9 +280,12 @@ export function CookieConsentBanner() {
 
                 <label className="flex items-start justify-between gap-4 p-5 rounded-2xl bg-white/5 border border-white/10 cursor-pointer hover:bg-white/[0.07]">
                   <div className="flex-1">
-                    <h3 className="text-white font-black italic uppercase text-sm tracking-wider">Publicitarias</h3>
+                    <h3 className="text-white font-black italic uppercase text-sm tracking-wider">
+                      Publicitarias
+                    </h3>
                     <p className="text-white/60 text-sm mt-1">
-                      Permiten mostrar anuncios de Google AdSense y medir su rendimiento.
+                      Permiten mostrar anuncios de Google AdSense y medir su
+                      rendimiento.
                     </p>
                   </div>
                   <input
@@ -275,8 +323,14 @@ export function CookieConsentBanner() {
 
               <p className="text-white/40 text-xs mt-6 leading-relaxed">
                 Puedes cambiar tu decisión en cualquier momento desde el enlace{" "}
-                <span className="text-white/60 font-bold">"Gestionar cookies"</span> en el pie de página o desde la{" "}
-                <Link href="/politica-cookies" className="text-red-500 hover:text-red-400 underline">
+                <span className="text-white/60 font-bold">
+                  "Gestionar cookies"
+                </span>{" "}
+                en el pie de página o desde la{" "}
+                <Link
+                  href="/politica-cookies"
+                  className="text-red-500 hover:text-red-400 underline"
+                >
                   Política de Cookies
                 </Link>
                 .
@@ -291,11 +345,7 @@ export function CookieConsentBanner() {
 
 export function ManageCookiesLink({ className = "" }: { className?: string }) {
   return (
-    <button
-      type="button"
-      onClick={openCookiePreferences}
-      className={className}
-    >
+    <button type="button" onClick={openCookiePreferences} className={className}>
       Gestionar cookies
     </button>
   );
