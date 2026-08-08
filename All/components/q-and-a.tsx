@@ -16,9 +16,8 @@ import {
 import { Input } from "@/All/components/ui/input";
 import { Textarea } from "@/All/components/ui/textarea";
 import { toast } from "sonner";
-import { useEffect, useState } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 import { HelpCircle } from "lucide-react";
-import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 import { AnimatePresence, motion } from "framer-motion";
 
 const formSchema = z.object({
@@ -40,7 +39,16 @@ interface Question {
   createdAt: string;
 }
 
-export function QAndA() {
+/**
+ * Bloque de participación de El Paddock.
+ *
+ * Reparto en escritorio: a la izquierda lo que el usuario *hace* (la encuesta
+ * que llega por `aside` y el formulario), fijo con sticky mientras lee; a la
+ * derecha, en el doble de ancho, lo que la comunidad *ha dicho*. Antes ambas
+ * mitades eran iguales y las preguntas quedaban en una tira de texto de unos
+ * 280 px, que es lo que se veía mal.
+ */
+export function QAndA({ aside }: { aside?: ReactNode }) {
   const [questions, setQuestions] = useState<Question[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -99,94 +107,100 @@ export function QAndA() {
   }
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12">
+    <div className="grid grid-cols-1 items-start gap-8 lg:grid-cols-3 lg:gap-10">
+      {/* Columna de acciones: encuesta + formulario, fijos al hacer scroll. */}
       <motion.div
         initial={{ opacity: 0, x: -20 }}
         whileInView={{ opacity: 1, x: 0 }}
         transition={{ duration: 0.8 }}
-        className="bg-white/[0.03] backdrop-blur-3xl rounded-[28px] md:rounded-[32px] border border-white/10 p-6 md:p-10 shadow-2xl self-start md:sticky md:top-24"
+        className="w-full space-y-8 self-start lg:sticky lg:top-28 lg:col-span-1"
       >
-        <h3 className="text-xl md:text-2xl font-black text-white italic tracking-tighter uppercase mb-6 md:mb-8">
-          Envía tu pregunta
-        </h3>
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-            <FormField
-              control={form.control}
-              name="userName"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel className="text-[10px] font-black uppercase tracking-widest text-white/50 mb-2 block">
-                    Tu nombre (Opcional)
-                  </FormLabel>
-                  <FormControl>
-                    <Input
-                      placeholder="Ej: Juan Pérez"
-                      {...field}
-                      className="bg-white/5 border-white/10 focus:border-red-600 focus:ring-1 focus:ring-red-600 rounded-xl h-12 text-white placeholder:text-white/20 transition-all font-bold italic"
-                    />
-                  </FormControl>
-                  <FormMessage className="text-red-500 text-[10px] font-bold" />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="question"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel className="text-[10px] font-black uppercase tracking-widest text-white/50 mb-2 block">
-                    Tu pregunta
-                  </FormLabel>
-                  <FormControl>
-                    <Textarea
-                      placeholder="Escribe aquí tu pregunta para Manuel Pecino..."
-                      className="bg-white/5 border-white/10 focus:border-red-600 focus:ring-1 focus:ring-red-600 rounded-2xl p-5 text-white placeholder:text-white/20 transition-all resize-none shadow-inner"
-                      rows={6}
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormDescription className="text-[10px] font-medium text-white/20 italic mt-2">
-                    Se filtra automáticamente el lenguaje ofensivo. Sé
-                    respetuoso.
-                  </FormDescription>
-                  <FormMessage className="text-red-500 text-[10px] font-bold" />
-                </FormItem>
-              )}
-            />
-            <Button
-              type="submit"
-              disabled={isSubmitting}
-              className="w-full bg-red-600 hover:bg-red-700 text-white font-black italic uppercase tracking-widest py-4 md:py-6 rounded-xl md:rounded-2xl transition-all hover:scale-[1.02] active:scale-95 shadow-[0_0_20px_rgba(220,38,38,0.3)]"
-            >
-              {isSubmitting ? "ENVIANDO..." : "ENVIAR PREGUNTA"}
-            </Button>
-
-            {/* Aviso RGPD en el punto de recogida (art. 13 RGPD / capa básica) */}
-            <p className="text-[10px] leading-relaxed text-white/30 mt-4">
-              Al enviar, tu nombre (si lo indicas) y tu pregunta se almacenarán
-              y podrán publicarse para moderación y participación en la
-              comunidad. Responsable:{" "}
-              <span className="text-white/50 font-semibold">
-                MPC Network SL
-              </span>
-              . Puedes ejercer tus derechos y consultar los detalles en la{" "}
-              <a
-                href="/politica-privacidad"
-                className="text-red-500 hover:text-red-400 underline"
+        {aside}
+        <div className="bg-white/[0.03] backdrop-blur-3xl rounded-[28px] md:rounded-[32px] border border-white/10 p-6 md:p-8 shadow-2xl">
+          <h3 className="text-xl md:text-2xl font-black text-white italic tracking-tighter uppercase mb-6 md:mb-8">
+            Envía tu pregunta
+          </h3>
+          <Form {...form}>
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+              <FormField
+                control={form.control}
+                name="userName"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-[10px] font-black uppercase tracking-widest text-white/50 mb-2 block">
+                      Tu nombre (Opcional)
+                    </FormLabel>
+                    <FormControl>
+                      <Input
+                        placeholder="Ej: Juan Pérez"
+                        {...field}
+                        className="bg-white/5 border-white/10 focus:border-red-600 focus:ring-1 focus:ring-red-600 rounded-xl h-12 text-white placeholder:text-white/20 transition-all font-bold italic"
+                      />
+                    </FormControl>
+                    <FormMessage className="text-red-500 text-[10px] font-bold" />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="question"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-[10px] font-black uppercase tracking-widest text-white/50 mb-2 block">
+                      Tu pregunta
+                    </FormLabel>
+                    <FormControl>
+                      <Textarea
+                        placeholder="Escribe aquí tu pregunta para Manuel Pecino..."
+                        className="bg-white/5 border-white/10 focus:border-red-600 focus:ring-1 focus:ring-red-600 rounded-2xl p-5 text-white placeholder:text-white/20 transition-all resize-none shadow-inner"
+                        rows={6}
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormDescription className="text-[10px] font-medium text-white/20 italic mt-2">
+                      Se filtra automáticamente el lenguaje ofensivo. Sé
+                      respetuoso.
+                    </FormDescription>
+                    <FormMessage className="text-red-500 text-[10px] font-bold" />
+                  </FormItem>
+                )}
+              />
+              <Button
+                type="submit"
+                disabled={isSubmitting}
+                className="w-full bg-red-600 hover:bg-red-700 text-white font-black italic uppercase tracking-widest py-4 md:py-6 rounded-xl md:rounded-2xl transition-all hover:scale-[1.02] active:scale-95 shadow-[0_0_20px_rgba(220,38,38,0.3)]"
               >
-                Política de Privacidad
-              </a>
-              .
-            </p>
-          </form>
-        </Form>
+                {isSubmitting ? "ENVIANDO..." : "ENVIAR PREGUNTA"}
+              </Button>
+
+              {/* Aviso RGPD en el punto de recogida (art. 13 RGPD / capa básica) */}
+              <p className="text-[10px] leading-relaxed text-white/30 mt-4">
+                Al enviar, tu nombre (si lo indicas) y tu pregunta se
+                almacenarán y podrán publicarse para moderación y participación
+                en la comunidad. Responsable:{" "}
+                <span className="text-white/50 font-semibold">
+                  MPC Network SL
+                </span>
+                . Puedes ejercer tus derechos y consultar los detalles en la{" "}
+                <a
+                  href="/politica-privacidad"
+                  className="text-red-500 hover:text-red-400 underline"
+                >
+                  Política de Privacidad
+                </a>
+                .
+              </p>
+            </form>
+          </Form>
+        </div>
       </motion.div>
+
+      {/* Columna del debate: el doble de ancha, para que las preguntas se lean. */}
       <motion.div
         initial={{ opacity: 0, x: 20 }}
         whileInView={{ opacity: 1, x: 0 }}
         transition={{ duration: 0.8, delay: 0.2 }}
-        className="bg-white/[0.03] backdrop-blur-3xl rounded-[28px] md:rounded-[32px] border border-white/10 p-6 md:p-10 shadow-2xl flex flex-col"
+        className="bg-white/[0.03] backdrop-blur-3xl rounded-[28px] md:rounded-[32px] border border-white/10 p-6 md:p-10 shadow-2xl flex flex-col lg:col-span-2"
       >
         <div className="flex items-baseline justify-between gap-3 mb-6 md:mb-8">
           <h3 className="text-xl md:text-2xl font-black text-white italic tracking-tighter uppercase">
@@ -200,6 +214,9 @@ export function QAndA() {
           )}
         </div>
         {questions.length > 0 ? (
+          /* Una sola columna a todo el ancho de la tarjeta (~700 px): son
+             párrafos de texto y se leen mejor en una línea larga que partidos
+             en dos columnas estrechas. */
           <div className="space-y-5">
             <AnimatePresence>
               {questions.map((q) => (

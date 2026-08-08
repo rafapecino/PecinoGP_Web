@@ -53,7 +53,9 @@ export default function ElPaddockPage() {
   };
 
   return (
-    <div className="min-h-screen bg-black text-foreground overflow-x-hidden selection:bg-red-600 selection:text-white">
+    // overflow-x-clip, no -hidden: "hidden" convierte este div en contenedor
+    // de scroll y anula el position:sticky de la columna de participación.
+    <div className="min-h-screen bg-black text-foreground overflow-x-clip selection:bg-red-600 selection:text-white">
       <Header />
 
       <main>
@@ -108,57 +110,44 @@ export default function ElPaddockPage() {
           <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-red-600/30 to-transparent" />
 
           <div className="max-w-7xl mx-auto">
-            {/* 
-              Usamos flex-col para que en móvil la encuesta salga primero (order-1).
-              En desktop (lg:grid), la encuesta va a la derecha (order-2) y el Q&A a la izquierda (order-1).
-            */}
-            <div className="flex flex-col lg:grid lg:grid-cols-3 gap-16 items-start">
-              {/* --- ENCUESTA (Primero en móvil) --- */}
-              <motion.div
-                initial={{ opacity: 0, x: 20 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                transition={{ duration: 1 }}
-                className="w-full lg:col-span-1 order-1 lg:order-2 lg:sticky lg:top-32"
-              >
-                <div className="flex items-center gap-3 mb-8">
-                  <div className="p-3 bg-red-600/10 rounded-2xl border border-red-600/20">
-                    <Vote className="text-red-600" size={24} />
-                  </div>
-                  <div>
-                    <h2 className="text-2xl font-black text-white italic tracking-tighter uppercase">
-                      La Encuesta
-                    </h2>
-                    <p className="text-[10px] font-bold text-red-500 uppercase tracking-widest italic">
-                      Vota y Decide
-                    </p>
-                  </div>
-                </div>
-                <QuickPoll />
-              </motion.div>
-
-              {/* --- Q&A (Segundo en móvil) --- */}
-              <motion.div
-                initial={{ opacity: 0, x: -20 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                transition={{ duration: 1 }}
-                className="w-full lg:col-span-2 order-2 lg:order-1"
-              >
-                <div className="flex items-center gap-3 mb-8">
-                  <div className="p-3 bg-red-600/10 rounded-2xl border border-red-600/20">
-                    <MessageSquare className="text-red-600" size={24} />
-                  </div>
-                  <div>
-                    <h2 className="text-2xl font-black text-white italic tracking-tighter uppercase">
-                      Preguntas y Debate
-                    </h2>
-                    <p className="text-[10px] font-bold text-red-500 uppercase tracking-widest italic">
-                      Interacción Directa
-                    </p>
-                  </div>
-                </div>
-                <QAndA />
-              </motion.div>
+            <div className="flex items-center gap-3 mb-10">
+              <div className="p-3 bg-red-600/10 rounded-2xl border border-red-600/20">
+                <MessageSquare className="text-red-600" size={24} />
+              </div>
+              <div>
+                <h2 className="text-2xl font-black text-white italic tracking-tighter uppercase">
+                  Participa en el Paddock
+                </h2>
+                <p className="text-[10px] font-bold text-red-500 uppercase tracking-widest italic">
+                  Vota, pregunta y debate
+                </p>
+              </div>
             </div>
+
+            {/*
+              Un único bloque a todo el ancho. El Q&A coloca a la izquierda lo
+              que se hace (esta encuesta + el formulario, fijos al hacer scroll)
+              y a la derecha, al doble de ancho, el debate de la comunidad.
+              En móvil todo cae en una columna, con la encuesta la primera.
+            */}
+            <QAndA
+              aside={
+                <motion.div
+                  initial={{ opacity: 0, x: 20 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  transition={{ duration: 1 }}
+                  className="w-full"
+                >
+                  <div className="flex items-center gap-3 mb-6">
+                    <Vote className="text-red-600 shrink-0" size={20} />
+                    <h3 className="text-xl font-black text-white italic tracking-tighter uppercase">
+                      La Encuesta
+                    </h3>
+                  </div>
+                  <QuickPoll />
+                </motion.div>
+              }
+            />
           </div>
         </section>
 
