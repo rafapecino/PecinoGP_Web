@@ -31,20 +31,36 @@ export default function AvisoLegalPage() {
                 1. Datos identificativos del titular
               </h2>
               <p>
-                En cumplimiento de lo establecido en el artículo 10 de la Ley 34/2002,
-                de 11 de julio, de Servicios de la Sociedad de la Información y de
-                Comercio Electrónico (LSSI-CE), se informa a los usuarios de los
-                siguientes datos identificativos del titular del sitio web{" "}
+                En cumplimiento de lo establecido en el artículo 10 de la Ley
+                34/2002, de 11 de julio, de Servicios de la Sociedad de la
+                Información y de Comercio Electrónico (LSSI-CE), se informa a
+                los usuarios de los siguientes datos identificativos del titular
+                del sitio web{" "}
                 <strong className="text-white">pecinogp.es</strong>:
               </p>
               <ul className="space-y-2 pl-6 list-disc marker:text-red-500">
-                <li><strong className="text-white">Denominación social:</strong> MPC Network SL</li>
-                <li><strong className="text-white">CIF:</strong> [PENDIENTE DE INDICAR]</li>
-                <li><strong className="text-white">Domicilio social:</strong> [PENDIENTE DE INDICAR]</li>
-                <li><strong className="text-white">Email de contacto:</strong> rafapecino@gmail.com</li>
                 <li>
-                  <strong className="text-white">Datos de inscripción registral:</strong>{" "}
-                  Inscrita en el Registro Mercantil — Tomo [—], Libro [—], Folio [—], Hoja [—].
+                  <strong className="text-white">Denominación social:</strong>{" "}
+                  MPC Network SL
+                </li>
+                <li>
+                  <strong className="text-white">CIF:</strong> B86868502
+                </li>
+                <li>
+                  <strong className="text-white">Domicilio social:</strong>{" "}
+                  Calle Autovía M-40 (Pq. Empresarial), 13 - Bajo, 28925
+                  Alcorcón (Madrid)
+                </li>
+                <li>
+                  <strong className="text-white">Email de contacto:</strong>{" "}
+                  rafapecino@gmail.com
+                </li>
+                <li>
+                  <strong className="text-white">
+                    Datos de inscripción registral:
+                  </strong>{" "}
+                  Inscrita en el Registro Mercantil — Tomo [—], Libro [—], Folio
+                  [—], Hoja [—].
                 </li>
               </ul>
             </section>
@@ -54,10 +70,11 @@ export default function AvisoLegalPage() {
                 2. Objeto
               </h2>
               <p>
-                El presente aviso legal regula el uso del sitio web pecinogp.es (en adelante,
-                "el sitio web"), del que es titular MPC Network SL. La navegación por el sitio
-                web atribuye la condición de Usuario e implica la aceptación plena y sin reservas
-                de todas y cada una de las disposiciones incluidas en este aviso legal, que
+                El presente aviso legal regula el uso del sitio web pecinogp.es
+                (en adelante, "el sitio web"), del que es titular MPC Network
+                SL. La navegación por el sitio web atribuye la condición de
+                Usuario e implica la aceptación plena y sin reservas de todas y
+                cada una de las disposiciones incluidas en este aviso legal, que
                 pueden sufrir modificaciones.
               </p>
             </section>
@@ -67,12 +84,13 @@ export default function AvisoLegalPage() {
                 3. Condiciones de uso
               </h2>
               <p>
-                El Usuario se compromete a hacer un uso adecuado de los contenidos y servicios
-                que MPC Network SL ofrece a través de su sitio web y a no emplearlos para
-                incurrir en actividades ilícitas o contrarias a la buena fe y al ordenamiento
-                legal; difundir contenidos o propaganda de carácter racista, xenófobo,
-                pornográfico, de apología del terrorismo o atentatorio contra los derechos
-                humanos.
+                El Usuario se compromete a hacer un uso adecuado de los
+                contenidos y servicios que MPC Network SL ofrece a través de su
+                sitio web y a no emplearlos para incurrir en actividades
+                ilícitas o contrarias a la buena fe y al ordenamiento legal;
+                difundir contenidos o propaganda de carácter racista, xenófobo,
+                pornográfico, de apología del terrorismo o atentatorio contra
+                los derechos humanos.
               </p>
             </section>
 
@@ -81,17 +99,20 @@ export default function AvisoLegalPage() {
                 4. Propiedad intelectual e industrial
               </h2>
               <p>
-                Todos los contenidos del sitio web, entendiendo por estos a título meramente
-                enunciativo los textos, fotografías, gráficos, imágenes, iconos, tecnología,
-                software, links y demás contenidos audiovisuales o sonoros, así como su diseño
-                gráfico y códigos fuente, son propiedad intelectual de MPC Network SL o de
-                terceros, sin que puedan entenderse cedidos al Usuario ninguno de los derechos
-                de explotación reconocidos por la normativa vigente.
+                Todos los contenidos del sitio web, entendiendo por estos a
+                título meramente enunciativo los textos, fotografías, gráficos,
+                imágenes, iconos, tecnología, software, links y demás contenidos
+                audiovisuales o sonoros, así como su diseño gráfico y códigos
+                fuente, son propiedad intelectual de MPC Network SL o de
+                terceros, sin que puedan entenderse cedidos al Usuario ninguno
+                de los derechos de explotación reconocidos por la normativa
+                vigente.
               </p>
               <p>
-                Las marcas comerciales, nombres comerciales o signos distintivos son
-                titularidad de MPC Network SL o de terceros, sin que pueda entenderse que el
-                acceso al sitio web atribuye derecho alguno sobre los mismos.
+                Las marcas comerciales, nombres comerciales o signos distintivos
+                son titularidad de MPC Network SL o de terceros, sin que pueda
+                entenderse que el acceso al sitio web atribuye derecho alguno
+                sobre los mismos.
               </p>
             </section>
 
@@ -100,11 +121,13 @@ export default function AvisoLegalPage() {
                 5. Exclusión de garantías y responsabilidad
               </h2>
               <p>
-                MPC Network SL no se hace responsable, en ningún caso, de los daños y perjuicios
-                de cualquier naturaleza que pudieran ocasionar, a título enunciativo: errores u
-                omisiones en los contenidos, falta de disponibilidad del portal o la
-                transmisión de virus o programas maliciosos o lesivos en los contenidos, pese
-                a haber adoptado todas las medidas tecnológicas necesarias para evitarlo.
+                MPC Network SL no se hace responsable, en ningún caso, de los
+                daños y perjuicios de cualquier naturaleza que pudieran
+                ocasionar, a título enunciativo: errores u omisiones en los
+                contenidos, falta de disponibilidad del portal o la transmisión
+                de virus o programas maliciosos o lesivos en los contenidos,
+                pese a haber adoptado todas las medidas tecnológicas necesarias
+                para evitarlo.
               </p>
             </section>
 
@@ -113,10 +136,11 @@ export default function AvisoLegalPage() {
                 6. Enlaces a terceros
               </h2>
               <p>
-                El sitio web puede contener enlaces (links) a otros sitios web. MPC Network SL
-                no ejerce ningún control sobre dichos sitios y contenidos, y en ningún caso
-                asume responsabilidad alguna por los contenidos de algún enlace perteneciente
-                a un sitio web ajeno.
+                El sitio web puede contener enlaces (links) a otros sitios web.
+                MPC Network SL no ejerce ningún control sobre dichos sitios y
+                contenidos, y en ningún caso asume responsabilidad alguna por
+                los contenidos de algún enlace perteneciente a un sitio web
+                ajeno.
               </p>
             </section>
 
@@ -125,10 +149,11 @@ export default function AvisoLegalPage() {
                 7. Derecho de exclusión
               </h2>
               <p>
-                MPC Network SL se reserva el derecho a denegar o retirar el acceso al portal
-                y/o los servicios ofrecidos, sin necesidad de preaviso, a instancia propia o de
-                un tercero, a aquellos usuarios que incumplan las presentes condiciones
-                generales de uso.
+                MPC Network SL se reserva el derecho a denegar o retirar el
+                acceso al portal y/o los servicios ofrecidos, sin necesidad de
+                preaviso, a instancia propia o de un tercero, a aquellos
+                usuarios que incumplan las presentes condiciones generales de
+                uso.
               </p>
             </section>
 
@@ -137,21 +162,27 @@ export default function AvisoLegalPage() {
                 8. Legislación aplicable y jurisdicción
               </h2>
               <p>
-                La relación entre MPC Network SL y el Usuario se regirá por la normativa
-                española vigente. Todas las disputas y reclamaciones derivadas de este aviso
-                legal se resolverán por los Juzgados y Tribunales competentes conforme a
-                derecho.
+                La relación entre MPC Network SL y el Usuario se regirá por la
+                normativa española vigente. Todas las disputas y reclamaciones
+                derivadas de este aviso legal se resolverán por los Juzgados y
+                Tribunales competentes conforme a derecho.
               </p>
             </section>
 
             <section className="pt-8 border-t border-white/10">
               <p className="text-sm text-white/60">
                 Consulta también nuestra{" "}
-                <Link href="/politica-privacidad" className="text-red-500 hover:text-red-400 underline">
+                <Link
+                  href="/politica-privacidad"
+                  className="text-red-500 hover:text-red-400 underline"
+                >
                   Política de Privacidad
                 </Link>{" "}
                 y nuestra{" "}
-                <Link href="/politica-cookies" className="text-red-500 hover:text-red-400 underline">
+                <Link
+                  href="/politica-cookies"
+                  className="text-red-500 hover:text-red-400 underline"
+                >
                   Política de Cookies
                 </Link>
                 .

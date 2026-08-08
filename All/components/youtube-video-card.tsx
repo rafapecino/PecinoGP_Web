@@ -1,26 +1,26 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import Image from "next/image"
-import { YouTubeVideo, formatDate } from "@/lib/youtube-service"
+import { useState } from "react";
+import Image from "next/image";
+import { YouTubeVideo, formatDate } from "@/lib/youtube-service";
 
 interface YouTubeVideoCardProps {
-  video: YouTubeVideo
+  video: YouTubeVideo;
 }
 
 export function YouTubeVideoCard({ video }: YouTubeVideoCardProps) {
-  const [isPlaying, setIsPlaying] = useState(false)
+  const [isPlaying, setIsPlaying] = useState(false);
 
   const handlePlay = () => {
-    setIsPlaying(true)
-  }
+    setIsPlaying(true);
+  };
 
   if (isPlaying) {
     return (
       <div className="card-racing overflow-hidden">
         <div className="relative w-full aspect-video overflow-hidden bg-secondary">
           <iframe
-            src={`https://www.youtube.com/embed/${video.id}?autoplay=1`}
+            src={`https://www.youtube-nocookie.com/embed/${video.id}?autoplay=1&rel=0`}
             title={video.title}
             frameBorder="0"
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
@@ -29,20 +29,20 @@ export function YouTubeVideoCard({ video }: YouTubeVideoCardProps) {
           ></iframe>
         </div>
         <div className="p-4">
-            <h3 className="font-bold text-lg mb-2 text-foreground line-clamp-2">
-              {video.title}
-            </h3>
-            <p className="text-muted-foreground text-sm mb-3 line-clamp-2">
-              {video.description}
-            </p>
-            <div className="flex items-center justify-between text-xs text-muted-foreground border-t border-border pt-3">
-              <span className="flex items-center gap-1">
-                📅 {formatDate(video.publishedAt)}
-              </span>
-            </div>
+          <h3 className="font-bold text-lg mb-2 text-foreground line-clamp-2">
+            {video.title}
+          </h3>
+          <p className="text-muted-foreground text-sm mb-3 line-clamp-2">
+            {video.description}
+          </p>
+          <div className="flex items-center justify-between text-xs text-muted-foreground border-t border-border pt-3">
+            <span className="flex items-center gap-1">
+              📅 {formatDate(video.publishedAt)}
+            </span>
           </div>
+        </div>
       </div>
-    )
+    );
   }
 
   return (
@@ -85,5 +85,5 @@ export function YouTubeVideoCard({ video }: YouTubeVideoCardProps) {
         </div>
       </div>
     </div>
-  )
+  );
 }

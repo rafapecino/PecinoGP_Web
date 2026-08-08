@@ -17,6 +17,7 @@ import {
 import { SplitHeadline } from "@/All/components/split-headline";
 import { ScrollHint } from "@/All/components/scroll-hint";
 import { HeroUnderline } from "@/All/components/hero-underline";
+import { Magnetic } from "@/All/components/magnetic";
 import dynamic from "next/dynamic";
 
 const ThreeBackground = dynamic(
@@ -57,7 +58,7 @@ export default function ElPaddockPage() {
 
       <main>
         {/* --- CINEMATIC HERO --- */}
-        <section className="relative py-20 md:py-44 flex items-center justify-center overflow-hidden">
+        <section className="relative min-h-[88vh] py-20 flex items-center justify-center overflow-hidden">
           <motion.div
             style={{ y: y1 }}
             className="absolute inset-0 z-0 scale-110"
@@ -81,16 +82,6 @@ export default function ElPaddockPage() {
             animate="visible"
             className="relative z-20 max-w-7xl mx-auto px-4 text-center"
           >
-            <motion.div
-              variants={itemVariants}
-              className="flex items-center justify-center gap-2 mb-6"
-            >
-              <div className="w-8 h-1 bg-red-600 rounded-full" />
-              <span className="text-red-500 font-black uppercase tracking-[0.4em] text-[10px]">
-                Zona de Interacción
-              </span>
-            </motion.div>
-
             <SplitHeadline
               className="text-5xl sm:text-6xl md:text-8xl lg:text-9xl font-black text-white italic tracking-tighter leading-[0.85] mb-8"
               style={{ filter: "drop-shadow(0 10px 30px rgba(0,0,0,0.8))" }}
@@ -234,19 +225,21 @@ export default function ElPaddockPage() {
                     </div>
                   </div>
 
-                  <Link
-                    href="/contacto"
-                    className="group relative inline-flex items-center justify-between gap-3 bg-gradient-to-r from-red-600 to-red-700 text-white font-black py-5 px-8 rounded-2xl overflow-hidden transition-all duration-500 hover:scale-[1.02] active:scale-95 shadow-[0_0_30px_rgba(220,38,38,0.3)] hover:shadow-[0_0_50px_rgba(220,38,38,0.6)] border border-white/10"
-                  >
-                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:animate-shimmer" />
-                    <span className="relative z-10 flex items-center gap-3 italic tracking-tighter uppercase text-base md:text-lg">
-                      <Mail size={20} /> Ir a Contacto
-                    </span>
-                    <ArrowUpRight
-                      className="relative z-10 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform"
-                      size={22}
-                    />
-                  </Link>
+                  <Magnetic strength={0.35} className="block w-full">
+                    <Link
+                      href="/contacto"
+                      className="group relative inline-flex w-full items-center justify-between gap-3 bg-gradient-to-r from-red-600 to-red-700 text-white font-black py-5 px-8 rounded-2xl overflow-hidden transition-all duration-500 hover:scale-[1.02] active:scale-95 shadow-[0_0_30px_rgba(220,38,38,0.3)] hover:shadow-[0_0_50px_rgba(220,38,38,0.6)] border border-white/10"
+                    >
+                      <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:animate-shimmer" />
+                      <span className="relative z-10 flex items-center gap-3 italic tracking-tighter uppercase text-base md:text-lg">
+                        <Mail size={20} /> Ir a Contacto
+                      </span>
+                      <ArrowUpRight
+                        className="relative z-10 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform"
+                        size={22}
+                      />
+                    </Link>
+                  </Magnetic>
                 </div>
               </div>
             </motion.div>

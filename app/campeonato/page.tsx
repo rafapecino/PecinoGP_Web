@@ -7,6 +7,7 @@ import { Footer } from "@/All/components/footer";
 import { SplitHeadline } from "@/All/components/split-headline";
 import { ScrollHint } from "@/All/components/scroll-hint";
 import { HeroUnderline } from "@/All/components/hero-underline";
+import { Magnetic } from "@/All/components/magnetic";
 import { getNextRace, races } from "@/lib/races";
 import { getDriverStandings, type DriverStanding } from "@/lib/motogp-service";
 import { motion, useScroll, useTransform } from "framer-motion";
@@ -154,7 +155,7 @@ export default function CampeonatoPage() {
 
       <main>
         {/* --- HERO --- */}
-        <section className="relative py-20 md:py-44 flex items-center justify-center overflow-hidden">
+        <section className="relative min-h-[88vh] py-20 flex items-center justify-center overflow-hidden">
           <motion.div
             style={{ y: y1 }}
             className="absolute inset-0 z-0 scale-110"
@@ -173,14 +174,6 @@ export default function CampeonatoPage() {
           <ThreeBackground className="z-[1] opacity-70" density={700} />
 
           <div className="relative z-20 max-w-7xl mx-auto px-4 text-center">
-            <div className="flex items-center justify-center gap-2 mb-6">
-              <div className="w-8 h-1 bg-red-600 rounded-full" />
-              <span className="text-red-500 font-black uppercase tracking-[0.4em] text-[10px]">
-                Mundial 2026
-              </span>
-              <div className="w-8 h-1 bg-red-600 rounded-full" />
-            </div>
-
             <SplitHeadline
               className="text-5xl sm:text-6xl md:text-8xl lg:text-9xl font-black text-white italic tracking-tighter leading-[0.85] mb-8"
               style={{ filter: "drop-shadow(0 10px 30px rgba(0,0,0,0.8))" }}
@@ -396,16 +389,18 @@ export default function CampeonatoPage() {
             )}
 
             <div className="mt-10 flex justify-center">
-              <Link
-                href="/clasificacion"
-                className="group relative inline-flex items-center justify-center gap-3 bg-white/5 border border-white/10 text-white font-black py-4 px-10 rounded-2xl overflow-hidden transition-all duration-500 hover:bg-red-600 hover:border-red-600 active:scale-95 italic tracking-tighter uppercase"
-              >
-                Ver clasificación completa
-                <ChevronRight
-                  size={22}
-                  className="group-hover:translate-x-1 transition-transform"
-                />
-              </Link>
+              <Magnetic strength={0.4}>
+                <Link
+                  href="/clasificacion"
+                  className="group relative inline-flex items-center justify-center gap-3 bg-white/5 border border-white/10 text-white font-black py-4 px-10 rounded-2xl overflow-hidden transition-all duration-500 hover:bg-red-600 hover:border-red-600 active:scale-95 italic tracking-tighter uppercase"
+                >
+                  Ver clasificación completa
+                  <ChevronRight
+                    size={22}
+                    className="group-hover:translate-x-1 transition-transform"
+                  />
+                </Link>
+              </Magnetic>
             </div>
           </div>
         </section>

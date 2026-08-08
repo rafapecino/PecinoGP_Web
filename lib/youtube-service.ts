@@ -1,6 +1,6 @@
 const KEYS = [
-  process.env['NEXT_PUBLIC_YOUTUBE_API_KEY'],
-  process.env['NEXT_PUBLIC_YOUTUBE_API_KEY_2']
+  process.env["NEXT_PUBLIC_YOUTUBE_API_KEY"],
+  process.env["NEXT_PUBLIC_YOUTUBE_API_KEY_2"],
 ].filter((k): k is string => !!k && k.length > 10);
 
 console.log(`[CONFIG] Número de API Keys detectadas: ${KEYS.length}`);
@@ -49,42 +49,46 @@ async function fetchWithRotation(baseUrl: string) {
     const url = `${baseUrl}&key=${apiKey}`;
 
     try {
-      console.log(`[YouTube API] Intentando con Key #${i + 1} (${apiKey.substring(0, 4)}...)`);
-      
+      console.log(
+        `[YouTube API] Intentando con Key #${i + 1} (${apiKey.substring(0, 4)}...)`,
+      );
+
       const res = await fetch(url, { next: { revalidate: 60 } });
 
       if (res.ok) {
         return await res.json();
       }
-      
+
       if (res.status === 403) {
         const errorData = await res.json();
-        const message = errorData.error?.message || 'Quota Exceeded or Access Denied';
+        const message =
+          errorData.error?.message || "Quota Exceeded or Access Denied";
         console.error(`[YouTube API] Key #${i + 1} falló (403):`, message);
-        throw new Error('QUOTA_EXCEEDED');
+        throw new Error("QUOTA_EXCEEDED");
       }
-      
-      throw new Error(`HTTP error ${res.status}`);
 
+      throw new Error(`HTTP error ${res.status}`);
     } catch (err) {
       lastError = err;
-      console.warn(`[YouTube API] Error con Key #${i + 1}. Saltando a la siguiente...`);
+      console.warn(
+        `[YouTube API] Error con Key #${i + 1}. Saltando a la siguiente...`,
+      );
       continue;
     }
   }
 
-  console.error('[YouTube API] Todas las claves fallaron.');
+  console.error("[YouTube API] Todas las claves fallaron.");
   throw lastError;
 }
 
 export async function getLiveStream(): Promise<LiveStream> {
   if (!CHANNEL_ID) {
     console.warn(
-      "YouTube Channel ID not configured, using fallback data for live status"
+      "YouTube Channel ID not configured, using fallback data for live status",
     );
     return FALLBACK_LIVE_STATUS;
   }
-  
+
   const baseUrl = `https://www.googleapis.com/youtube/v3/search?part=snippet&channelId=${CHANNEL_ID}&eventType=live&type=video`;
 
   try {
@@ -99,7 +103,10 @@ export async function getLiveStream(): Promise<LiveStream> {
 
     return { isLive: false };
   } catch (error) {
-    console.error("Error final al obtener el estado en vivo de YouTube:", error);
+    console.error(
+      "Error final al obtener el estado en vivo de YouTube:",
+      error,
+    );
     return FALLBACK_LIVE_STATUS;
   }
 }
@@ -109,7 +116,8 @@ export function getVideoUrl(videoId: string): string {
 }
 
 export function getVideoEmbedUrl(videoId: string): string {
-  return `https://www.youtube.com/embed/${videoId}`;
+  // Dominio de privacidad mejorada: no fija cookies hasta que se reproduce.
+  return `https://www.youtube-nocookie.com/embed/${videoId}`;
 }
 
 export function formatNumber(num: string): string {

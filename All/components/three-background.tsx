@@ -38,6 +38,13 @@ export default function ThreeBackground({
     if (!mount) return;
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
+    // Optimización móvil: menos partículas, sin antialias y menor pixel ratio
+    // para no penalizar batería/rendimiento en teléfonos. El parallax de ratón
+    // se desactiva en táctil (no aporta y ahorra trabajo).
+    const isMobile = window.innerWidth < 768;
+    const isTouch = window.matchMedia("(pointer: coarse)").matches;
+    const effDensity = isMobile ? Math.round(density * 0.4) : density;
+
     let width = mount.clientWidth || window.innerWidth;
     let height = mount.clientHeight || window.innerHeight;
 
@@ -45,14 +52,20 @@ export default function ThreeBackground({
     const camera = new THREE.PerspectiveCamera(70, width / height, 0.1, 100);
     camera.position.z = 30;
 
-    const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5));
+    const renderer = new THREE.WebGLRenderer({
+      alpha: true,
+      antialias: !isMobile,
+      powerPreference: "low-power",
+    });
+    renderer.setPixelRatio(
+      Math.min(window.devicePixelRatio, isMobile ? 1 : 1.5),
+    );
     renderer.setSize(width, height);
     mount.appendChild(renderer.domElement);
 
     // Capa principal (color de marca)
-    const positions = new Float32Array(density * 3);
-    for (let i = 0; i < density; i++) {
+    const positions = new Float32Array(effDensity * 3);
+    for (let i = 0; i < effDensity; i++) {
       positions[i * 3] = (Math.random() - 0.5) * 80;
       positions[i * 3 + 1] = (Math.random() - 0.5) * 50;
       positions[i * 3 + 2] = (Math.random() - 0.5) * 50;
@@ -71,7 +84,7 @@ export default function ThreeBackground({
     scene.add(points);
 
     // Capa secundaria (blanco tenue) para dar profundidad
-    const count2 = Math.floor(density / 2);
+    const count2 = Math.floor(effDensity / 2);
     const positions2 = new Float32Array(count2 * 3);
     for (let i = 0; i < count2; i++) {
       positions2[i * 3] = (Math.random() - 0.5) * 90;
@@ -97,7 +110,8 @@ export default function ThreeBackground({
       mouseX = e.clientX / window.innerWidth - 0.5;
       mouseY = e.clientY / window.innerHeight - 0.5;
     };
-    window.addEventListener("mousemove", onMouse);
+    // El parallax de ratón no aporta nada en táctil: lo omitimos.
+    if (!isTouch) window.addEventListener("mousemove", onMouse);
 
     // Reactividad al scroll: acumula "velocidad" al deslizar y decae al parar.
     let scrollVel = 0;

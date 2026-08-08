@@ -1,10 +1,14 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { z } from 'zod';
-import { Pool } from '@neondatabase/serverless';
+import { NextRequest, NextResponse } from "next/server";
+import { z } from "zod";
+import { Pool } from "@neondatabase/serverless";
+import { containsProfanity } from "@/lib/profanity";
 
 // Esquema de validación
 const questionSchema = z.object({
-  question: z.string().min(10, 'La pregunta debe tener al menos 10 caracteres').max(500, 'La pregunta no puede tener más de 500 caracteres'),
+  question: z
+    .string()
+    .min(10, "La pregunta debe tener al menos 10 caracteres")
+    .max(500, "La pregunta no puede tener más de 500 caracteres"),
   userName: z.string().optional(),
 });
 
@@ -17,23 +21,49 @@ export async function POST(req: NextRequest) {
     const validation = questionSchema.safeParse(body);
 
     if (!validation.success) {
-      return NextResponse.json({ error: validation.error.format() }, { status: 400 });
+      return NextResponse.json(
+        { error: validation.error.format() },
+        { status: 400 },
+      );
     }
 
     const { question, userName } = validation.data;
-    const finalUserName = userName || 'Anónimo';
+
+    // Filtro de contenido ofensivo: no guardamos preguntas ni nombres con
+    // lenguaje obsceno/ofensivo. Se rechaza antes de tocar la base de datos.
+    if (containsProfanity(question) || containsProfanity(userName || "")) {
+      return NextResponse.json(
+        {
+          error: {
+            question: {
+              _errors: [
+                "Tu mensaje contiene lenguaje ofensivo y no se puede publicar. Reformúlalo, por favor.",
+              ],
+            },
+          },
+        },
+        { status: 400 },
+      );
+    }
+
+    const finalUserName = userName || "Anónimo";
 
     // Guardar en Neon
     await pool.query(
-      'INSERT INTO questions (question_text, user_name) VALUES ($1, $2)',
-      [question, finalUserName]
+      "INSERT INTO questions (question_text, user_name) VALUES ($1, $2)",
+      [question, finalUserName],
     );
 
-    return NextResponse.json({ message: 'Pregunta enviada con éxito' }, { status: 201 });
-
+    return NextResponse.json(
+      { message: "Pregunta enviada con éxito" },
+      { status: 201 },
+    );
   } catch (error) {
-    console.error('Error POST questions:', error);
-    return NextResponse.json({ error: 'Error al enviar la pregunta' }, { status: 500 });
+    console.error("Error POST questions:", error);
+    return NextResponse.json(
+      { error: "Error al enviar la pregunta" },
+      { status: 500 },
+    );
   } finally {
     await pool.end();
   }
@@ -47,15 +77,22 @@ export async function GET() {
     // Seleccionamos solo las NO respondidas, ordenadas por fecha (más recientes primero)
     const result = await pool.query(`
       SELECT id, question_text as question, user_name as "userName", created_at as "createdAt", is_answered as answered
-      FROM questions 
-      WHERE is_answered = FALSE 
+      FROM questions
+      WHERE is_answered = FALSE
       ORDER BY created_at DESC
     `);
 
-    return NextResponse.json(result.rows);
+    // Red de seguridad: ocultamos cualquier pregunta/nombre ofensivo que
+    // pudiera haberse colado antes de existir el filtro.
+    const safe = result.rows.filter(
+      (r: { question?: string; userName?: string }) =>
+        !containsProfanity(r.question || "") &&
+        !containsProfanity(r.userName || ""),
+    );
 
+    return NextResponse.json(safe);
   } catch (error) {
-    console.error('Error GET questions:', error);
+    console.error("Error GET questions:", error);
     // Devolver array vacío en caso de error para no romper el frontend
     return NextResponse.json([]);
   } finally {

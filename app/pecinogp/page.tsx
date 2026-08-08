@@ -10,6 +10,8 @@ import { StatBadge } from "@/All/components/stat-badge";
 import { Reveal } from "@/All/components/reveal";
 import { ScrollHint } from "@/All/components/scroll-hint";
 import { HeroUnderline } from "@/All/components/hero-underline";
+import { Magnetic } from "@/All/components/magnetic";
+import type { InstagramStats } from "@/lib/instagram-data";
 import type { YouTubeChannel, YouTubeVideo } from "@/lib/youtube-data";
 import { decodeHtmlEntities } from "@/lib/utils";
 import {
@@ -299,6 +301,7 @@ export default function MiCanalPage() {
 
   const [stats, setStats] = useState<YouTubeChannel | null>(null);
   const [latest, setLatest] = useState<YouTubeVideo[]>([]);
+  const [ig, setIg] = useState<InstagramStats | null>(null);
   const [activeTab, setActiveTab] = useState<"youtube" | "instagram">(
     "youtube",
   );
@@ -315,6 +318,13 @@ export default function MiCanalPage() {
       }
     }
     load();
+    // Estadísticas de Instagram (Graph API; cae a fallback si no hay token).
+    fetch("/api/instagram")
+      .then((r) => r.json())
+      .then((data) => {
+        if (data && !data.error) setIg(data as InstagramStats);
+      })
+      .catch(() => {});
     // Pequeño retraso para que los charts se monten suavemente
     const t = setTimeout(() => setChartMounted(true), 300);
     return () => clearTimeout(t);
@@ -324,6 +334,15 @@ export default function MiCanalPage() {
   const subs = stats ? Number(stats.subscriberCount) : 68400;
   const videoCount = stats ? Number(stats.videoCount) : 1234;
 
+  // Instagram: valores reales (o los últimos conocidos como respaldo).
+  const igFollowers = ig?.followers ?? 4345;
+  const igViews = ig?.views ?? 140665;
+  const igReach = ig?.reach ?? 49983;
+  const igInteractions = ig?.interactions ?? 6622;
+  const igEngagement = ig?.engagement ?? 4.7;
+  const compactK = (n: number) =>
+    n >= 1000 ? `${(n / 1000).toFixed(1).replace(".", ",")}K` : String(n);
+
   return (
     <MotionConfig reducedMotion="user">
       <div className="min-h-screen bg-black text-foreground overflow-x-hidden selection:bg-red-600 selection:text-white">
@@ -331,7 +350,7 @@ export default function MiCanalPage() {
 
         <main>
           {/* ─── HERO ─── */}
-          <section className="relative py-20 md:py-44 flex items-center justify-center overflow-hidden">
+          <section className="relative min-h-[88vh] py-20 flex items-center justify-center overflow-hidden">
             <motion.div
               style={{ y: y1 }}
               className="absolute inset-0 z-0 scale-110"
@@ -349,14 +368,6 @@ export default function MiCanalPage() {
             <ThreeBackground className="z-[1] opacity-70" density={700} />
 
             <div className="relative z-20 max-w-7xl mx-auto px-4 text-center">
-              <div className="flex items-center justify-center gap-2 mb-6">
-                <div className="w-8 h-1 bg-red-600 rounded-full" />
-                <span className="text-red-500 font-black uppercase tracking-[0.4em] text-[10px]">
-                  El canal oficial
-                </span>
-                <div className="w-8 h-1 bg-red-600 rounded-full" />
-              </div>
-
               <SplitHeadline
                 className="text-5xl sm:text-6xl md:text-8xl lg:text-9xl font-black text-white italic tracking-tighter leading-[0.85] mb-8"
                 style={{ filter: "drop-shadow(0 10px 30px rgba(0,0,0,0.8))" }}
@@ -685,7 +696,7 @@ export default function MiCanalPage() {
                     exit={{ opacity: 0, y: -20 }}
                     transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
                   >
-                    {/* KPIs Instagram (datos reales · últimos 30 días) */}
+                    {/* KPIs Instagram (Graph API en tiempo real · últimos 28 días) */}
                     <motion.div
                       variants={kpiGrid}
                       initial="hidden"
@@ -695,26 +706,26 @@ export default function MiCanalPage() {
                     >
                       <MiniStat
                         label="Seguidores"
-                        value="4.345"
-                        delta="comunidad fiel"
+                        value={igFollowers.toLocaleString("es-ES")}
+                        delta={ig?.live ? "en tiempo real" : "comunidad fiel"}
                         color="purple"
                       />
                       <MiniStat
                         label="Visualizaciones"
-                        value="140,7K"
-                        delta="↑ 98,7% en Reels"
+                        value={compactK(igViews)}
+                        delta="últimos 28 días"
                         color="purple"
                       />
                       <MiniStat
                         label="Cuentas alcanzadas"
-                        value="50,0K"
-                        delta="↑ 77,6% no te siguen"
+                        value={compactK(igReach)}
+                        delta="últimos 28 días"
                         color="purple"
                       />
                       <MiniStat
                         label="Interacciones"
-                        value="6.622"
-                        delta="↑ 4,7% engagement"
+                        value={igInteractions.toLocaleString("es-ES")}
+                        delta={`↑ ${String(igEngagement).replace(".", ",")}% engagement`}
                         color="purple"
                       />
                     </motion.div>
@@ -1015,13 +1026,15 @@ export default function MiCanalPage() {
                     ÚLTIMOS <span className="text-red-600">VÍDEOS</span>
                   </h2>
                 </div>
-                <Link
-                  href="/analisis-gp"
-                  className="group flex items-center gap-3 bg-white/5 border border-white/10 text-white font-black py-3 px-8 rounded-xl hover:bg-red-600 transition-all tracking-wider text-sm uppercase italic"
-                >
-                  Ver todos los vídeos{" "}
-                  <ChevronRight className="group-hover:translate-x-1 transition-transform" />
-                </Link>
+                <Magnetic>
+                  <Link
+                    href="/analisis-gp"
+                    className="group flex items-center gap-3 bg-white/5 border border-white/10 text-white font-black py-3 px-8 rounded-xl hover:bg-red-600 transition-all tracking-wider text-sm uppercase italic"
+                  >
+                    Ver todos los vídeos{" "}
+                    <ChevronRight className="group-hover:translate-x-1 transition-transform" />
+                  </Link>
+                </Magnetic>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">

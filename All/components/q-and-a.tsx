@@ -88,7 +88,7 @@ export function QAndA() {
         toast.error(
           `Error al enviar la pregunta: ${
             errorData.error?.question?._errors[0] || "Inténtalo de nuevo."
-          }`
+          }`,
         );
       }
     } catch (error) {
@@ -104,102 +104,141 @@ export function QAndA() {
         initial={{ opacity: 0, x: -20 }}
         whileInView={{ opacity: 1, x: 0 }}
         transition={{ duration: 0.8 }}
-        className="bg-white/[0.03] backdrop-blur-3xl rounded-[28px] md:rounded-[32px] border border-white/10 p-6 md:p-10 shadow-2xl"
+        className="bg-white/[0.03] backdrop-blur-3xl rounded-[28px] md:rounded-[32px] border border-white/10 p-6 md:p-10 shadow-2xl self-start md:sticky md:top-24"
       >
-        <h3 className="text-xl md:text-2xl font-black text-white italic tracking-tighter uppercase mb-6 md:mb-8">Envía tu pregunta</h3>
+        <h3 className="text-xl md:text-2xl font-black text-white italic tracking-tighter uppercase mb-6 md:mb-8">
+          Envía tu pregunta
+        </h3>
         <Form {...form}>
-          <form
-            onSubmit={form.handleSubmit(onSubmit)}
-            className="space-y-8"
-          >
-                <FormField
-                  control={form.control}
-                  name="userName"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel className="text-[10px] font-black uppercase tracking-widest text-white/50 mb-2 block">Tu nombre (Opcional)</FormLabel>
-                      <FormControl>
-                        <Input 
-                          placeholder="Ej: Juan Pérez" 
-                          {...field} 
-                          className="bg-white/5 border-white/10 focus:border-red-600 focus:ring-1 focus:ring-red-600 rounded-xl h-12 text-white placeholder:text-white/20 transition-all font-bold italic"
-                        />
-                      </FormControl>
-                      <FormMessage className="text-red-500 text-[10px] font-bold" />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name="question"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel className="text-[10px] font-black uppercase tracking-widest text-white/50 mb-2 block">Tu pregunta</FormLabel>
-                      <FormControl>
-                        <Textarea
-                          placeholder="Escribe aquí tu pregunta para Manuel Pecino..."
-                          className="bg-white/5 border-white/10 focus:border-red-600 focus:ring-1 focus:ring-red-600 rounded-2xl p-5 text-white placeholder:text-white/20 transition-all resize-none shadow-inner"
-                          rows={6}
-                          {...field}
-                        />
-                      </FormControl>
-                      <FormDescription className="text-[10px] font-medium text-white/20 italic mt-2">
-                        Tu pregunta será revisada antes de ser publicada.
-                      </FormDescription>
-                      <FormMessage className="text-red-500 text-[10px] font-bold" />
-                    </FormItem>
-                  )}
-                />
-                <Button 
-                  type="submit" 
-                  disabled={isSubmitting}
-                  className="w-full bg-red-600 hover:bg-red-700 text-white font-black italic uppercase tracking-widest py-4 md:py-6 rounded-xl md:rounded-2xl transition-all hover:scale-[1.02] active:scale-95 shadow-[0_0_20px_rgba(220,38,38,0.3)]"
-                >
-                  {isSubmitting ? "ENVIANDO..." : "ENVIAR PREGUNTA"}
-                </Button>
-              </form>
-            </Form>
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+            <FormField
+              control={form.control}
+              name="userName"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="text-[10px] font-black uppercase tracking-widest text-white/50 mb-2 block">
+                    Tu nombre (Opcional)
+                  </FormLabel>
+                  <FormControl>
+                    <Input
+                      placeholder="Ej: Juan Pérez"
+                      {...field}
+                      className="bg-white/5 border-white/10 focus:border-red-600 focus:ring-1 focus:ring-red-600 rounded-xl h-12 text-white placeholder:text-white/20 transition-all font-bold italic"
+                    />
+                  </FormControl>
+                  <FormMessage className="text-red-500 text-[10px] font-bold" />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="question"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="text-[10px] font-black uppercase tracking-widest text-white/50 mb-2 block">
+                    Tu pregunta
+                  </FormLabel>
+                  <FormControl>
+                    <Textarea
+                      placeholder="Escribe aquí tu pregunta para Manuel Pecino..."
+                      className="bg-white/5 border-white/10 focus:border-red-600 focus:ring-1 focus:ring-red-600 rounded-2xl p-5 text-white placeholder:text-white/20 transition-all resize-none shadow-inner"
+                      rows={6}
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormDescription className="text-[10px] font-medium text-white/20 italic mt-2">
+                    Se filtra automáticamente el lenguaje ofensivo. Sé
+                    respetuoso.
+                  </FormDescription>
+                  <FormMessage className="text-red-500 text-[10px] font-bold" />
+                </FormItem>
+              )}
+            />
+            <Button
+              type="submit"
+              disabled={isSubmitting}
+              className="w-full bg-red-600 hover:bg-red-700 text-white font-black italic uppercase tracking-widest py-4 md:py-6 rounded-xl md:rounded-2xl transition-all hover:scale-[1.02] active:scale-95 shadow-[0_0_20px_rgba(220,38,38,0.3)]"
+            >
+              {isSubmitting ? "ENVIANDO..." : "ENVIAR PREGUNTA"}
+            </Button>
+
+            {/* Aviso RGPD en el punto de recogida (art. 13 RGPD / capa básica) */}
+            <p className="text-[10px] leading-relaxed text-white/30 mt-4">
+              Al enviar, tu nombre (si lo indicas) y tu pregunta se almacenarán
+              y podrán publicarse para moderación y participación en la
+              comunidad. Responsable:{" "}
+              <span className="text-white/50 font-semibold">
+                MPC Network SL
+              </span>
+              . Puedes ejercer tus derechos y consultar los detalles en la{" "}
+              <a
+                href="/politica-privacidad"
+                className="text-red-500 hover:text-red-400 underline"
+              >
+                Política de Privacidad
+              </a>
+              .
+            </p>
+          </form>
+        </Form>
       </motion.div>
       <motion.div
         initial={{ opacity: 0, x: 20 }}
         whileInView={{ opacity: 1, x: 0 }}
         transition={{ duration: 0.8, delay: 0.2 }}
-        className="bg-white/[0.03] backdrop-blur-3xl rounded-[28px] md:rounded-[32px] border border-white/10 p-6 md:p-10 shadow-2xl flex flex-col h-full"
+        className="bg-white/[0.03] backdrop-blur-3xl rounded-[28px] md:rounded-[32px] border border-white/10 p-6 md:p-10 shadow-2xl flex flex-col"
       >
-        <h3 className="text-xl md:text-2xl font-black text-white italic tracking-tighter uppercase mb-6 md:mb-8">Debate Comunitario</h3>
-        <div className="flex-grow">
-          {questions.length > 0 ? (
-            <div className="space-y-6 max-h-[500px] overflow-y-auto pr-4 custom-scrollbar">
-              <AnimatePresence>
-                {questions.map((q, index) => (
-                  <motion.div
-                    key={q.id}
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    className="bg-white/5 border border-white/5 p-6 rounded-[24px] group hover:border-red-600/30 transition-all"
-                  >
-                    <div className="flex items-center gap-2 mb-3">
-                      <div className="w-1 h-3 bg-red-600 rounded-full" />
-                      <span className="text-[10px] font-black uppercase tracking-widest text-red-500 italic">
-                        {q.userName || "Fan PecinoGP"}
-                      </span>
-                    </div>
-                    <p className="text-gray-300 font-medium leading-relaxed italic line-clamp-4">
-                      "{q.question}"
-                    </p>
-                  </motion.div>
-                ))}
-              </AnimatePresence>
-            </div>
-          ) : (
-            <div className="text-center py-16">
-              <HelpCircle className="mx-auto h-20 w-20 text-white/10 mb-6" />
-              <p className="text-white/40 font-bold italic tracking-wider max-w-[240px] mx-auto text-sm leading-relaxed">
-                ¡ABRE EL DEBATE! TU PREGUNTA PODRÍA SALIR EN EL PRÓXIMO VÍDEO.
-              </p>
-            </div>
+        <div className="flex items-baseline justify-between gap-3 mb-6 md:mb-8">
+          <h3 className="text-xl md:text-2xl font-black text-white italic tracking-tighter uppercase">
+            Debate Comunitario
+          </h3>
+          {questions.length > 0 && (
+            <span className="shrink-0 text-[10px] font-black uppercase tracking-widest text-white/30">
+              {questions.length}{" "}
+              {questions.length === 1 ? "pregunta" : "preguntas"}
+            </span>
           )}
         </div>
+        {questions.length > 0 ? (
+          <div className="space-y-5">
+            <AnimatePresence>
+              {questions.map((q) => (
+                <motion.div
+                  key={q.id}
+                  initial={{ opacity: 0, y: 12 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true, margin: "-40px" }}
+                  transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+                  className="relative overflow-hidden bg-white/[0.04] border border-white/8 p-6 md:p-7 rounded-[24px] hover:border-red-600/30 hover:bg-white/[0.06] transition-colors"
+                >
+                  {/* Comilla decorativa de fondo */}
+                  <span
+                    aria-hidden
+                    className="pointer-events-none absolute -top-5 right-3 text-7xl font-black italic text-white/[0.04] select-none leading-none"
+                  >
+                    &rdquo;
+                  </span>
+                  <div className="relative flex items-center gap-2 mb-3">
+                    <div className="w-1 h-3.5 bg-red-600 rounded-full" />
+                    <span className="text-[10px] font-black uppercase tracking-widest text-red-500 italic">
+                      {q.userName || "Fan PecinoGP"}
+                    </span>
+                  </div>
+                  <p className="relative text-gray-200 font-medium leading-relaxed italic text-[15px] md:text-base whitespace-pre-line break-words">
+                    &ldquo;{q.question}&rdquo;
+                  </p>
+                </motion.div>
+              ))}
+            </AnimatePresence>
+          </div>
+        ) : (
+          <div className="text-center py-16">
+            <HelpCircle className="mx-auto h-20 w-20 text-white/10 mb-6" />
+            <p className="text-white/40 font-bold italic tracking-wider max-w-[240px] mx-auto text-sm leading-relaxed">
+              ¡ABRE EL DEBATE! TU PREGUNTA PODRÍA SALIR EN EL PRÓXIMO VÍDEO.
+            </p>
+          </div>
+        )}
       </motion.div>
     </div>
   );

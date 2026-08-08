@@ -63,7 +63,7 @@ export default function AnalisisGpPage() {
 
       <main>
         {/* --- CINEMATIC HEADER --- */}
-        <section className="relative py-20 md:py-44 flex items-center justify-center overflow-hidden">
+        <section className="relative min-h-[88vh] py-20 flex items-center justify-center overflow-hidden">
           <motion.div
             style={{ y: y1 }}
             className="absolute inset-0 z-0 scale-110"
@@ -84,16 +84,6 @@ export default function AnalisisGpPage() {
             animate="visible"
             className="relative z-20 max-w-7xl mx-auto px-4 text-center"
           >
-            <motion.div
-              variants={itemVariants}
-              className="flex items-center justify-center gap-2 mb-6"
-            >
-              <div className="w-8 h-1 bg-red-600 rounded-full" />
-              <span className="text-red-500 font-black uppercase tracking-[0.4em] text-[10px]">
-                Archivo Histórico
-              </span>
-            </motion.div>
-
             <SplitHeadline
               className="text-5xl sm:text-6xl md:text-8xl lg:text-9xl font-black text-white italic tracking-tighter leading-[0.95] md:leading-[0.85] mb-8"
               style={{ filter: "drop-shadow(0 10px 30px rgba(0,0,0,0.8))" }}
