@@ -43,7 +43,7 @@ export const SITE = {
  * «Unirse», el schema de precios y los textos definitivos. No hay que tocar
  * nada más.
  */
-export const MEMBERSHIP_LIVE = false;
+export const MEMBERSHIP_LIVE = true;
 
 type BuildMetadataInput = {
   /** Título sin el sufijo de marca; la plantilla del layout añade "| PecinoGP". */

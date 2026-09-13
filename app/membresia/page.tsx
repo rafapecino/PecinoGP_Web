@@ -15,10 +15,11 @@ import {
   Check,
   Youtube,
   ArrowUpRight,
-  Trophy,
-  Radio,
   Users,
+  Radio,
   Bell,
+  Lock,
+  Globe,
 } from "lucide-react";
 
 export const metadata = buildMetadata({
@@ -26,8 +27,8 @@ export const metadata = buildMetadata({
     ? "Membresía PecinoGP: hazte miembro del canal"
     : "Membresía PecinoGP: muy pronto",
   description: MEMBERSHIP_LIVE
-    ? "Únete a la membresía de PecinoGP desde 3,99 €/mes: directos exclusivos post-carrera, acceso anticipado a vídeos, porra de MotoGP por GP y comunidad privada."
-    : "La membresía de PecinoGP llega muy pronto: directos exclusivos post-carrera, acceso anticipado a los vídeos, porra por Gran Premio y comunidad privada. Tres niveles desde 3,99 €/mes.",
+    ? "Únete a la membresía de PecinoGP desde 3,99 €/mes: directos solo para el Club, mesas redondas cerradas, vídeos que no ve nadie más, noticiario cada 48 h y el chat de miembros."
+    : "La membresía de PecinoGP llega muy pronto: directos solo para el Club, mesas redondas cerradas, vídeos que no ve nadie más y el chat de miembros. Dos niveles: 3,99 y 14,99 €/mes.",
   path: "/membresia",
   // Tarjeta social propia (app/membresia/opengraph-image.tsx).
   image: "/membresia/opengraph-image",
@@ -37,7 +38,7 @@ export const metadata = buildMetadata({
     "miembro canal MotoGP",
     "comunidad MotoGP",
     "directos exclusivos MotoGP",
-    "porra MotoGP",
+    "Club PecinoGP",
   ],
 });
 
@@ -49,43 +50,36 @@ export const metadata = buildMetadata({
  */
 const TIERS = [
   {
-    name: "Box",
+    name: "Grada PecinoGP",
+    /** Etiqueta corta del botón: el nombre completo parte la línea en móvil. */
+    cta: "Unirme a la Grada",
     price: "3,99",
-    icon: Trophy,
-    tagline: "El primer paso dentro del box",
+    icon: Users,
+    tagline: "Dentro del grupo, con voz propia",
     featured: false,
     benefits: [
-      "Insignia de fidelidad junto a tu nombre",
-      "Emojis exclusivos en chats y directos",
-      "Encuestas para votar los temas de los vídeos",
-      "Porra de resultados por GP con clasificación anual",
+      "Insignias de fidelidad junto a tu nombre",
+      "Emojis del canal en comentarios y directos",
+      "La sobremesa: el chat solo para miembros",
+      "Tu pregunta va primero",
+      "Fotos y detrás de cámaras",
+      "Tú eliges el tema",
+      "Te nombro en directo",
     ],
   },
   {
-    name: "Paddock",
-    price: "9,99",
+    name: "PecinoGP Club",
+    cta: "Unirme al Club",
+    price: "14,99",
     icon: Radio,
-    tagline: "Donde se comenta la carrera de verdad",
+    tagline: "La trastienda del canal",
     featured: true,
     benefits: [
-      "Directo exclusivo post-carrera tras cada Gran Premio",
-      "Acceso anticipado a los vídeos (24–48 h antes)",
-      "Tus preguntas respondidas con prioridad en los directos",
-      "Todo lo incluido en el nivel Box",
-    ],
-  },
-  {
-    name: "Hospitality",
-    price: "24,99",
-    icon: Users,
-    tagline: "El círculo más cercano del canal",
-    featured: false,
-    benefits: [
-      "Grupo privado de la comunidad (Discord/Telegram)",
-      "Tu nombre en los agradecimientos de los vídeos",
-      "Videollamada grupal trimestral con Manuel Pecino",
-      "Voto en las decisiones del canal",
-      "Todo lo incluido en los niveles Box y Paddock",
+      "Directos solo para el Club PecinoGP",
+      "Mesas redondas cerradas",
+      "Vídeos que no ve nadie más",
+      "Noticiario cada 48 h",
+      "Todo lo incluido en Grada PecinoGP",
     ],
   },
 ] as const;
@@ -100,7 +94,7 @@ const FAQ = MEMBERSHIP_LIVE
       {
         question: "¿Cuánto cuesta la membresía de PecinoGP?",
         answer:
-          "Hay tres niveles: Box por 3,99 €/mes, Paddock por 9,99 €/mes y Hospitality por 24,99 €/mes. Las ventajas son acumulativas, así que cada nivel incluye todo lo del anterior. El cobro lo gestiona YouTube directamente.",
+          "Hay dos niveles: Grada PecinoGP por 3,99 €/mes y PecinoGP Club por 14,99 €/mes. Las ventajas son acumulativas, así que el Club incluye todo lo de Grada. El cobro lo gestiona YouTube directamente.",
       },
       {
         question: "¿Cómo me hago miembro del canal?",
@@ -108,9 +102,9 @@ const FAQ = MEMBERSHIP_LIVE
           "Entra en el canal de PecinoGP en YouTube y pulsa el botón «Unirse» que aparece junto al de suscribirse. Elige el nivel que quieras y completa el pago desde tu cuenta de Google. El acceso a las ventajas es inmediato.",
       },
       {
-        question: "¿Qué incluye el directo exclusivo post-carrera?",
+        question: "¿Qué incluye el nivel PecinoGP Club?",
         answer:
-          "Tras cada Gran Premio de MotoGP, Manuel Pecino hace un directo solo para miembros de los niveles Paddock y Hospitality, donde se analiza la carrera en caliente y se responden las preguntas de la comunidad. Son unos 22 directos a lo largo de la temporada.",
+          "Los directos cerrados del Club tras los Grandes Premios, las mesas redondas solo para miembros, los vídeos que no se publican en el canal y el noticiario cada 48 horas. Además de todo lo del nivel Grada PecinoGP.",
       },
       {
         question: "¿Puedo cancelar la membresía cuando quiera?",
@@ -125,7 +119,7 @@ const FAQ = MEMBERSHIP_LIVE
       {
         question: "¿Necesito ser miembro para ver los vídeos del canal?",
         answer:
-          "No. Todos los análisis públicos de MotoGP seguirán siendo gratuitos en YouTube. La membresía añade contenido y ventajas extra: directos exclusivos, acceso anticipado, porra por GP y comunidad privada.",
+          "No. Todos los análisis públicos de MotoGP seguirán siendo gratuitos en YouTube. La membresía añade contenido y ventajas extra: el chat de miembros, insignias y emojis, y en el Club los directos cerrados, las mesas redondas, los vídeos exclusivos y el noticiario cada 48 h.",
       },
     ] as const)
   : ([
@@ -137,12 +131,12 @@ const FAQ = MEMBERSHIP_LIVE
       {
         question: "¿Cuánto va a costar la membresía?",
         answer:
-          "Está previsto que haya tres niveles: Box por 3,99 €/mes, Paddock por 9,99 €/mes y Hospitality por 24,99 €/mes. Las ventajas son acumulativas, así que cada nivel incluirá todo lo del anterior. El cobro lo gestionará YouTube directamente.",
+          "Está previsto que haya dos niveles: Grada PecinoGP por 3,99 €/mes y PecinoGP Club por 14,99 €/mes. Las ventajas son acumulativas, así que el Club incluirá todo lo de Grada. El cobro lo gestionará YouTube directamente.",
       },
       {
-        question: "¿Qué incluirá el directo exclusivo post-carrera?",
+        question: "¿Qué incluirá el nivel PecinoGP Club?",
         answer:
-          "Tras cada Gran Premio de MotoGP, Manuel Pecino hará un directo solo para miembros de los niveles Paddock y Hospitality, donde se analizará la carrera en caliente y se responderán las preguntas de la comunidad. Serán unos 22 directos a lo largo de la temporada.",
+          "Los directos cerrados del Club tras los Grandes Premios, las mesas redondas solo para miembros, los vídeos que no se publicarán en el canal y el noticiario cada 48 horas. Además de todo lo del nivel Grada PecinoGP.",
       },
       {
         question: "¿Cómo podré hacerme miembro cuando esté disponible?",
@@ -157,16 +151,41 @@ const FAQ = MEMBERSHIP_LIVE
       {
         question: "¿Hará falta ser miembro para ver los vídeos del canal?",
         answer:
-          "No. Todos los análisis públicos de MotoGP seguirán siendo gratuitos en YouTube. La membresía añadirá contenido y ventajas extra: directos exclusivos, acceso anticipado, porra por GP y comunidad privada.",
+          "No. Todos los análisis públicos de MotoGP seguirán siendo gratuitos en YouTube. La membresía añadirá contenido y ventajas extra: el chat de miembros, insignias y emojis, y en el Club los directos cerrados, las mesas redondas, los vídeos exclusivos y el noticiario cada 48 h.",
       },
     ] as const);
+
+/**
+ * Los tres hechos que explican la membresía sin un muro de texto: qué se
+ * compra, quién cobra y qué sigue siendo gratis.
+ */
+const FACTS = [
+  {
+    icon: Lock,
+    title: "Lo que no es público",
+    description:
+      "Directos cerrados tras cada Gran Premio, vídeos que no salen en el canal y el chat donde se decide qué se analiza.",
+  },
+  {
+    icon: Youtube,
+    title: "Se gestiona en YouTube",
+    description:
+      "Alta, cobro y baja desde tu cuenta de Google. Sin permanencia: cancelas cuando quieras.",
+  },
+  {
+    icon: Globe,
+    title: "Lo público sigue gratis",
+    description:
+      "Los análisis de cada carrera siguen abiertos para todos. La membresía suma, no quita.",
+  },
+] as const;
 
 /** Cómo funciona, en tres pasos. */
 const STEPS = [
   {
     title: "Elige tu nivel",
     description:
-      "Box, Paddock u Hospitality. Se puede empezar por el más básico y subir cuando quieras.",
+      "Grada PecinoGP o PecinoGP Club. Se puede empezar por el básico y subir al Club cuando quieras.",
   },
   {
     title: "Pulsa «Unirse» en YouTube",
@@ -176,7 +195,7 @@ const STEPS = [
   {
     title: "Entra en la comunidad",
     description:
-      "Insignia, emojis, encuestas y, según el nivel, directos exclusivos y grupo privado.",
+      "Insignias, emojis, La sobremesa y, en el Club, directos cerrados, mesas redondas y vídeos exclusivos.",
   },
 ] as const;
 
@@ -200,7 +219,7 @@ const membershipSchema = {
   name: "Membresía del canal PecinoGP",
   serviceType: "Membresía de canal de YouTube",
   description:
-    "Membresía de pago del canal de MotoGP PecinoGP, con directos exclusivos post-carrera, acceso anticipado a vídeos, porra por Gran Premio y comunidad privada.",
+    "Membresía de pago del canal de MotoGP PecinoGP, con directos cerrados del Club, mesas redondas solo para miembros, vídeos exclusivos, noticiario cada 48 h y el chat de miembros.",
   url: `${SITE.url}/membresia`,
   provider: { "@id": `${SITE.url}/#organization` },
   areaServed: "ES",
@@ -213,7 +232,7 @@ const membershipSchema = {
           "@type": "AggregateOffer",
           priceCurrency: "EUR",
           lowPrice: "3.99",
-          highPrice: "24.99",
+          highPrice: "14.99",
           offerCount: TIERS.length,
           offers: TIERS.map((tier) => ({
             "@type": "Offer",
@@ -288,8 +307,8 @@ export default function MembresiaPage() {
 
             <p className="max-w-2xl mx-auto text-gray-400 text-lg md:text-xl font-medium italic mb-10">
               {MEMBERSHIP_LIVE
-                ? "Directos exclusivos tras cada carrera, acceso anticipado a los vídeos y una comunidad de MotoGP que decide contigo. Desde 3,99 € al mes."
-                : "Directos exclusivos tras cada carrera, acceso anticipado a los vídeos y una comunidad de MotoGP que decide contigo. Estamos ultimando los detalles."}
+                ? "Directos cerrados tras cada carrera, vídeos que no ve nadie más y una comunidad de MotoGP que decide contigo. Desde 3,99 € al mes."
+                : "Directos cerrados tras cada carrera, vídeos que no ve nadie más y una comunidad de MotoGP que decide contigo. Estamos ultimando los detalles."}
             </p>
 
             <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
@@ -336,41 +355,6 @@ export default function MembresiaPage() {
           </div>
         </section>
 
-        {/* --- QUÉ ES --- */}
-        <section className="px-4 sm:px-6 lg:px-8 py-16 md:py-24 relative">
-          <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-red-600/30 to-transparent" />
-
-          <div className="max-w-3xl mx-auto">
-            <Reveal y={40} className="space-y-6">
-              <h2 className="text-3xl md:text-5xl font-black text-white italic tracking-tighter leading-tight">
-                Qué es la membresía de{" "}
-                <span className="text-red-600">PecinoGP</span>
-              </h2>
-              <p className="text-white/70 text-lg leading-relaxed">
-                La membresía es la forma de apoyar directamente el canal de
-                MotoGP de <strong className="text-white">Manuel Pecino</strong>{" "}
-                y, a cambio, entrar en la parte del proyecto que no es pública:
-                los directos que se hacen justo después de cada Gran Premio, los
-                vídeos antes de que salgan y el grupo donde se decide qué se
-                analiza a continuación.
-              </p>
-              <p className="text-white/70 text-lg leading-relaxed">
-                Se gestiona desde el propio canal de YouTube, con tres niveles
-                de precio y ventajas acumulativas. Los análisis públicos de cada
-                carrera seguirán siendo gratuitos: la membresía añade acceso,
-                cercanía y comunidad.
-              </p>
-              {!MEMBERSHIP_LIVE && (
-                <p className="text-white/50 text-base leading-relaxed border-l-2 border-red-600/50 pl-5">
-                  Todavía no está abierta. Preferimos estrenarla con el
-                  contenido exclusivo ya grabado, para que quien entre el primer
-                  día se encuentre algo dentro y no una promesa.
-                </p>
-              )}
-            </Reveal>
-          </div>
-        </section>
-
         {/* --- NIVELES --- */}
         <section
           id="niveles"
@@ -381,7 +365,7 @@ export default function MembresiaPage() {
               <div className="flex items-center justify-center gap-2 mb-4">
                 <div className="w-8 h-1 bg-red-600 rounded-full" />
                 <span className="text-red-500 font-black uppercase tracking-[0.4em] text-[10px]">
-                  Tres niveles
+                  Dos niveles
                 </span>
               </div>
               <MaskReveal className="text-4xl md:text-6xl font-black text-white italic tracking-tighter">
@@ -400,7 +384,7 @@ export default function MembresiaPage() {
             <Reveal
               stagger={0.12}
               y={50}
-              className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-stretch"
+              className="grid grid-cols-1 md:grid-cols-2 gap-10 lg:gap-20 items-stretch max-w-6xl mx-auto"
             >
               {TIERS.map((tier) => {
                 const Icon = tier.icon;
@@ -413,7 +397,7 @@ export default function MembresiaPage() {
                     className="h-full"
                   >
                     <article
-                      className={`relative flex flex-col h-full rounded-[28px] p-8 backdrop-blur-xl transition-colors ${
+                      className={`relative flex flex-col h-full rounded-[28px] p-8 lg:p-10 backdrop-blur-xl transition-colors ${
                         tier.featured
                           ? "bg-gradient-to-b from-red-600/10 to-white/[0.02] shadow-[0_0_50px_rgba(220,38,38,0.15)]"
                           : "bg-white/[0.03]"
@@ -475,7 +459,7 @@ export default function MembresiaPage() {
                               : "border border-white/15 bg-white/5 text-white hover:border-red-600/50 hover:bg-red-600/10"
                           }`}
                         >
-                          Unirme a {tier.name} <ArrowUpRight size={16} />
+                          {tier.cta} <ArrowUpRight size={16} />
                         </TrackedLink>
                       ) : (
                         /* Sin alta todavía: se marca el estado en vez de dejar un
@@ -504,13 +488,69 @@ export default function MembresiaPage() {
           </div>
         </section>
 
+        {/* --- QUÉ ES (compacto, debajo de los niveles) --- */}
+        <section className="px-4 sm:px-6 lg:px-8 pb-16 pt-4 md:pt-8">
+          <div className="max-w-5xl mx-auto">
+            <Reveal y={30} className="text-center mb-8">
+              <h2 className="text-2xl md:text-4xl font-black text-white italic tracking-tighter">
+                Qué es la membresía de{" "}
+                <span className="text-red-600">PecinoGP</span>
+              </h2>
+              <p className="mx-auto mt-3 max-w-xl text-sm md:text-base text-white/50">
+                Apoyar el canal de{" "}
+                <strong className="font-bold text-white/80">Manuel Pecino</strong>{" "}
+                y entrar en la parte del proyecto que no es pública.
+              </p>
+            </Reveal>
+
+            <Reveal
+              stagger={0.1}
+              y={30}
+              className="grid grid-cols-1 sm:grid-cols-3 gap-4"
+            >
+              {FACTS.map((fact) => {
+                const Icon = fact.icon;
+                return (
+                  <div
+                    key={fact.title}
+                    className="group rounded-2xl border border-white/10 bg-white/[0.03] p-5 transition-all duration-300 hover:-translate-y-1 hover:border-red-600/40 hover:bg-red-600/[0.06]"
+                  >
+                    <Icon
+                      size={20}
+                      className="text-red-500 transition-transform duration-300 group-hover:scale-110"
+                      aria-hidden
+                    />
+                    <h3 className="mt-3 text-sm font-black uppercase italic tracking-tight text-white">
+                      {fact.title}
+                    </h3>
+                    <p className="mt-1.5 text-sm leading-relaxed text-white/55">
+                      {fact.description}
+                    </p>
+                  </div>
+                );
+              })}
+            </Reveal>
+
+            {!MEMBERSHIP_LIVE && (
+              <p className="mx-auto mt-6 max-w-2xl border-l-2 border-red-600/50 pl-5 text-sm leading-relaxed text-white/50">
+                Todavía no está abierta. Preferimos estrenarla con el contenido
+                exclusivo ya grabado, para que quien entre el primer día se
+                encuentre algo dentro y no una promesa.
+              </p>
+            )}
+          </div>
+        </section>
+
         {/* --- CÓMO FUNCIONA --- */}
         <section className="px-4 sm:px-6 lg:px-8 py-16 md:py-24 relative">
           <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-red-600/30 to-transparent" />
 
           <div className="max-w-5xl mx-auto">
             <h2 className="mb-12 text-center text-4xl md:text-5xl font-black text-white italic tracking-tighter">
-              CÓMO <span className="text-red-600">FUNCIONARÁ</span>
+              CÓMO{" "}
+              <span className="text-red-600">
+                {MEMBERSHIP_LIVE ? "FUNCIONA" : "FUNCIONARÁ"}
+              </span>
             </h2>
 
             <Reveal
@@ -591,8 +631,8 @@ export default function MembresiaPage() {
                 </h2>
                 <p className="mx-auto mb-10 max-w-xl text-white/60 text-base md:text-lg leading-relaxed">
                   {MEMBERSHIP_LIVE
-                    ? "El próximo directo post-carrera es solo para miembros. Únete antes del siguiente Gran Premio y no te lo pierdas."
-                    : "La apertura se anuncia primero en el canal. Suscríbete y activa la campana para enterarte el mismo día, antes del primer directo post-carrera."}
+                    ? "El próximo directo del Club es solo para miembros. Únete antes del siguiente Gran Premio y no te lo pierdas."
+                    : "La apertura se anuncia primero en el canal. Suscríbete y activa la campana para enterarte el mismo día, antes del primer directo del Club."}
                 </p>
 
                 <Magnetic className="inline-block">

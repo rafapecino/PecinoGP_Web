@@ -14,13 +14,13 @@ export default function MembresiaTwitterImage() {
           eyebrow: "Membresía del canal",
           title: "Hazte miembro de PecinoGP",
           subtitle:
-            "Directos exclusivos post-carrera, acceso anticipado y comunidad privada. Desde 3,99 €/mes.",
+            "Directos cerrados del Club, vídeos que no ve nadie más y el chat de miembros. Desde 3,99 €/mes.",
         }
       : {
           eyebrow: "Membresía del canal · Muy pronto",
           title: "Algo se está preparando en el box",
           subtitle:
-            "Directos exclusivos post-carrera, acceso anticipado y comunidad privada. Tres niveles, muy pronto.",
+            "Directos cerrados del Club, vídeos que no ve nadie más y el chat de miembros. Dos niveles, muy pronto.",
         },
   );
 }
