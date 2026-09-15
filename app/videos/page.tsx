@@ -1,6 +1,8 @@
 import Header from "@/All/components/header";
 import { getLatestVideos } from "@/lib/youtube-data";
 import { YouTubeVideos } from "@/All/components/youtube-videos";
+import { MembershipCta } from "@/All/components/membership-cta";
+import { Footer } from "@/All/components/footer";
 import { buildMetadata } from "@/lib/seo";
 
 export const metadata = buildMetadata({
@@ -53,7 +55,16 @@ export default async function VideosPage() {
             )}
           </div>
         </section>
+
+        {/* Quien termina de recorrer el catálogo gratis es justo quien puede
+            querer el de pago. */}
+        <MembershipCta location="videos" />
       </main>
+
+      {/* Esta página estaba sin footer, y está en el sitemap: llegaba tráfico
+          de búsqueda a un callejón sin salida, sin navegación ni enlaces
+          legales. */}
+      <Footer />
     </div>
   );
 }

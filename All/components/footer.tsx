@@ -31,6 +31,14 @@ export function Footer() {
             >
               El Paddock
             </Link>
+            {/* Destacada sobre el resto: es el único enlace del footer que
+                puede acabar en un alta. */}
+            <Link
+              href="/membresia"
+              className="font-bold text-foreground hover:text-primary transition-colors"
+            >
+              Membresía
+            </Link>
             <Link
               href="/contacto"
               className="hover:text-primary transition-colors"

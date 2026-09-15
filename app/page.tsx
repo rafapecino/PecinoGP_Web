@@ -12,6 +12,7 @@ import type {
 import { YouTubeStats } from "@/All/components/youtube-stats";
 import { FeaturedStack } from "@/All/components/featured-stack";
 import { LatestVideo } from "@/All/components/latest-video";
+import { MembershipCta } from "@/All/components/membership-cta";
 import { Magnetic } from "@/All/components/magnetic";
 import { ScatterText } from "@/All/components/motion/scatter-text";
 import { MaskReveal } from "@/All/components/motion/mask-reveal";
@@ -497,6 +498,12 @@ export default function Home() {
             )}
           </div>
         </section>
+
+        {/* --- MEMBRESÍA ---
+            Va antes de "colabora con nosotros" a propósito: quien llega hasta
+            el final de la home es un aficionado, y lo primero que debe
+            encontrarse es la membresía, no la puerta de las marcas. */}
+        <MembershipCta location="home" />
 
         {/* --- COLABORA CON NOSOTROS --- */}
         <section className="px-4 sm:px-6 lg:px-8 py-24 md:py-32 relative overflow-hidden">

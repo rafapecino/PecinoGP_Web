@@ -3,6 +3,7 @@
 import Header from "@/All/components/header";
 import { QAndA } from "@/All/components/q-and-a";
 import { QuickPoll } from "@/All/components/quick-poll";
+import { MembershipCta } from "@/All/components/membership-cta";
 import { motion, useScroll, useTransform } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
@@ -147,6 +148,14 @@ export default function ElPaddockPage() {
                   <QuickPoll />
                 </motion.div>
               }
+            />
+
+            {/* Justo debajo del formulario de preguntas: es el momento en que
+                alguien acaba de mandar la suya y le importa que se responda. */}
+            <MembershipCta
+              location="paddock"
+              variant="inline"
+              className="mt-16"
             />
           </div>
         </section>
