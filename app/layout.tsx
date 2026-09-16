@@ -12,6 +12,7 @@ import {
   webSiteSchema,
 } from "@/All/components/json-ld";
 import { SITE } from "@/lib/seo";
+import { ADSENSE_CLIENT } from "@/lib/ads";
 
 export const metadata: Metadata = {
   // Base para resolver todas las URLs relativas (canonical, OG, sitemap).
@@ -73,7 +74,7 @@ export const metadata: Metadata = {
     apple: "/apple-icon.png",
   },
   other: {
-    "google-adsense-account": "ca-pub-4835675344404063",
+    "google-adsense-account": ADSENSE_CLIENT,
   },
   // Para verificar la propiedad en Search Console, define
   // NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION con el código que da Google.

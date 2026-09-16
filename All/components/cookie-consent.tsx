@@ -3,6 +3,8 @@
 import { useEffect, useState } from "react";
 import Script from "next/script";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { ADSENSE_CLIENT, pathAllowsAds } from "@/lib/ads";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, Cookie, ChevronRight } from "lucide-react";
 
@@ -35,6 +37,7 @@ export function openCookiePreferences() {
 }
 
 export function CookieConsentBanner() {
+  const pathname = usePathname();
   const [mounted, setMounted] = useState(false);
   const [showBanner, setShowBanner] = useState(false);
   const [showPanel, setShowPanel] = useState(false);
@@ -109,7 +112,11 @@ export function CookieConsentBanner() {
 
   if (!mounted) return null;
 
-  const loadAdSense = consent?.marketing === true;
+  /* Publicidad solo con opt-in explícito y solo en las rutas que la admiten:
+     los anuncios automáticos no se pueden filtrar por página desde el marcado,
+     así que no cargar el script es la única forma de dejar limpias la página
+     de membresía y las legales. */
+  const loadAdSense = consent?.marketing === true && pathAllowsAds(pathname);
 
   return (
     <>
@@ -117,7 +124,7 @@ export function CookieConsentBanner() {
         <Script
           id="adsense-script"
           async
-          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4835675344404063"
+          src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${ADSENSE_CLIENT}`}
           crossOrigin="anonymous"
           strategy="afterInteractive"
         />
