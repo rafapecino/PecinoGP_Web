@@ -2,7 +2,7 @@
  * Capa fina sobre Google Analytics 4 (gtag).
  *
  * El script de GA solo se inyecta desde <AnalyticsSuite /> cuando el usuario
- * ha aceptado la categoría "analíticas" en el banner de cookies, así que
+ * ha dado su consentimiento en el aviso de cookies de Google, así que
  * cualquier llamada a trackEvent() antes de ese momento es un no-op silencioso.
  */
 

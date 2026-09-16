@@ -81,8 +81,9 @@ export default function PoliticaPrivacidadPage() {
                   cookies analíticas (solo con tu consentimiento).
                 </li>
                 <li>
-                  Mostrar publicidad personalizada a través de Google AdSense
-                  (solo con tu consentimiento).
+                  Mostrar publicidad a través de Google AdSense: personalizada
+                  solo con tu consentimiento y, sin él, únicamente anuncios
+                  limitados no personalizados.
                 </li>
               </ul>
               <p className="mt-3">
@@ -133,7 +134,10 @@ export default function PoliticaPrivacidadPage() {
                 <li>
                   <strong className="text-white">Google Ireland Ltd.</strong> —
                   YouTube Data API (consulta pública de vídeos del canal) y
-                  Google AdSense (publicidad, solo con consentimiento).
+                  Google AdSense (publicidad, personalizada solo con
+                  consentimiento) y su plataforma de gestión del
+                  consentimiento, que muestra el aviso de cookies y guarda tu
+                  decisión.
                 </li>
                 <li>
                   <strong className="text-white">

@@ -55,13 +55,16 @@ export default function PoliticaCookiesPage() {
                     Cookies técnicas o necesarias
                   </h3>
                   <p className="text-white/70">
-                    Imprescindibles para el funcionamiento del sitio (por
-                    ejemplo, almacenar tu decisión sobre el consentimiento de
-                    cookies). No requieren consentimiento previo y no pueden
+                    Imprescindibles para el funcionamiento del sitio. La
+                    principal es la que recuerda tu decisión sobre el
+                    consentimiento, que guarda la plataforma de gestión del
+                    consentimiento de Google para no volver a preguntarte en
+                    cada visita. No requieren consentimiento previo y no pueden
                     desactivarse.
                   </p>
                   <p className="text-white/50 text-sm mt-2">
-                    Propias · Duración: hasta 12 meses · Finalidad: técnica.
+                    Proveedor: Google (plataforma de consentimiento) ·
+                    Finalidad: técnica, recordar tu elección.
                   </p>
                 </div>
 
@@ -85,12 +88,13 @@ export default function PoliticaCookiesPage() {
                     Cookies publicitarias
                   </h3>
                   <p className="text-white/70">
-                    Permiten mostrar anuncios de Google AdSense y medir su
-                    rendimiento. Solo se cargan después de que aceptes esta
-                    categoría — antes de tu consentimiento{" "}
-                    <strong className="text-white">no se inyecta</strong> el
-                    script de AdSense ni se envía información al servidor de
-                    anuncios.
+                    Permiten mostrar anuncios de Google AdSense personalizados y
+                    medir su rendimiento. Solo se instalan si das tu
+                    consentimiento en el aviso de cookies. Si no lo das, Google
+                    puede mostrar igualmente{" "}
+                    <strong className="text-white">anuncios limitados</strong>:
+                    no personalizados y sin cookies publicitarias en tu
+                    navegador.
                   </p>
                   <p className="text-white/50 text-sm mt-2">
                     De terceros · Proveedor: Google AdSense · Duración: hasta 24
@@ -127,14 +131,26 @@ export default function PoliticaCookiesPage() {
                 3. Bloqueo previo (opt-in estricto)
               </h2>
               <p>
-                Hasta que el usuario otorgue su consentimiento expreso a las
-                cookies analíticas o publicitarias, PecinoGP{" "}
+                Al entrar por primera vez verás el aviso de cookies de la
+                plataforma de gestión del consentimiento de Google, certificada
+                dentro del marco de transparencia y consentimiento (TCF) de IAB
+                Europe. Ofrece{" "}
                 <strong className="text-white">
-                  no carga ningún script de rastreo
+                  Consentir, No consentir y Gestionar opciones
                 </strong>{" "}
-                (incluido Google AdSense). Las casillas de configuración
-                aparecen desmarcadas por defecto, conforme a las directrices de
-                la AEPD y al artículo 22 de la LSSI-CE.
+                en la misma pantalla, de modo que rechazar es tan sencillo como
+                aceptar, conforme a la guía de cookies de la AEPD y al artículo
+                22 de la LSSI-CE.
+              </p>
+              <p className="mt-3">
+                Hasta que des tu consentimiento,{" "}
+                <strong className="text-white">
+                  no se carga ninguna herramienta de analítica
+                </strong>{" "}
+                ni se instalan cookies analíticas o publicitarias. En las
+                páginas con publicidad sí se carga el código de Google AdSense,
+                que respeta tu decisión y, sin consentimiento, solo sirve
+                anuncios limitados sin cookies publicitarias.
               </p>
             </section>
 
@@ -146,9 +162,10 @@ export default function PoliticaCookiesPage() {
                 Puedes aceptar, rechazar o personalizar tu elección en cualquier
                 momento pulsando el botón{" "}
                 <strong className="text-white">"Gestionar mis cookies"</strong>{" "}
-                situado en la parte superior de esta página o en el enlace del
-                pie de página. Tu decisión queda guardada localmente en tu
-                navegador hasta que decidas modificarla.
+                situado en la parte superior de esta página o en el enlace
+                «Gestionar cookies» del pie de página, que abren de nuevo el
+                panel de consentimiento de Google. Tu decisión queda guardada en
+                tu navegador hasta que decidas modificarla.
               </p>
               <p className="mt-3">
                 Adicionalmente, puedes configurar tu navegador para bloquear o

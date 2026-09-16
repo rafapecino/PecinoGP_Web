@@ -1,7 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import "./globals.css";
 import "lenis/dist/lenis.css";
-import { CookieConsentBanner } from "@/All/components/cookie-consent";
+import { ConsentAndAds } from "@/All/components/cookie-consent";
 import { AnalyticsSuite } from "@/All/components/analytics";
 import { SmoothScroll } from "@/All/components/smooth-scroll";
 import { RaceProgressBar } from "@/All/components/race-progress-bar";
@@ -111,7 +111,7 @@ export default function RootLayout({
         <RaceProgressBar />
         <CursorFollower />
         <SmoothScroll>{children}</SmoothScroll>
-        <CookieConsentBanner />
+        <ConsentAndAds />
         <AnalyticsSuite />
       </body>
     </html>

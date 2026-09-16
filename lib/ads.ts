@@ -6,17 +6,17 @@
  * inserta y dónde, incluido el ancla fija de la parte de abajo. Qué formatos se
  * permiten se configura en el panel de AdSense, no aquí.
  *
- * Tres cosas que este archivo sí controla:
+ * Dos cosas que este archivo sí controla:
  *
  * 1. Qué cuenta de AdSense monetiza la web. Va en una variable de entorno
  *    porque la web y el canal de YouTube pueden acabar en cuentas distintas;
  *    cambiarla no debería obligar a tocar código ni a desplegar a mano.
- * 2. Que el script solo se cargue si el visitante ha aceptado las cookies
- *    publicitarias (lo aplica `CookieConsentBanner`). Sin opt-in no se pide ni
- *    un anuncio, que es lo que exigen la LSSI-CE y el RGPD.
- * 3. Que haya rutas sin publicidad. Como los anuncios automáticos no se pueden
+ * 2. Que haya rutas sin publicidad. Como los anuncios automáticos no se pueden
  *    filtrar por página desde el marcado, la única forma segura de dejar una
  *    ruta limpia es no cargarle el script.
+ *
+ * El consentimiento no se decide aquí: lo gestiona la CMP de Google, que
+ * AdSense lee por su cuenta (ver `lib/consent.ts` y `ConsentAndAds`).
  */
 
 /**
