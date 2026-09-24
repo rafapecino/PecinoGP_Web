@@ -45,7 +45,7 @@ const COPY: Record<Location, Copy> = {
     title: "ESTO SE VE MEJOR",
     titleAccent: "DESDE DENTRO",
     text: MEMBERSHIP_LIVE
-      ? "Directos cerrados tras cada carrera, vídeos que no ve nadie más, el noticiario cada 48 h y el chat de miembros."
+      ? "Directos cerrados tras cada carrera, vídeos que no ve nadie más, el noticiario cada 48 h por WhatsApp y el chat de miembros."
       : "Directos cerrados tras cada carrera, vídeos que no ve nadie más y el chat de miembros. Estamos ultimando los detalles.",
     cta: MEMBERSHIP_LIVE ? "Ver la membresía" : "Ver qué incluirá",
   },
@@ -54,7 +54,7 @@ const COPY: Record<Location, Copy> = {
     title: "ESTOS VÍDEOS SON GRATIS.",
     titleAccent: "LOS QUE NO VES, NO.",
     text: MEMBERSHIP_LIVE
-      ? "Todo el análisis del canal seguirá siendo público. Los vídeos que no se publican, los directos cerrados y el noticiario cada 48 h están en PecinoGP Club."
+      ? "Todo el análisis del canal seguirá siendo público. Los vídeos que no se publican, los directos cerrados y el noticiario cada 48 h por WhatsApp están en PecinoGP Club."
       : "Todo el análisis del canal seguirá siendo público. Los vídeos que no se publicarán, los directos cerrados y el noticiario están en camino.",
     cta: MEMBERSHIP_LIVE ? "Ver la membresía" : "Ver qué incluirá",
   },

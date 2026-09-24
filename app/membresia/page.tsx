@@ -27,7 +27,7 @@ export const metadata = buildMetadata({
     ? "Membresía PecinoGP: hazte miembro del canal"
     : "Membresía PecinoGP: muy pronto",
   description: MEMBERSHIP_LIVE
-    ? "Únete a la membresía de PecinoGP desde 3,99 €/mes: directos solo para el Club, mesas redondas cerradas, vídeos que no ve nadie más, noticiario cada 48 h y el chat de miembros."
+    ? "Únete a la membresía de PecinoGP desde 3,99 €/mes: directos solo para el Club, mesas redondas cerradas, vídeos que no ve nadie más, noticiario cada 48 h por WhatsApp y el chat de miembros."
     : "La membresía de PecinoGP llega muy pronto: directos solo para el Club, mesas redondas cerradas, vídeos que no ve nadie más y el chat de miembros. Dos niveles: 3,99 y 14,99 €/mes.",
   path: "/membresia",
   // Tarjeta social propia (app/membresia/opengraph-image.tsx).
@@ -78,7 +78,7 @@ const TIERS = [
       "Directos solo para el Club PecinoGP",
       "Mesas redondas cerradas",
       "Vídeos que no ve nadie más",
-      "Noticiario cada 48 h",
+      "Noticiario cada 48 h por WhatsApp",
       "Todo lo incluido en Grada PecinoGP",
     ],
   },
@@ -104,7 +104,7 @@ const FAQ = MEMBERSHIP_LIVE
       {
         question: "¿Qué incluye el nivel PecinoGP Club?",
         answer:
-          "Los directos cerrados del Club tras los Grandes Premios, las mesas redondas solo para miembros, los vídeos que no se publican en el canal y el noticiario cada 48 horas. Además de todo lo del nivel Grada PecinoGP.",
+          "Los directos cerrados del Club tras los Grandes Premios, las mesas redondas solo para miembros, los vídeos que no se publican en el canal y el noticiario cada 48 horas por WhatsApp. Además de todo lo del nivel Grada PecinoGP.",
       },
       {
         question: "¿Puedo cancelar la membresía cuando quiera?",
@@ -119,7 +119,7 @@ const FAQ = MEMBERSHIP_LIVE
       {
         question: "¿Necesito ser miembro para ver los vídeos del canal?",
         answer:
-          "No. Todos los análisis públicos de MotoGP seguirán siendo gratuitos en YouTube. La membresía añade contenido y ventajas extra: el chat de miembros, insignias y emojis, y en el Club los directos cerrados, las mesas redondas, los vídeos exclusivos y el noticiario cada 48 h.",
+          "No. Todos los análisis públicos de MotoGP seguirán siendo gratuitos en YouTube. La membresía añade contenido y ventajas extra: el chat de miembros, insignias y emojis, y en el Club los directos cerrados, las mesas redondas, los vídeos exclusivos y el noticiario cada 48 h por WhatsApp.",
       },
     ] as const)
   : ([
@@ -136,7 +136,7 @@ const FAQ = MEMBERSHIP_LIVE
       {
         question: "¿Qué incluirá el nivel PecinoGP Club?",
         answer:
-          "Los directos cerrados del Club tras los Grandes Premios, las mesas redondas solo para miembros, los vídeos que no se publicarán en el canal y el noticiario cada 48 horas. Además de todo lo del nivel Grada PecinoGP.",
+          "Los directos cerrados del Club tras los Grandes Premios, las mesas redondas solo para miembros, los vídeos que no se publicarán en el canal y el noticiario cada 48 horas por WhatsApp. Además de todo lo del nivel Grada PecinoGP.",
       },
       {
         question: "¿Cómo podré hacerme miembro cuando esté disponible?",
@@ -151,7 +151,7 @@ const FAQ = MEMBERSHIP_LIVE
       {
         question: "¿Hará falta ser miembro para ver los vídeos del canal?",
         answer:
-          "No. Todos los análisis públicos de MotoGP seguirán siendo gratuitos en YouTube. La membresía añadirá contenido y ventajas extra: el chat de miembros, insignias y emojis, y en el Club los directos cerrados, las mesas redondas, los vídeos exclusivos y el noticiario cada 48 h.",
+          "No. Todos los análisis públicos de MotoGP seguirán siendo gratuitos en YouTube. La membresía añadirá contenido y ventajas extra: el chat de miembros, insignias y emojis, y en el Club los directos cerrados, las mesas redondas, los vídeos exclusivos y el noticiario cada 48 h por WhatsApp.",
       },
     ] as const);
 
@@ -219,7 +219,7 @@ const membershipSchema = {
   name: "Membresía del canal PecinoGP",
   serviceType: "Membresía de canal de YouTube",
   description:
-    "Membresía de pago del canal de MotoGP PecinoGP, con directos cerrados del Club, mesas redondas solo para miembros, vídeos exclusivos, noticiario cada 48 h y el chat de miembros.",
+    "Membresía de pago del canal de MotoGP PecinoGP, con directos cerrados del Club, mesas redondas solo para miembros, vídeos exclusivos, noticiario cada 48 h por WhatsApp y el chat de miembros.",
   url: `${SITE.url}/membresia`,
   provider: { "@id": `${SITE.url}/#organization` },
   areaServed: "ES",
