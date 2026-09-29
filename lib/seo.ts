@@ -27,7 +27,7 @@ export const SITE = {
     spotify: "https://open.spotify.com/show/4asUu5yNVnBAyAnmfq1xDz",
   },
   /** Enlace de alta a la membresía nativa de YouTube. */
-  membershipUrl: "https://www.youtube.com/@pecinogp/join",
+  membershipUrl: "https://www.youtube.com/channel/UCSvr3yH2NkqlAHfuRDphz4g/join",
   email: "contacto@pecinogp.es",
 } as const;
 
