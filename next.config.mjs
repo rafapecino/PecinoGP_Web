@@ -33,13 +33,6 @@ const adTrafficQuality = [
   "https://ep2.adtrafficquality.google",
 ];
 
-/**
- * CMP de Google (AdSense → Privacidad y mensajes): es la que pinta el aviso de
- * cookies. Carga su script, abre su propio iframe, pide la configuración del
- * mensaje y descarga los recursos del aviso, así que va en las cuatro.
- */
-const googleCmp = ["https://fundingchoicesmessages.google.com"];
-
 const adsense = {
   script: [
     "https://pagead2.googlesyndication.com",
@@ -47,7 +40,8 @@ const adsense = {
     "https://partner.googleadservices.com",
     "https://adservice.google.com",
     "https://www.googletagservices.com",
-    ...googleCmp,
+    // Mensajes de consentimiento y verificación de propiedad de AdSense.
+    "https://fundingchoicesmessages.google.com",
     ...adTrafficQuality,
   ],
   img: [
@@ -56,7 +50,6 @@ const adsense = {
     "https://googleads.g.doubleclick.net",
     "https://www.google.com",
     "https://www.gstatic.com",
-    ...googleCmp,
     ...adTrafficQuality,
   ],
   connect: [
@@ -64,7 +57,6 @@ const adsense = {
     "https://googleads.g.doubleclick.net",
     "https://tpc.googlesyndication.com",
     "https://csi.gstatic.com",
-    ...googleCmp,
     ...adTrafficQuality,
   ],
   frame: [
@@ -73,7 +65,6 @@ const adsense = {
     "https://googleads.g.doubleclick.net",
     "https://tpc.googlesyndication.com",
     "https://www.google.com",
-    ...googleCmp,
     ...adTrafficQuality,
   ],
 };

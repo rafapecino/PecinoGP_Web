@@ -5,32 +5,31 @@ import Script from "next/script";
 import { usePathname, useSearchParams } from "next/navigation";
 import { Analytics as VercelAnalytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
+import {
+  CONSENT_UPDATED_EVENT,
+  getStoredConsent,
+  type CookieConsent,
+} from "./cookie-consent";
 import { GA_MEASUREMENT_ID, trackPageView } from "@/lib/analytics";
-import { allowsAnalytics, subscribeToConsent } from "@/lib/consent";
 
 /**
- * true cuando el visitante ha dado consentimiento para la analítica en el
- * aviso de Google. Reacciona sin recargar tanto a la primera decisión como a
- * los cambios posteriores desde «Gestionar cookies».
+ * Hook compartido: devuelve true cuando el usuario ha aceptado la categoría
+ * "analíticas" del banner de cookies. Escucha el evento que emite el banner
+ * para reaccionar sin recargar la página.
  */
 function useAnalyticsConsent() {
   const [granted, setGranted] = useState(false);
 
-  useEffect(
-    () =>
-      subscribeToConsent((data) => {
-        const allowed = allowsAnalytics(data);
-        setGranted(allowed);
+  useEffect(() => {
+    setGranted(getStoredConsent()?.analytics === true);
 
-        // Desmontar <AnalyticsSuite /> no descarga un gtag que ya estaba en
-        // la página: si alguien retira el consentimiento, hay que decirle a GA
-        // explícitamente que deje de guardar cookies.
-        if (!allowed && typeof window.gtag === "function") {
-          window.gtag("consent", "update", { analytics_storage: "denied" });
-        }
-      }),
-    [],
-  );
+    const onUpdate = (event: Event) => {
+      const detail = (event as CustomEvent<CookieConsent>).detail;
+      setGranted(detail?.analytics === true);
+    };
+    window.addEventListener(CONSENT_UPDATED_EVENT, onUpdate);
+    return () => window.removeEventListener(CONSENT_UPDATED_EVENT, onUpdate);
+  }, []);
 
   return granted;
 }
@@ -57,10 +56,10 @@ function GaPageViews() {
  * - Google Analytics 4 — métricas de audiencia, fuentes de tráfico y eventos.
  * - Vercel Analytics + Speed Insights — tráfico y Core Web Vitals reales.
  *
- * Se cargan solo cuando el visitante consiente en el aviso de Google (ver
- * `lib/consent.ts`). Si algún día quieres medir a todo el mundo con Vercel (es
- * cookieless y no usa datos personales), saca <VercelAnalytics /> y
- * <SpeedInsights /> fuera del `if (!granted)`.
+ * Los tres son sin cookies o con cookies de terceros según el caso; se cargan
+ * solo tras el opt-in, igual que ya se hacía con AdSense. Si algún día quieres
+ * medir a todo el mundo con Vercel (es cookieless y no usa datos personales),
+ * saca <VercelAnalytics /> y <SpeedInsights /> fuera del `if (!granted)`.
  */
 export function AnalyticsSuite() {
   const granted = useAnalyticsConsent();
